@@ -1,55 +1,26 @@
-services:
-  - type: web
-    name: career-pk
-    runtime: static
-    buildCommand: ""
-    staticPublishPath: .
-    routes:
-      - type: rewrite
-        source: /scholarships
-        destination: /scholarships.html
-      - type: rewrite
-        source: /scholarships-national
-        destination: /scholarships-national.html
-      - type: rewrite
-        source: /scholarships-international
-        destination: /scholarships-international.html
-      - type: rewrite
-        source: /jobs
-        destination: /jobs.html
-      - type: rewrite
-        source: /jobs-government
-        destination: /jobs-government.html
-      - type: rewrite
-        source: /jobs-private
-        destination: /jobs-private.html
-      - type: rewrite
-        source: /internships
-        destination: /internships.html
-      - type: rewrite
-        source: /exams
-        destination: /exams.html
-      - type: rewrite
-        source: /exams-mdcat
-        destination: /exams-mdcat.html
-      - type: rewrite
-        source: /exams-css
-        destination: /exams-css.html
-      - type: rewrite
-        source: /exams-ppsc
-        destination: /exams-ppsc.html
-      - type: rewrite
-        source: /books
-        destination: /books.html
-      - type: rewrite
-        source: /search
-        destination: /search.html
-      - type: rewrite
-        source: /favorites
-        destination: /favorites.html
-      - type: rewrite
-        source: /resume-builder
-        destination: /resume-builder.html
-      - type: rewrite
-        source: /
-        destination: /index.html
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>International Scholarships 2025 | CareerHub Pakistan</title>
+  <meta name="description" content="Latest international scholarships for Pakistani students."/>
+  <link rel="stylesheet" href="css/style.css"/><link rel="stylesheet" href="css/cms-additions.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+<div class="notif-bar" id="notifBar"><div class="notif-track" id="notifTrack"><span>Loading...</span></div></div>
+<nav class="navbar" id="navbar"><div class="nav-container">
+<a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a>
+<ul class="nav-links" id="navLinks"><li><a href="index.html">Home</a></li><li class="has-dropdown"><a href="scholarships.html" class="active">Scholarships</a><ul class="dropdown"><li><a href="scholarships-national.html">National Scholarships</a></li><li><a href="scholarships-international.html" class="active">International Scholarships</a></li></ul></li><li><a href="jobs.html">Jobs</a></li><li><a href="internships.html">Internships</a></li><li><a href="exams.html">Exams</a></li><li><a href="books.html">Books</a></li></ul>
+<div class="nav-actions"><button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button><a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a><button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button><button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button></div>
+</div></nav>
+<div class="page-header"><div class="container"><div class="breadcrumb"><a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <a href="scholarships.html">Scholarships</a> <i class="fa fa-chevron-right fa-xs"></i> <span>International</span></div><h1 class="page-title">🌍 International Scholarships 2025</h1><p class="page-subtitle">Fully funded and partial scholarships around the world.</p></div></div>
+<section class="section"><div class="container"><div class="results-info"><span id="resultsCount">Loading...</span></div><div class="cards-grid" id="resultsGrid"><div class="skeleton-card"></div></div><div class="empty-state" id="emptyState" style="display:none"><i class="fa fa-inbox"></i><h3>No international scholarships found</h3></div></div></section>
+<script src="js/google-sheet-loader.js"></script><script src="js/app.js"></script><script src="js/cms-auto-refresh-listener.js"></script><script src="js/chatbot-loader.js"></script>
+<script>
+let allData=[];
+document.addEventListener('DOMContentLoaded',()=>{updateFavCount();onCMSReady(()=>{loadData();updateFavCount();});registerAutoRefreshSection('Scholarships',loadData);initializeAutoRefreshListeners();});
+function loadData(){const all=window.CMS_DATA.Scholarships||[];allData=all.filter(s=>scholarshipMatchesCountry(s,'International'));applyFilters();}
+function applyFilters(){const sort='newest';const f=sortItems(allData,sort);document.getElementById('resultsCount').textContent=`${f.length} international scholarship${f.length!==1?'s':''} found`;renderCards(f,'resultsGrid','scholarship');document.getElementById('emptyState').style.display=f.length===0?'flex':'none';}
+</script>
+</body></html>
