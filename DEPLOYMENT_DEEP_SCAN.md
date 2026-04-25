@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta name="robots" content="index, follow, max-image-preview:large"/>
-  <meta name="author" content="CareerHub Pakistan"/>
-  <meta property="og:site_name" content="CareerHub Pakistan"/>
+  <meta name="author" content="Career Pakistan"/>
+  <meta property="og:site_name" content="Career Pakistan"/>
   <meta property="og:locale" content="en_PK"/>
   <meta property="og:image" content="https://careerhub.pk/logo-banner.svg"/>
   <meta property="og:url" content="https://careerhub.pk/exams-mdcat.html"/>
-  <meta property="og:title" content="MDCAT 2025 — Syllabus, Date, Registration, Books | CareerHub Pakistan"/>
+  <meta property="og:title" content="MDCAT 2025 — Syllabus, Date, Registration, Books | Career Pakistan"/>
   <meta property="og:description" content="Medical and Dental College Admission Test PMC Pakistan. Exam September 2025. Complete preparation guide with syllabus and past papers."/>
   <meta property="og:type" content="website"/>
   <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="MDCAT 2025 — Syllabus, Date, Registration, Books | CareerHub Pakistan"/>
+  <meta name="twitter:title" content="MDCAT 2025 — Syllabus, Date, Registration, Books | Career Pakistan"/>
   <meta name="twitter:description" content="Medical and Dental College Admission Test PMC Pakistan. Exam date September 14 2025. Complete preparation guide with syllabus and past papers."/>
   <meta name="twitter:image" content="https://careerhub.pk/logo-banner.svg"/>
   <meta name="theme-color" content="#0f766e"/>
-  <title>MDCAT 2025 — Syllabus, Date, Registration, Books | CareerHub Pakistan</title>
+  <title>MDCAT 2025 — Syllabus, Date, Registration, Books | Career Pakistan</title>
   <meta name="description" content="Medical & Dental College Admission Test — PMC Pakistan. Exam date September 14, 2025. Complete preparation guide."/>
   <link rel="canonical" href="https://careerhub.pk/exams-mdcat.html"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -96,7 +96,7 @@
   </div>
 </section>
 
-<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2025 CareerHub Pakistan</p><div class="footer-bottom-links"><a href="index.html">Home</a><a href="#">Privacy</a></div></div></div></footer>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2025 Career Pakistan</p><div class="footer-bottom-links"><a href="index.html">Home</a><a href="#">Privacy</a></div></div></div></footer>
 <nav class="mobile-bottom-nav"><a href="index.html" class="mob-nav-item"><i class="fa fa-home"></i><span>Home</span></a><a href="scholarships.html" class="mob-nav-item"><i class="fa fa-graduation-cap"></i><span>Scholarships</span></a><a href="jobs.html" class="mob-nav-item"><i class="fa fa-briefcase"></i><span>Jobs</span></a><a href="exams.html" class="mob-nav-item active"><i class="fa fa-file-alt"></i><span>Exams</span></a><a href="books.html" class="mob-nav-item"><i class="fa fa-book"></i><span>Books</span></a></nav>
 
 
