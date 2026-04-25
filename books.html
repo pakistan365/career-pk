@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="author" content="CareerHub Pakistan"/>
+  <title>Books & Study Material 2025 | CareerHub Pakistan</title>
+  <meta name="description" content="Find exam prep books and study material for MDCAT, CSS, PPSC, FPSC, IELTS and more."/>
+  <link rel="stylesheet" href="css/style.css"/><link rel="stylesheet" href="css/cms-additions.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+<div class="notif-bar" id="notifBar"><div class="notif-track" id="notifTrack"><span>Loading...</span></div></div>
+<nav class="navbar" id="navbar"><div class="nav-container">
+<a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a>
+<ul class="nav-links" id="navLinks">
+<li><a href="index.html">Home</a></li>
+<li class="has-dropdown"><a href="scholarships.html">Scholarships <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="scholarships-national.html">National</a></li><li><a href="scholarships-international.html">International</a></li></ul></li>
+<li class="has-dropdown"><a href="jobs.html">Jobs <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="jobs-government.html">Government Jobs</a></li><li><a href="jobs-private.html">Private / NGO Jobs</a></li></ul></li>
+<li><a href="internships.html">Internships</a></li><li><a href="exams.html">Exams</a></li><li><a href="books.html" class="active">Books</a></li>
+</ul><div class="nav-actions"><button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button><a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a><button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button><button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button></div>
+</div><div class="nav-search" id="navSearch"><div class="nav-container"><form action="search.html" method="GET" class="search-form-nav"><i class="fa fa-search"></i><input type="text" name="q" id="navSearchInput" placeholder="Search books..."/><button type="submit">Search</button></form></div></div></nav>
+<div class="page-header"><div class="container"><h1 class="page-title">📚 Books & Study Material</h1><p class="page-subtitle">Exam prep books and free PDFs</p></div></div>
+<div class="filter-bar"><div class="container"><div class="filter-row"><div class="filter-left">
+<select class="filter-select" id="filterExam" onchange="applyFilters()"><option value="">📝 All Exams</option><option value="MDCAT">MDCAT</option><option value="CSS">CSS</option><option value="PPSC">PPSC</option><option value="FPSC">FPSC</option><option value="IELTS">IELTS</option></select>
+<select class="filter-select" id="filterCategory" onchange="applyFilters()"><option value="">📂 All Categories</option><option value="Preparation">Preparation</option><option value="Past Papers">Past Papers</option><option value="Guide">Guide</option></select>
+<select class="filter-select" id="filterFree" onchange="applyFilters()"><option value="">💳 Free + Paid</option><option value="free">Free only</option><option value="paid">Paid only</option></select>
+<button class="btn-clear" onclick="clearFilters()"><i class="fa fa-times"></i> Clear</button>
+</div><div class="filter-right"><label class="filter-label">Sort:</label><select class="filter-select" id="sortBy" onchange="applyFilters()"><option value="newest">Newest</option><option value="oldest">Oldest</option></select></div></div></div></div>
+<section class="section"><div class="container"><div class="results-info"><span id="resultsCount">Loading...</span></div><div class="cards-grid" id="resultsGrid"><div class="skeleton-card"></div></div><div class="empty-state" id="emptyState" style="display:none"><i class="fa fa-inbox"></i><h3>No books found</h3></div></div></section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2025 CareerHub Pakistan</p><div class="footer-bottom-links"><a href="index.html">Home</a><a href="scholarships.html">Scholarships</a><a href="jobs.html">Jobs</a><a href="exams.html">Exams</a></div></div></div></footer>
+<script src="js/google-sheet-loader.js"></script><script src="js/app.js"></script><script src="js/cms-auto-refresh-listener.js"></script><script src="js/chatbot-loader.js"></script>
+<script>
+let allData=[];
+document.addEventListener('DOMContentLoaded',()=>{updateFavCount();onCMSReady(()=>{loadData();updateFavCount();});registerAutoRefreshSection('Books',loadData);initializeAutoRefreshListeners();});
+function loadData(){allData=window.CMS_DATA.Books||[];applyFilters();}
+function applyFilters(){const exam=document.getElementById('filterExam').value;const cat=document.getElementById('filterCategory').value;const free=document.getElementById('filterFree').value;const sort=document.getElementById('sortBy').value;let f=allData.filter(b=>(!exam||(b.exam_type||'').includes(exam))&&(!cat||b.category===cat)&&(!free||(free==='free'?b.is_free:!b.is_free)));f=sortItems(f,sort);document.getElementById('resultsCount').textContent=`${f.length} book${f.length!==1?'s':''} found`;renderCards(f,'resultsGrid','book');document.getElementById('emptyState').style.display=f.length===0?'flex':'none';}
+function clearFilters(){['filterExam','filterCategory','filterFree'].forEach(id=>document.getElementById(id).value='');document.getElementById('sortBy').value='newest';applyFilters();}
+</script>
+<nav class="mobile-bottom-nav"><a href="index.html" class="mob-nav-item"><i class="fa fa-home"></i><span>Home</span></a><a href="scholarships.html" class="mob-nav-item"><i class="fa fa-graduation-cap"></i><span>Scholarships</span></a><a href="jobs.html" class="mob-nav-item"><i class="fa fa-briefcase"></i><span>Jobs</span></a><a href="exams.html" class="mob-nav-item"><i class="fa fa-file-alt"></i><span>Exams</span></a><a href="books.html" class="mob-nav-item active"><i class="fa fa-book"></i><span>Books</span></a></nav>
+</body></html>
