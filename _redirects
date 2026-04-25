@@ -1,0 +1,16 @@
+# Render / Netlify static redirects
+/scholarships          /scholarships.html          200
+/scholarships-national /scholarships-national.html 200
+/scholarships-international /scholarships-international.html 200
+/jobs                  /jobs.html                  200
+/jobs-government       /jobs-government.html       200
+/jobs-private          /jobs-private.html          200
+/internships           /internships.html           200
+/exams                 /exams.html                 200
+/exams-mdcat           /exams-mdcat.html           200
+/exams-css             /exams-css.html             200
+/exams-ppsc            /exams-ppsc.html            200
+/books                 /books.html                 200
+/search                /search.html                200
+/favorites             /favorites.html             200
+/resume-builder        /resume-builder.html        200
