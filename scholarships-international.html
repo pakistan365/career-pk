@@ -1,0 +1,55 @@
+services:
+  - type: web
+    name: career-pk
+    runtime: static
+    buildCommand: ""
+    staticPublishPath: .
+    routes:
+      - type: rewrite
+        source: /scholarships
+        destination: /scholarships.html
+      - type: rewrite
+        source: /scholarships-national
+        destination: /scholarships-national.html
+      - type: rewrite
+        source: /scholarships-international
+        destination: /scholarships-international.html
+      - type: rewrite
+        source: /jobs
+        destination: /jobs.html
+      - type: rewrite
+        source: /jobs-government
+        destination: /jobs-government.html
+      - type: rewrite
+        source: /jobs-private
+        destination: /jobs-private.html
+      - type: rewrite
+        source: /internships
+        destination: /internships.html
+      - type: rewrite
+        source: /exams
+        destination: /exams.html
+      - type: rewrite
+        source: /exams-mdcat
+        destination: /exams-mdcat.html
+      - type: rewrite
+        source: /exams-css
+        destination: /exams-css.html
+      - type: rewrite
+        source: /exams-ppsc
+        destination: /exams-ppsc.html
+      - type: rewrite
+        source: /books
+        destination: /books.html
+      - type: rewrite
+        source: /search
+        destination: /search.html
+      - type: rewrite
+        source: /favorites
+        destination: /favorites.html
+      - type: rewrite
+        source: /resume-builder
+        destination: /resume-builder.html
+      - type: rewrite
+        source: /
+        destination: /index.html

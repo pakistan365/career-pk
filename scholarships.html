@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="author" content="CareerHub Pakistan"/>
+  <meta property="og:site_name" content="CareerHub Pakistan"/>
+  <meta property="og:locale" content="en_PK"/>
+  <meta property="og:image" content="https://careerhub.pk/logo-banner.svg"/>
+   <meta property="og:url" content="https://careerhub.pk/internships.html"/>
+  <meta property="og:title" content="Internships in Pakistan 2025 — Paid & Unpaid | CareerHub"/>
+  <meta property="og:description" content="Latest paid and unpaid internships in Pakistan 2025. Top companies, NGOs and government. Karachi, Lahore, Islamabad and remote."/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Internships in Pakistan 2025 — Paid & Unpaid | CareerHub"/>
+  <meta name="twitter:description" content="Latest paid and unpaid internship opportunities in Pakistan 2025. Top companies, NGOs and government. Karachi, Lahore, Islamabad."/>
+  <meta name="twitter:image" content="https://careerhub.pk/logo-banner.svg"/>
+  <meta name="theme-color" content="#0f766e"/>
+  <title>Internships in Pakistan 2025 — Paid & Unpaid | CareerHub</title>
+  <meta name="description" content="Latest internship opportunities in Pakistan 2025. Paid and unpaid internships at top companies, NGOs and government organizations. Karachi, Lahore, Islamabad and remote."/>
+  <meta name="keywords" content="internships Pakistan 2025, paid internships, summer internship, IT internship, marketing internship Pakistan"/>
+  <link rel="canonical" href="https://careerhub.pk/internships.html"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/cms-additions.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="logo.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="logo.svg"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"JobPosting","title":"Internships in Pakistan 2025","hiringOrganization":{"@type":"Organization","name":"CareerHub Pakistan"},"jobLocation":{"@type":"Place","address":{"@type":"PostalAddress","addressCountry":"PK"}}}</script>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+<div class="notif-bar" id="notifBar"><div class="notif-track" id="notifTrack"><span>Loading...</span></div><button class="notif-close" onclick="document.getElementById('notifBar').style.display='none'"><i class="fa fa-times"></i></button></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown"><a href="scholarships.html">Scholarships <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="scholarships-national.html">National</a></li><li><a href="scholarships-international.html">International</a></li></ul></li>
+      <li class="has-dropdown"><a href="jobs.html">Jobs <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="jobs-government.html">Government Jobs</a></li><li><a href="jobs-private.html">Private / NGO Jobs</a></li></ul></li>
+      <li><a href="internships.html" class="active">Internships</a></li>
+      <li><a href="exams.html">Exams</a></li>
+      <li><a href="books.html">Books</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button>
+      <a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a>
+      <button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button>
+    </div>
+  </div>
+  <div class="nav-search" id="navSearch"><div class="nav-container"><form action="search.html" method="GET" class="search-form-nav"><i class="fa fa-search"></i><input type="text" name="q" id="navSearchInput" placeholder="Search..."/><button type="submit">Search</button></form></div></div>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <span>Internships</span></div>
+    <h1 class="page-title">🚀 Internships 2025</h1>
+    <p class="page-subtitle">Paid and unpaid internships at top companies and organizations in Pakistan</p>
+    <div class="page-header-links">
+      <span class="chip-static">💰 Paid</span>
+      <span class="chip-static">🎓 Unpaid</span>
+      <span class="chip-static">💻 Remote</span>
+      <span class="chip-static">☀️ Summer</span>
+    </div>
+  </div>
+</div>
+
+<div class="filter-bar">
+    <div class="filter-row">
+      <div class="filter-left">
+        <select class="filter-select" id="filterType" onchange="applyFilters()">
+          <option value="">💰 All Types</option>
+          <option value="Paid">Paid</option>
+          <option value="Unpaid">Unpaid</option>
+          <option value="Part-time">Part-time</option>
+        </select>
+        <select class="filter-select" id="filterCountry" onchange="applyFilters()">
+          <option value="">🌐 All Locations</option>
+          <option value="Pakistan">Pakistan</option>
+          <option value="International">International / Remote</option>
+        </select>
+        <select class="filter-select" id="filterDuration" onchange="applyFilters()">
+          <option value="">⏱️ Any Duration</option>
+          <option value="2 Months">2 Months</option>
+          <option value="3 Months">3 Months</option>
+          <option value="6 Months">6 Months</option>
+        </select>
+        <button class="btn-clear" onclick="clearFilters()"><i class="fa fa-times"></i> Clear</button>
+      </div>
+      <div class="filter-right">
+        <label class="filter-label">Sort:</label>
+        <select class="filter-select" id="sortBy" onchange="applyFilters()">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="deadline">Deadline</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="results-info">
+      <span id="resultsCount">Loading...</span>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')"><i class="fa fa-th"></i></button>
+        <button class="view-btn" id="listViewBtn" onclick="setView('list')"><i class="fa fa-list"></i></button>
+      </div>
+    </div>
+    <div class="cards-grid" id="resultsGrid">
+      <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+    </div>
+        </div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <i class="fa fa-inbox"></i><h3>No internships found</h3><p>Try adjusting your filters.</p>
+      <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+    </div>
+    <div class="error-state" id="errorState" style="display:none">
+      <i class="fa fa-triangle-exclamation"></i><h3>Could not load data</h3>
+      <button class="btn btn-primary" onclick="loadData()">Retry</button>
+  </div>
+</section>
+
+
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2025 CareerHub Pakistan</p><div class="footer-bottom-links"><a href="index.html">Home</a><a href="#">Privacy</a><a href="#">Contact</a></div></div></div></footer>
+<nav class="mobile-bottom-nav"><a href="index.html" class="mob-nav-item"><i class="fa fa-home"></i><span>Home</span></a><a href="scholarships.html" class="mob-nav-item"><i class="fa fa-graduation-cap"></i><span>Scholarships</span></a><a href="jobs.html" class="mob-nav-item active"><i class="fa fa-briefcase"></i><span>Jobs</span></a><a href="exams.html" class="mob-nav-item"><i class="fa fa-file-alt"></i><span>Exams</span></a><a href="books.html" class="mob-nav-item"><i class="fa fa-book"></i><span>Books</span></a></nav>  
+
+<script src="js/google-sheet-loader.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cms-auto-refresh-listener.js"></script>
+<script src="js/chatbot-loader.js"></script>
+  <script>
+  let allData = [];
+  document.addEventListener('DOMContentLoaded', () => { updateFavCount(); onCMSReady(() => { loadData(); updateFavCount(); }); registerAutoRefreshSection('Internships', loadData); initializeAutoRefreshListeners(); });
+  function loadData() {
+    try { allData = window.CMS_DATA['Internships'] || []; applyFilters(); }
+    catch(e) { document.getElementById('errorState').style.display = 'flex'; }
+  }
+  function applyFilters() {
+    const type     = document.getElementById('filterType').value;
+    const country  = document.getElementById('filterCountry').value;
+    const duration = document.getElementById('filterDuration').value;
+    const sort     = document.getElementById('sortBy').value;
+    let f = allData.filter(i => matchesFilterValue(i.type, type) && matchesFilterValue(i.country, country) && matchesFilterValue(i.duration, duration));
+    f = sortItems(f, sort);
+    document.getElementById('resultsCount').textContent = `${f.length} internship${f.length!==1?'s':''} found`;
+    renderCards(f, 'resultsGrid', 'internship');
+    document.getElementById('emptyState').style.display = f.length===0 ? 'flex' : 'none';
+  }
+  function clearFilters() { ['filterType','filterCountry','filterDuration'].forEach(id=>document.getElementById(id).value=''); document.getElementById('sortBy').value='newest'; applyFilters(); }
+  function setView(v) { document.getElementById('resultsGrid').className=v==='list'?'cards-list':'cards-grid'; document.getElementById('gridViewBtn').classList.toggle('active',v==='grid'); document.getElementById('listViewBtn').classList.toggle('active',v==='list'); }
+</script>
+</body>
+</html>

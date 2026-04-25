@@ -1,0 +1,32 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Resume Builder | CareerHub Pakistan</title>
+<link rel="stylesheet" href="css/style.css"/><link rel="stylesheet" href="css/cms-additions.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head><body>
+<nav class="navbar" id="navbar"><div class="nav-container"><a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a></div></nav>
+<section class="section"><div class="container">
+  <h1 class="page-title">🧾 Resume Builder</h1>
+<div class="resume-builder-layout">
+<div>
+<div class="card" style="padding:16px">
+<div class="form-group"><label>Name</label><input id="rName" type="text" oninput="updatePreview()"></div>
+<div class="form-group"><label>Title</label><input id="rTitle" type="text" oninput="updatePreview()"></div>
+<div class="form-row"><div class="form-group"><label>Email</label><input id="rEmail" type="email" oninput="updatePreview()"></div><div class="form-group"><label>Phone</label><input id="rPhone" type="text" oninput="updatePreview()"></div></div>
+<div class="form-row"><div class="form-group"><label>City</label><input id="rCity" type="text" oninput="updatePreview()"></div><div class="form-group"><label>LinkedIn</label><input id="rLinkedin" type="text" oninput="updatePreview()"></div></div>
+<div class="form-group"><label>Summary</label><textarea id="rSummary" oninput="updatePreview()"></textarea></div>
+<div class="form-group"><label>Skills (comma separated)</label><input id="rSkills" type="text" oninput="updatePreview()"></div>
+<div class="form-group"><label>Languages</label><input id="rLanguages" type="text" oninput="updatePreview()"></div>
+</div>
+<div class="card" style="padding:16px;margin-top:16px"><h3>Education</h3><div id="educationList"></div><button class="btn btn-secondary" onclick="addEducation()">+ Add Education</button></div>
+<div class="card" style="padding:16px;margin-top:16px"><h3>Experience</h3><div id="experienceList"></div><button class="btn btn-secondary" onclick="addExperience()">+ Add Experience</button></div>
+<div class="card" style="padding:16px;margin-top:16px"><h3>Certifications</h3><div id="certList"></div><button class="btn btn-secondary" onclick="addCert()">+ Add Certification</button></div>
+</div>
+<div>
+<div style="display:flex;gap:8px;margin-bottom:12px"><button class="template-btn active" onclick="setTemplate('classic')">Classic</button><button class="template-btn" onclick="setTemplate('modern')">Modern</button><button class="template-btn" onclick="setTemplate('minimal')">Minimal</button><button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button></div>
+<div id="resumePreview" class="card" style="padding:0"></div>
+</div>
+</div></div></section>
+<script src="js/app.js"></script><script src="js/resume.js"></script>
+<script>document.addEventListener('DOMContentLoaded',()=>{addEducation();addExperience();updatePreview();});</script>
+</body></html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="author" content="CareerHub Pakistan"/>
+  <meta property="og:site_name" content="CareerHub Pakistan"/>
+  <meta property="og:locale" content="en_PK"/>
+  <meta property="og:image" content="https://careerhub.pk/logo-banner.svg"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="CareerHub Pakistan"/>
+  <meta name="twitter:description" content="Find scholarships, jobs, internships, exam guidance, and books in one place."/>
+  <meta name="twitter:image" content="https://careerhub.pk/logo-banner.svg"/>
+  <meta name="theme-color" content="#0f766e"/>
+  <title>Scholarships 2025 — National & International | CareerHub Pakistan</title>
+  <meta name="description" content="Find latest scholarships in Pakistan and abroad. HEC, Chevening, DAAD, Australia Awards, USAID and more fully funded scholarships for Pakistani students."/>
+  <meta name="keywords" content="scholarships Pakistan 2025, HEC scholarship, Chevening scholarship, fully funded scholarship, international scholarships for Pakistanis"/>
+  <meta property="og:title" content="Scholarships 2025 — CareerHub Pakistan"/>
+  <meta property="og:description" content="Latest scholarships for Pakistani students — national and international, fully funded and partial."/>
+    <meta property="og:url" content="https://careerhub.pk/scholarships-national.html"/>
+  <link rel="canonical" href="https://careerhub.pk/scholarships-national.html"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/cms-additions.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Scholarships 2025 Pakistan","url":"https://careerhub.pk/scholarships-national.html","description":"All scholarships for Pakistani students 2025"}</script>
+  <link rel="icon" href="logo.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="logo.svg"/>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+  
+<div class="notif-bar" id="notifBar">
+  <div class="notif-track" id="notifTrack"><span>Loading latest updates...</span></div>
+  <button class="notif-close" onclick="document.getElementById('notifBar').style.display='none'"><i class="fa fa-times"></i></button>
+</div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown">
+        <a href="scholarships.html" class="active">Scholarships <i class="fa fa-chevron-down fa-xs"></i></a>
+        <ul class="dropdown">
+          <li><a href="scholarships-national.html">National Scholarships</a></li>
+          <li><a href="scholarships-international.html">International Scholarships</a></li>
+        </ul>
+      </li>
+      <li class="has-dropdown">
+        <a href="jobs.html">Jobs <i class="fa fa-chevron-down fa-xs"></i></a>
+        <ul class="dropdown">
+          <li><a href="jobs-government.html">Government Jobs</a></li>
+          <li><a href="jobs-private.html">Private / NGO Jobs</a></li>
+        </ul>
+      </li>
+      <li><a href="internships.html">Internships</a></li>
+      <li><a href="exams.html">Exams</a></li>
+      <li><a href="books.html">Books</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="nav-icon-btn" onclick="toggleSearch()" aria-label="Search"><i class="fa fa-search"></i></button>
+      <a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a>
+      <button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button>
+    </div>
+  </div>
+  <div class="nav-search" id="navSearch">
+    <div class="nav-container">
+      <form action="search.html" method="GET" class="search-form-nav">
+        <i class="fa fa-search"></i>
+        <input type="text" name="q" placeholder="Search scholarships..." id="navSearchInput"/>
+        <button type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+  <!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <a href="scholarships.html">Scholarships</a> <i class="fa fa-chevron-right fa-xs"></i> <span>National</span></div>
+    <h1 class="page-title">🇵🇰 National Scholarships 2025</h1>
+    <p class="page-subtitle">National & International scholarships for Pakistani students — updated daily</p>
+    <div class="page-header-links">
+      <a href="scholarships-national.html" class="chip">🇵🇰 National</a>
+      <a href="scholarships-international.html" class="chip">🌍 International</a>
+    </div>
+  </div>
+</div>
+
+  <!-- FILTER BAR -->
+<div class="filter-bar">
+  <div class="container">
+    <div class="filter-row">
+      <div class="filter-left">
+        <select class="filter-select" id="filterType" onchange="applyFilters()">
+          <option value="">💰 All Types</option>
+          <option value="Paid">Paid</option>
+          <option value="Unpaid">Unpaid</option>
+          <option value="Part-time">Part-time</option>
+        </select>
+        <select class="filter-select" id="filterCountry" onchange="applyFilters()">
+          <option value="">🌐 All Countries</option>
+          <option value="Pakistan">🇵🇰 Pakistan</option>
+          <option value="UK">🇬🇧 United Kingdom</option>
+          <option value="Germany">🇩🇪 Germany</option>
+          <option value="Turkey">🇹🇷 Turkey</option>
+          <option value="Australia">🇦🇺 Australia</option>
+          <option value="International">🌍 International</option>
+        </select>
+        <select class="filter-select" id="filterFunding" onchange="applyFilters()">
+          <option value="">💰 All Funding</option>
+          <option value="Fully Funded">Fully Funded</option>
+          <option value="Partial">Partial</option>
+        </select>
+        <select class="filter-select" id="filterType" onchange="applyFilters()">
+          <option value="">🏷️ All Types</option>
+          <option value="Government">Government</option>
+          <option value="International">International</option>
+          <option value="NGO">NGO</option>
+        </select>
+        <select class="filter-select" id="filterLevel" onchange="applyFilters()">
+          <option value="">🎓 All Levels</option>
+          <option value="Undergraduate">Undergraduate</option>
+          <option value="Masters">Masters</option>
+          <option value="PhD">PhD</option>
+        </select>
+        <button class="btn-clear" onclick="clearFilters()"><i class="fa fa-times"></i> Clear</button>
+      </div>
+      <div class="filter-right">
+        <label class="filter-label">Sort by:</label>
+        <select class="filter-select" id="sortBy" onchange="applyFilters()">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="deadline">Deadline (Urgent)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- RESULTS -->
+<section class="section">
+  <div class="container">
+    <div class="results-info">
+      <span id="resultsCount">Loading...</span>
+      <div class="view-toggle">
+        <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" aria-label="Grid view"><i class="fa fa-th"></i></button>
+        <button class="view-btn" id="listViewBtn" onclick="setView('list')" aria-label="List view"><i class="fa fa-list"></i></button>
+        <button id="cms-refresh-btn" class="btn-refresh" title="Refresh data from Google Sheets"><i class="fa fa-sync-alt"></i> Refresh</button>
+      </div>
+    </div>
+    <div class="cards-grid" id="resultsGrid">
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+      <div class="skeleton-card">
+        <div class="card-img"></div>
+        <div class="card-body">
+          <div class="skeleton-line long"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line short"></div>
+        </div>
+      </div>
+    </div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <i class="fa fa-inbox"></i>
+      <h3>No scholarships found</h3>
+      <p>Try adjusting your filters or check back later.</p>
+      <button class="btn btn-secondary" onclick="clearFilters()">Clear Filters</button>
+    </div>
+    <div class="error-state" id="errorState" style="display:none">
+      <i class="fa fa-triangle-exclamation"></i>
+      <h3>Could not load data</h3>
+      <p>Please check your connection and try again.</p>
+      <button class="btn btn-primary" onclick="loadScholarships()">Retry</button>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </div>
+</section>
+
+<!-- Refresh indicator -->
+<div id="cms-refresh-indicator"></div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="footer-logo">Career<span>Hub</span></a>
+        <p>Pakistan's most trusted platform for scholarships, jobs, exams and career resources.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+          <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col"><h4>Scholarships</h4><ul><li><a href="scholarships-national.html">National</a></li><li><a href="scholarships-international.html">International</a></li><li><a href="scholarships.html">Fully Funded</a></li></ul></div>
+      <div class="footer-col"><h4>Jobs</h4><ul><li><a href="jobs-government.html">Government Jobs</a></li><li><a href="jobs-private.html">Private Jobs</a></li><li><a href="internships.html">Internships</a></li></ul></div>
+      <div class="footer-col"><h4>Exams</h4><ul><li><a href="exams-mdcat.html">MDCAT</a></li><li><a href="exams-css.html">CSS</a></li><li><a href="exams.html">All Exams</a></li></ul></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 CareerHub Pakistan. All rights reserved.</p><div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a></div></div>
+  </div>
+</footer>
+
+<nav class="mobile-bottom-nav">
+  <a href="index.html" class="mob-nav-item"><i class="fa fa-home"></i><span>Home</span></a>
+  <a href="scholarships.html" class="mob-nav-item active"><i class="fa fa-graduation-cap"></i><span>Scholarships</span></a>
+  <a href="jobs.html" class="mob-nav-item"><i class="fa fa-briefcase"></i><span>Jobs</span></a>
+  <a href="exams.html" class="mob-nav-item"><i class="fa fa-file-alt"></i><span>Exams</span></a>
+  <a href="books.html" class="mob-nav-item"><i class="fa fa-book"></i><span>Books</span></a>
+</nav>
+
+<script src="js/google-sheet-loader.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cms-auto-refresh-listener.js"></script>
+<script src="js/chatbot-loader.js"></script>
+  <script>
+  let allScholarships = [];
+  document.addEventListener('DOMContentLoaded', () => { updateFavCount(); onCMSReady(() => { loadScholarships(); updateFavCount(); }); registerAutoRefreshSection('Scholarships', loadScholarships); initializeAutoRefreshListeners(); });
+
+  function loadScholarships() {
+    try {
+      const data = window.CMS_DATA['Scholarships'] || [];
+      allScholarships = data.filter(s => scholarshipMatchesCountry(s, 'Pakistan'));
+      applyFilters();
+    } catch(e) {
+      document.getElementById('resultsGrid').innerHTML = '';
+      document.getElementById('errorState').style.display = 'flex';
+    }
+  }
+    
+  function applyFilters() {
+    const country  = "Pakistan";
+    const funding  = document.getElementById('filterFunding').value;
+    const type     = document.getElementById('filterType').value;
+    const level    = document.getElementById('filterLevel').value;
+    const sort     = document.getElementById('sortBy').value;
+
+    let filtered = allScholarships.filter(s => {
+      return scholarshipMatchesCountry(s, country) &&
+             matchesFilterValue(s.funding, funding) &&
+             matchesFilterValue(s.type, type) &&
+             includesFilterValue(s.level, level);
+    });
+    filtered = sortItems(filtered, sort);
+    document.getElementById('resultsCount').textContent = `${filtered.length} scholarship${filtered.length !== 1 ? 's' : ''} found`;
+    renderCards(filtered, 'resultsGrid', 'scholarship');
+    document.getElementById('emptyState').style.display = filtered.length === 0 ? 'flex' : 'none';
+  }
+
+  function clearFilters() {
+    ['filterFunding','filterType','filterLevel'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('filterCountry').value = 'Pakistan';
+    document.getElementById('sortBy').value = 'newest';
+    applyFilters();
+  }
+
+  function setView(view) {
+    const grid = document.getElementById('resultsGrid');
+    grid.className = view === 'list' ? 'cards-list' : 'cards-grid';
+    document.getElementById('gridViewBtn').classList.toggle('active', view === 'grid');
+    document.getElementById('listViewBtn').classList.toggle('active', view === 'list');
+  }
+</script>
+</body>
+</html>
