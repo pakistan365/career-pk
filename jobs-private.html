@@ -1,32 +1,85 @@
-<!DOCTYPE html><html lang="en"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Resume Builder | CareerHub Pakistan</title>
-<link rel="stylesheet" href="css/style.css"/><link rel="stylesheet" href="css/cms-additions.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-</head><body>
-<nav class="navbar" id="navbar"><div class="nav-container"><a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a></div></nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="author" content="CareerHub Pakistan"/>
+  <meta property="og:site_name" content="CareerHub Pakistan"/>
+  <meta property="og:locale" content="en_PK"/>
+  <meta property="og:image" content="https://careerhub.pk/logo-banner.svg"/>
+  <meta property="og:url" content="https://careerhub.pk/jobs-private.html"/>
+  <meta property="og:title" content="Private, NGO & Remote Jobs Pakistan 2025 | CareerHub"/>
+  <meta property="og:description" content="Latest private sector, NGO and remote jobs in Pakistan 2025. IT, marketing, healthcare and development roles updated daily."/>
+  <meta property="og:type" content="website"/>
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Private, NGO & Remote Jobs Pakistan 2025 | CareerHub"/>
+  <meta name="twitter:description" content="Latest private sector, NGO and remote jobs in Pakistan 2025. IT, marketing, healthcare and development roles updated daily."/>
+  <meta name="twitter:image" content="https://careerhub.pk/logo-banner.svg"/>
+  <meta name="theme-color" content="#0f766e"/>
+  <title>Private, NGO & Remote Jobs Pakistan 2025 | CareerHub</title>
+  <meta name="description" content="Latest private sector, NGO and remote jobs in Pakistan 2025. IT, marketing, healthcare, media, development jobs updated daily."/>
+  <link rel="canonical" href="https://careerhub.pk/jobs-private.html"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/cms-additions.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="logo.svg" type="image/svg+xml"/><link rel="apple-touch-icon" href="logo.svg"/>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Private NGO Remote Jobs Pakistan 2025","url":"https://careerhub.pk/jobs-private.html"}</script>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+<div class="notif-bar" id="notifBar"><div class="notif-track" id="notifTrack"><span>Loading...</span></div><button class="notif-close" onclick="document.getElementById('notifBar').style.display='none'"><i class="fa fa-times"></i></button></div>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><img src="logo.svg" alt="CareerPK" height="44"/></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown"><a href="scholarships.html">Scholarships <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="scholarships-national.html">National</a></li><li><a href="scholarships-international.html">International</a></li></ul></li>
+      <li class="has-dropdown"><a href="jobs.html" class="active">Jobs <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="jobs-government.html">Government Jobs</a></li><li><a href="jobs-private.html" class="active">Private / NGO Jobs</a></li></ul></li>
+      <li><a href="internships.html">Internships</a></li><li><a href="exams.html">Exams</a></li><li><a href="books.html">Books</a></li>
+    </ul>
+    <div class="nav-actions"><button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button><a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a><button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button><button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button></div>
+  </div>
+  <div class="nav-search" id="navSearch"><div class="nav-container"><form action="search.html" method="GET" class="search-form-nav"><i class="fa fa-search"></i><input type="text" name="q" id="navSearchInput" placeholder="Search jobs..."/><button type="submit">Search</button></form></div></div>
+</nav>
+<div class="page-header">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <a href="jobs.html">Jobs</a> <i class="fa fa-chevron-right fa-xs"></i> <span>Private / NGO</span></div>
+    <h1 class="page-title">🏢 Private, NGO & Remote Jobs 2025</h1>
+    <p class="page-subtitle">Corporate, NGO, development sector and remote work opportunities in Pakistan</p>
+    <div class="page-header-links"><span class="chip-static">Private</span><span class="chip-static">NGO</span><span class="chip-static">Remote</span></div>
+  </div>
+<div>
+<div class="filter-bar"><div class="container"><div class="filter-row">
+  <div class="filter-left">
+    <select class="filter-select" id="filterType" onchange="applyFilters()"><option value="">🏷️ All Types</option><option value="Private">Private</option><option value="NGO">NGO</option><option value="Remote">Remote</option></select>
+    <select class="filter-select" id="filterCategory" onchange="applyFilters()"><option value="">📂 Category</option><option value="IT / Technology">IT / Tech</option><option value="Healthcare">Healthcare</option><option value="Marketing">Marketing</option><option value="Finance">Finance</option><option value="NGO / Development">NGO</option><option value="Media / Content">Media</option></select>
+    <button class="btn-clear" onclick="clearFilters()"><i class="fa fa-times"></i> Clear</button>
+  </div>
+  <div class="filter-right"><label class="filter-label">Sort:</label><select class="filter-select" id="sortBy" onchange="applyFilters()"><option value="newest">Newest</option><option value="oldest">Oldest</option><option value="deadline">Deadline</option></select></div>
+</div></div></div>
 <section class="section"><div class="container">
-  <h1 class="page-title">🧾 Resume Builder</h1>
-<div class="resume-builder-layout">
-<div>
-<div class="card" style="padding:16px">
-<div class="form-group"><label>Name</label><input id="rName" type="text" oninput="updatePreview()"></div>
-<div class="form-group"><label>Title</label><input id="rTitle" type="text" oninput="updatePreview()"></div>
-<div class="form-row"><div class="form-group"><label>Email</label><input id="rEmail" type="email" oninput="updatePreview()"></div><div class="form-group"><label>Phone</label><input id="rPhone" type="text" oninput="updatePreview()"></div></div>
-<div class="form-row"><div class="form-group"><label>City</label><input id="rCity" type="text" oninput="updatePreview()"></div><div class="form-group"><label>LinkedIn</label><input id="rLinkedin" type="text" oninput="updatePreview()"></div></div>
-<div class="form-group"><label>Summary</label><textarea id="rSummary" oninput="updatePreview()"></textarea></div>
-<div class="form-group"><label>Skills (comma separated)</label><input id="rSkills" type="text" oninput="updatePreview()"></div>
-<div class="form-group"><label>Languages</label><input id="rLanguages" type="text" oninput="updatePreview()"></div>
-</div>
-<div class="card" style="padding:16px;margin-top:16px"><h3>Education</h3><div id="educationList"></div><button class="btn btn-secondary" onclick="addEducation()">+ Add Education</button></div>
-<div class="card" style="padding:16px;margin-top:16px"><h3>Experience</h3><div id="experienceList"></div><button class="btn btn-secondary" onclick="addExperience()">+ Add Experience</button></div>
-<div class="card" style="padding:16px;margin-top:16px"><h3>Certifications</h3><div id="certList"></div><button class="btn btn-secondary" onclick="addCert()">+ Add Certification</button></div>
-</div>
-<div>
-<div style="display:flex;gap:8px;margin-bottom:12px"><button class="template-btn active" onclick="setTemplate('classic')">Classic</button><button class="template-btn" onclick="setTemplate('modern')">Modern</button><button class="template-btn" onclick="setTemplate('minimal')">Minimal</button><button class="btn btn-primary" onclick="downloadPDF()">Download PDF</button></div>
-<div id="resumePreview" class="card" style="padding:0"></div>
-</div>
-</div></div></section>
-<script src="js/app.js"></script><script src="js/resume.js"></script>
-<script>document.addEventListener('DOMContentLoaded',()=>{addEducation();addExperience();updatePreview();});</script>
+  <div class="results-info"><span id="resultsCount">Loading...</span></div>
+  <div class="cards-grid" id="resultsGrid"><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+  <div class="empty-state" id="emptyState" style="display:none"><i class="fa fa-inbox"></i><h3>No jobs found</h3><p>Try adjusting filters.</p><button class="btn btn-secondary" onclick="clearFilters()">Clear</button></div>
+  <div class="error-state" id="errorState" style="display:none"><i class="fa fa-triangle-exclamation"></i><h3>Could not load</h3><button class="btn btn-primary" onclick="loadData()">Retry</button></div>
+</div></section>
+<footer class="footer"><div class="container"><div class="footer-bottom"><p>© 2025 CareerHub Pakistan</p><div class="footer-bottom-links"><a href="index.html">Home</a><a href="#">Privacy</a></div></div></div></footer>
+<nav class="mobile-bottom-nav"><a href="index.html" class="mob-nav-item"><i class="fa fa-home"></i><span>Home</span></a><a href="scholarships.html" class="mob-nav-item"><i class="fa fa-graduation-cap"></i><span>Scholarships</span></a><a href="jobs.html" class="mob-nav-item active"><i class="fa fa-briefcase"></i><span>Jobs</span></a><a href="exams.html" class="mob-nav-item"><i class="fa fa-file-alt"></i><span>Exams</span></a><a href="books.html" class="mob-nav-item"><i class="fa fa-book"></i><span>Books</span></a></nav>
+
+
+
+<script src="js/google-sheet-loader.js"></script>
+<script src="js/app.js"></script>
+<script src="js/cms-auto-refresh-listener.js"></script>
+<script src="js/chatbot-loader.js"></script>
+  <script>
+  let allData=[];
+  document.addEventListener('DOMContentLoaded',()=>{ updateFavCount(); onCMSReady(()=>{loadData();updateFavCount();}); registerAutoRefreshSection('Jobs', loadData); initializeAutoRefreshListeners(); });
+  function loadData(){try{const d=window.CMS_DATA['Jobs'] || [];allData=d.filter(j=>!isGovernmentType(j.type));applyFilters();}catch(e){document.getElementById('errorState').style.display='flex';}}
+  function applyFilters(){const type=document.getElementById('filterType').value;const cat=document.getElementById('filterCategory').value;const sort=document.getElementById('sortBy').value;let f=allData.filter(j=>matchesFilterValue(j.type,type)&&matchesFilterValue(j.category,cat));f=sortItems(f,sort);document.getElementById('resultsCount').textContent=`${f.length} job${f.length!==1?'s':''} found`;renderCards(f,'resultsGrid','job');document.getElementById('emptyState').style.display=f.length===0?'flex':'none';}
+  function clearFilters(){['filterType','filterCategory'].forEach(id=>document.getElementById(id).value='');document.getElementById('sortBy').value='newest';applyFilters();}
+</script>
 </body></html>
