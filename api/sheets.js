@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   try {
     const response = await fetch(sourceUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; CareerHubPK/2.0)',
+        'User-Agent': 'Mozilla/5.0 (compatible; CareerPakistan/2.0)',
         'Accept': 'text/csv,text/plain,*/*',
         'Cache-Control': 'no-cache',
       },
