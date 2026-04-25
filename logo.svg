@@ -1,44 +1,48 @@
-<!-- Career Pakistan Logo SVG -->
-<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+<!-- Career Pakistan Logo (Optimized SVG) -->
+<svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
 
   <!-- Gradient -->
   <defs>
-    <linearGradient id="cpGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38f1d7"/>
-      <stop offset="100%" stop-color="#0ea5a4"/>
+    <linearGradient id="cpGradient" x1="0" y1="0" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38f1d7"/>
+      <stop offset="1" stop-color="#0ea5a4"/>
     </linearGradient>
   </defs>
 
-  <!-- Letter C -->
-  <path d="
-    M150 60
-    A90 90 0 1 0 150 240
-    L150 200
-    A50 50 0 1 1 150 100
-    Z
-  " fill="url(#cpGradient)"/>
+  <!-- C Shape -->
+  <path
+    d="M150 50
+       A100 100 0 1 0 150 250
+       A65 65 0 1 1 150 115"
+    stroke="url(#cpGradient)"
+    stroke-width="28"
+    stroke-linecap="round"
+    fill="none"/>
 
-  <!-- Letter P -->
-  <path d="
-    M150 110
-    L150 240
-    L180 240
-    L180 170
-    A40 40 0 1 0 150 110
-    Z
-  " fill="url(#cpGradient)"/>
+  <!-- P Stem -->
+  <rect x="150" y="110" width="26" height="130" rx="13" fill="url(#cpGradient)"/>
 
-  <!-- Arrow -->
-  <line x1="120" y1="140" x2="230" y2="60"
+  <!-- P Curve -->
+  <path
+    d="M150 110
+       A45 45 0 1 1 150 200"
+    stroke="url(#cpGradient)"
+    stroke-width="26"
+    stroke-linecap="round"
+    fill="none"/>
+
+  <!-- Arrow Line -->
+  <line x1="120" y1="140" x2="235" y2="60"
         stroke="#ffffff"
         stroke-width="10"
         stroke-linecap="round"/>
 
   <!-- Arrow Head -->
-  <polygon points="230,60 210,65 220,80" fill="#ffffff"/>
+  <polygon points="235,60 215,65 225,80" fill="#ffffff"/>
 
   <!-- Star -->
-  <polygon points="250,50 255,60 265,60 257,67 260,78 250,72 240,78 243,67 235,60 245,60"
-           fill="#38f1d7"/>
+  <polygon
+    points="255,45 260,55 272,55 262,63 266,75 255,68 244,75 248,63 238,55 250,55"
+    fill="#38f1d7"/>
 
 </svg>
