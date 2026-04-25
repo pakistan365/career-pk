@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   // Log feedback (extend this to store in a DB if needed)
-  console.log('[CareerHub Feedback]', JSON.stringify(payload));
+  console.log('[Career Feedback]', JSON.stringify(payload));
 
   return res.status(200).json({ ok: true });
 }
