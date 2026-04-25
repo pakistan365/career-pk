@@ -1,0 +1,373 @@
+/* ============================================================
+   CareerHub Pakistan — cms-additions.css
+   Extra styles for CMS-driven cards, badges, chatbot toggle
+   ============================================================ */
+
+/* ── Card image placeholder ──────────────────────────────── */
+.card-img { position: relative; overflow: hidden; height: 136px; background: var(--bg-alt, #efefef); border-radius: var(--radius-md) var(--radius-md) 0 0; }
+.card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+.card:hover .card-img img { transform: scale(1.05); }
+.card-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  background: linear-gradient(135deg, #f5f6f8 0%, #eceff4 100%);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+body.dark .card-img-placeholder { background: linear-gradient(135deg, #1e1e2e, #2a2a3e); }
+
+/* ── Featured / urgency badges ───────────────────────────── */
+.featured-badge {
+  position: absolute; top: 10px; left: 10px;
+  background: #1f4fbf;
+   color: white; font-size: 0.7rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 99px;
+}
+.free-badge { background: #1d7f49 !important; }
+
+.badge {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.68rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 99px; color: white;
+}
+.badge-urgent { background: #d32f2f; animation: pulse 1.5s infinite; }
+.badge-soon   { background: #4b5563; }
+.badge-expired { background: #6b7280; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+
+/* ── Card body ────────────────────────────────────────────── */
+.card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+.card-meta  { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.card-tag   {
+  font-size: 0.7rem; font-weight: 600; padding: 3px 9px;
+  border-radius: 99px; background: var(--bg-alt, #f3f4f6);
+  color: var(--text-secondary, #6b7280);
+  border: 1px solid var(--border, #e5e7eb);
+  white-space: nowrap;
+}
+.card-tag.fund-fully-funded { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.card-tag.fund-partial      { background: #fef3c7; color: #92400e; border-color: #fcd34d; }
+.card-tag.paid   { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.card-tag.unpaid { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
+body.dark .card-tag { background: #2a2a3e; color: #9ca3af; border-color: #374151; }
+
+.card-title { 
+  font-size: 0.92rem; font-weight: 700; margin: 0 0 8px; line-height: 1.4; color: var(--text-main, #111);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-desc  { 
+  font-size: 0.82rem; color: var(--text-secondary, #6b7280); margin: 0 0 10px; line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  flex: 1;
+}
+.card-details { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.card-details span { font-size: 0.75rem; color: var(--text-secondary, #6b7280); display: flex; align-items: center; gap: 4px; }
+.card-details i { color: var(--primary, #6366f1); font-size: 0.7rem; }
+
+/* Tags row */
+.tag {
+  display: inline-block; font-size: 0.68rem;
+  background: var(--bg-alt, #f3f4f6); color: var(--text-secondary, #6b7280);
+  padding: 2px 7px; border-radius: 4px; margin: 2px 2px 0 0;
+  border: 1px solid var(--border, #e5e7eb);
+}
+body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
+
+/* ── Card footer ──────────────────────────────────────────── */
+.card-footer { padding: 10px 14px; border-top: 1px solid var(--border, #e5e7eb); display: flex; align-items: center; gap: 8px; }
+.card-footer.exam-links { flex-wrap: wrap; gap: 6px; }
+.btn-fav {
+  margin-left: auto; background: none; border: 1px solid var(--border, #e5e7eb);
+  color: var(--text-secondary, #6b7280); width: 36px; height: 36px;
+  border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s; flex-shrink: 0;
+}
+.btn-fav:hover, .btn-fav.active { background: #fef3c7; border-color: #f59e0b; color: #f59e0b; }
+
+/* ── Results info bar ─────────────────────────────────────── */
+.results-info {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px; padding: 10px 0;
+  border-bottom: 1px solid var(--border, #e5e7eb);
+  font-size: 0.875rem; color: var(--text-secondary, #6b7280);
+}
+
+/* ── View toggle ──────────────────────────────────────────── */
+.view-toggle { display: flex; gap: 4px; align-items: center; }
+.view-btn {
+  width: 34px; height: 34px; border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg-card, #fff); color: var(--text-secondary, #6b7280);
+  border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.view-btn.active { background: var(--primary, #6366f1); color: white; border-color: var(--primary, #6366f1); }
+.view-btn:hover { background: var(--primary-bg, #eef2fb); color: var(--primary, #6366f1); border-color: var(--primary, #6366f1); }
+
+/* ── Refresh button ───────────────────────────────────────── */
+.btn-refresh {
+  padding: 6px 12px;
+  border: 1px solid var(--primary, #6366f1);
+  background: var(--primary-bg, #eef2fb);
+  color: var(--primary, #6366f1);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 8px;
+}
+.btn-refresh:hover:not(:disabled) {
+  background: var(--primary, #6366f1);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(31, 75, 191, 0.3);
+}
+.btn-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-refresh i {
+  font-size: 0.8rem;
+  transition: transform 0.3s;
+}
+.btn-refresh.loading i {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* List view */
+.cards-list { display: flex; flex-direction: column; gap: 12px; }
+.cards-list .card { display: flex; flex-direction: row; }
+.cards-list .card-img { width: 120px; height: auto; min-height: 100px; flex-shrink: 0; }
+.cards-list .card-img-placeholder { height: 100%; }
+.cards-list .card-body { padding: 12px; }
+@media (max-width: 600px) {
+  .cards-list .card { flex-direction: column; }
+  .cards-list .card-img { width: 100%; height: 140px; }
+}
+
+/* ── Empty / error states ────────────────────────────────── */
+.empty-state, .error-state {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 60px 20px; text-align: center;
+  color: var(--text-secondary, #6b7280); gap: 12px;
+}
+.empty-state i, .error-state i { font-size: 3rem; opacity: 0.4; }
+.empty-state h3, .error-state h3 { font-size: 1.1rem; margin: 0; color: var(--text-main, #111); }
+.empty-state p, .error-state p  { font-size: 0.875rem; margin: 0; }
+
+/* ── Skeleton cards ──────────────────────────────────────── */
+.skeleton-card {
+  background: var(--bg-card, #fff); border-radius: 12px; overflow: hidden;
+  height: 270px; position: relative;
+}
+.skeleton-card::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--bg-alt,#f3f4f6) 25%, var(--bg-main,#f9fafb) 50%, var(--bg-alt,#f3f4f6) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Dark mode overrides ─────────────────────────────────── */
+body.dark .skeleton-card::after {
+  background: linear-gradient(90deg, #1e1e2e 25%, #2a2a3e 50%, #1e1e2e 75%);
+  background-size: 200% 100%;
+}
+body.dark .card-title { color: #f3f4f6; }
+body.dark .card-footer { border-color: #374151; }
+body.dark .view-btn { background: #1e1e2e; border-color: #374151; color: #9ca3af; }
+body.dark .results-info { border-color: #374151; }
+
+/* ── btn-clear ───────────────────────────────────────────── */
+.btn-clear {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--border, #e5e7eb);
+  background: var(--bg-card, #fff); color: var(--text-secondary, #6b7280);
+  font-size: 0.8rem; cursor: pointer; transition: all 0.2s;
+}
+.btn-clear:hover { background: #fee2e2; border-color: #fca5a5; color: #ef4444; }
+
+/* ── Mobile bottom-nav spacing fix (chatbot button room) ─── */
+@media (max-width: 768px) {
+  .chatbot-toggle-btn { bottom: 74px; }
+  .chatbot-panel { bottom: 136px; }
+}
+
+/* ============================================================
+   Performance & Engagement Enhancements
+   ============================================================ */
+
+/* GPU-hinted elements for smooth animations */
+.card, .exam-card, .hero-search, .btn { will-change: transform; }
+.navbar { will-change: box-shadow; }
+
+/* Off-screen content lazy rendering — DISABLED: causes cards to not render on sub-pages */
+/* .section { content-visibility: auto; contain-intrinsic-size: 0 400px; } */
+
+/* Scroll fade-in animation */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.card, .exam-card {
+  opacity: 1;
+  transform: none;
+}
+.card.visible, .exam-card.visible {
+  animation: fadeInUp 0.35s ease both;
+}
+
+/* Stagger children in grids */
+.cards-grid .card:nth-child(1) { animation-delay: 0.00s; }
+.cards-grid .card:nth-child(2) { animation-delay: 0.06s; }
+.cards-grid .card:nth-child(3) { animation-delay: 0.12s; }
+.cards-grid .card:nth-child(4) { animation-delay: 0.18s; }
+
+/* Richer card hover — lift + subtle ring */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 28px rgba(31,79,191,0.12);
+  border-color: rgba(31,79,191,0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+body.dark .card:hover {
+  box-shadow: 0 8px 28px rgba(91,155,255,0.15);
+  border-color: rgba(91,155,255,0.3);
+}
+
+/* Exam card enhanced hover */
+.exam-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(31,79,191,0.14);
+}
+
+/* Button micro-interactions */
+.btn-primary:active { transform: scale(0.97); }
+.btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Hero search pulse on focus */
+.hero-search:focus-within {
+  box-shadow: 0 0 0 3px rgba(31,79,191,0.18);
+  transform: scaleX(1.005);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+/* Chip hover polish */
+.chip {
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+.chip:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31,79,191,0.15);
+}
+
+/* Featured badge shimmer effect */
+.featured-badge {
+  background: linear-gradient(90deg, #1f4fbf, #2563eb, #1f4fbf);
+  background-size: 200% 100%;
+  animation: badgeShimmer 3s linear infinite;
+}
+@keyframes badgeShimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* Stat counter number style */
+.stat-num {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+}
+
+/* Skeleton improved — faster shimmer */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-card::after { animation-duration: 1.2s; }
+
+/* Smooth page transition hint */
+html { scroll-behavior: smooth; }
+
+/* Reduced motion — respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  .card, .exam-card, .chip, .btn, .featured-badge { animation: none !important; transition: none !important; }
+  .hero-search:focus-within { transform: none; }
+}
+
+/* ── Why CareerHub section ──────────────────────────────────── */
+.why-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+@media (min-width: 768px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.why-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 16px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.why-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.why-icon { font-size: 2rem; margin-bottom: 10px; }
+.why-card h3 { font-size: 0.95rem; margin-bottom: 6px; }
+.why-card p { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; margin: 0; }
+
+/* ── FAQ section ─────────────────────────────────────────────── */
+.faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+.faq-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.faq-item[open] { border-color: var(--primary); }
+
+.faq-item summary {
+  padding: 14px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-main);
+  user-select: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: '+';
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: var(--primary);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.faq-item[open] summary::after { transform: rotate(45deg); }
+
+.faq-item p {
+  padding: 0 18px 14px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  margin: 0;
+}
+.faq-item p a { color: var(--primary); font-weight: 500; }
