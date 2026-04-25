@@ -1,5 +1,5 @@
 /* ============================================================
-   CareerHub Pakistan — cms-additions.css
+   Career Pakistan — cms-additions.css
    Extra styles for CMS-driven cards, badges, chatbot toggle
    ============================================================ */
 
@@ -306,7 +306,7 @@ html { scroll-behavior: smooth; }
   .hero-search:focus-within { transform: none; }
 }
 
-/* ── Why CareerHub section ──────────────────────────────────── */
+/* ── Why Career Pakistan section ──────────────────────────────────── */
 .why-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
