@@ -1,0 +1,69 @@
+services:
+  - type: web
+    name: careerhub-pakistan
+    env: static
+    buildCommand: ""
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /api/*
+        name: Access-Control-Allow-Origin
+        value: "*"
+      - path: /api/*
+        name: Cache-Control
+        value: no-store, max-age=0
+      - path: /*.html
+        name: Cache-Control
+        value: public, max-age=300, stale-while-revalidate=60
+      - path: /css/*
+        name: Cache-Control
+        value: public, max-age=86400
+      - path: /js/*
+        name: Cache-Control
+        value: public, max-age=86400
+    routes:
+      - type: rewrite
+        source: /scholarships
+        destination: /scholarships.html
+      - type: rewrite
+        source: /scholarships-national
+        destination: /scholarships-national.html
+      - type: rewrite
+        source: /scholarships-international
+        destination: /scholarships-international.html
+      - type: rewrite
+        source: /jobs
+        destination: /jobs.html
+      - type: rewrite
+        source: /jobs-government
+        destination: /jobs-government.html
+      - type: rewrite
+        source: /jobs-private
+        destination: /jobs-private.html
+      - type: rewrite
+        source: /internships
+        destination: /internships.html
+      - type: rewrite
+        source: /exams
+        destination: /exams.html
+      - type: rewrite
+        source: /exams-mdcat
+        destination: /exams-mdcat.html
+      - type: rewrite
+        source: /exams-css
+        destination: /exams-css.html
+      - type: rewrite
+        source: /exams-ppsc
+        destination: /exams-ppsc.html
+      - type: rewrite
+        source: /books
+        destination: /books.html
+      - type: rewrite
+        source: /search
+        destination: /search.html
+      - type: rewrite
+        source: /favorites
+        destination: /favorites.html
+      - type: rewrite
+        source: /resume-builder
+        destination: /resume-builder.html
