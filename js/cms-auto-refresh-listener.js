@@ -1,6 +1,6 @@
 /**
  * ============================================================
- * CareerHub Pakistan — cms-auto-refresh-listener.js
+ * Career Pakistan — cms-auto-refresh-listener.js
  * Automatic UI re-rendering on data refresh
  * ============================================================
  * 
@@ -40,10 +40,10 @@
       changedTabs.forEach(tabName => {
         if (window._AUTO_REFRESH_SECTIONS[tabName]) {
           try {
-            console.log(`[CareerHub] Auto-refreshing UI for: ${tabName}`);
+            console.log(`[Career Pakistan] Auto-refreshing UI for: ${tabName}`);
             window._AUTO_REFRESH_SECTIONS[tabName]();
           } catch (err) {
-            console.error(`[CareerHub] Error refreshing ${tabName}:`, err);
+            console.error(`[Career Pakistan] Error refreshing ${tabName}:`, err);
           }
         }
       });
@@ -51,15 +51,15 @@
       // Also refresh any multi-tab sections
       if (window._AUTO_REFRESH_SECTIONS['_multi']) {
         try {
-          console.log('[CareerHub] Auto-refreshing multi-tab section');
+          console.log('[Career Pakistan] Auto-refreshing multi-tab section');
           window._AUTO_REFRESH_SECTIONS['_multi']();
         } catch (err) {
-          console.error('[CareerHub] Error refreshing multi-tab:', err);
+          console.error('[Career Pakistan] Error refreshing multi-tab:', err);
         }
       }
     });
 
-    console.info('[CareerHub] Auto-refresh listeners initialized', Object.keys(window._AUTO_REFRESH_SECTIONS || {}));
+    console.info('[Career Pakistan] Auto-refresh listeners initialized', Object.keys(window._AUTO_REFRESH_SECTIONS || {}));
   };
 
   /**
