@@ -1,4 +1,4 @@
-// CareerHub — chatbot-loader.js
+// Career Pakistan — chatbot-loader.js
 // Loads the chatbot script early so AI adviser is visible on every page
 (function () {
   function loadChatbot() {
