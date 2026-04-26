@@ -179,6 +179,17 @@ function _bool(v) {
   return /^(yes|true|1|y|active|on|✅)$/i.test(String(v || '').trim());
 }
 
+function _mapRichContentFields(r) {
+  return {
+    details: _getField(r, ['Details', 'Long Description', 'Full Details']),
+    pdf_link: _getField(r, ['PDF Link', 'Brochure PDF', 'Document PDF']),
+    pdf_links: _getField(r, ['PDF Links', 'Documents']),
+    image_links: _getField(r, ['Image Links', 'Gallery']),
+    media_links: _getField(r, ['Media Links', 'Resources', 'Attachments']),
+    source_link: _getField(r, ['Source Link', 'Official Link']),
+  };
+}
+
 // ── Mappers ───────────────────────────────────────────────────
 function mapScholarship(r) {
   return {
@@ -197,6 +208,7 @@ function mapScholarship(r) {
     location: _getField(r, ['Location']),
     level: _getField(r, ['Level']),
     host_organization: _getField(r, ['Host Organization', 'Host Organisation']),
+    ..._mapRichContentFields(r),
   };
 }
 function mapJob(r) {
@@ -216,6 +228,7 @@ function mapJob(r) {
     location: _getField(r, ['Location']),
     salary: _getField(r, ['Salary']),
     experience: _getField(r, ['Experience']),
+    ..._mapRichContentFields(r),
   };
 }
 function mapInternship(r) {
@@ -235,6 +248,7 @@ function mapInternship(r) {
     location: _getField(r, ['Location']),
     duration: _getField(r, ['Duration']),
     type: _getField(r, ['Type']),
+    ..._mapRichContentFields(r),
   };
 }
 function mapExam(r) {
@@ -252,6 +266,8 @@ function mapExam(r) {
     registration_link: _getField(r, ['Registration Link']),
     eligibility: _getField(r, ['Eligibility']),
     conducting_body: _getField(r, ['Conducting Body']),
+    details: _getField(r, ['Details', 'Description', 'Long Description']),
+    ..._mapRichContentFields(r),
   };
 }
 function mapBook(r) {
@@ -268,6 +284,8 @@ function mapBook(r) {
     image_url: _getField(r, ['Image URL', 'Image']),
     edition: _getField(r, ['Edition']),
     language: _getField(r, ['Language']),
+    details: _getField(r, ['Details', 'Description', 'Long Description']),
+    ..._mapRichContentFields(r),
   };
 }
 function mapNotification(r) {
