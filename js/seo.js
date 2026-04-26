@@ -2,7 +2,7 @@
 (function () {
   const currentUrl = new URL(window.location.href);
   const siteUrl = `${currentUrl.protocol}//${currentUrl.host}`;
-  const defaultImage = `${siteUrl}/logo-banner.svg`;
+  const defaultImage = `${siteUrl}/banner.png`;
 
   const pageSEO = {
     '/': {
@@ -190,7 +190,7 @@
     '@type': 'Organization',
     name: 'CareerHub Pakistan',
     url: siteUrl,
-    logo: `${siteUrl}/logo.svg`
+    logo: `${siteUrl}/logo.png`
   }, 'seo-org-schema');
 
   addJsonLd({
