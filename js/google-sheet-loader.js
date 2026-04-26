@@ -1,5 +1,5 @@
 // ============================================================
-// CareerHub Pakistan — google-sheet-loader.js  (v7 — Vercel proxy)
+// Career Pakistan — google-sheet-loader.js  (v7 — Vercel proxy)
 // ============================================================
 // Fetches data via /api/sheets (Vercel serverless proxy).
 // This bypasses Google's "Host not in allowlist" browser block.
