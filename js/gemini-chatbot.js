@@ -9,6 +9,7 @@ const WEB_SEARCH_ENDPOINT = '/api/web-search';
 const AI_ENABLED_KEY = 'ch_ai_enabled';
 const CHAT_FEEDBACK_KEY = 'ch_ai_feedback';
 const CHAT_MEMORY_KEY = 'ch_ai_memory';
+const CHAT_PROVIDER_KEY = 'ch_ai_provider_mode';
 
 // Build context from CMS data (safe — handles missing data)
 function buildContext() {
@@ -67,6 +68,16 @@ function loadMemory() {
 
 function saveMemory(memory) {
   safeStorageSet(CHAT_MEMORY_KEY, JSON.stringify(memory.slice(-25)));
+}
+
+function getProviderMode() {
+  return safeStorageGet(CHAT_PROVIDER_KEY) || 'auto';
+}
+
+function setProviderMode(mode) {
+  const normalized = ['auto', 'gemini', 'groq', 'local'].includes(mode) ? mode : 'auto';
+  safeStorageSet(CHAT_PROVIDER_KEY, normalized);
+  updateProviderStatus(normalized);
 }
 
 function storeMemory(question, answer, helpfulScore = 0) {
@@ -198,6 +209,53 @@ function shouldUseWebSearch(queryText, internalMatches) {
   return explicitRealtime || internalMatches.length < 2;
 }
 
+function escapeHtml(text) {
+  return String(text || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function buildLocalAssistantReply(queryText, internalMatches, usefulLinks) {
+  const modeLabel = getProviderMode() === 'local'
+    ? 'Local mode (no API)'
+    : 'Fallback mode (API temporarily unavailable)';
+  const topMatches = internalMatches.slice(0, 4);
+  const sections = [];
+  sections.push(`**${modeLabel}**`);
+  if (topMatches.length) {
+    const bestOptions = topMatches.map((item, index) => (
+      `${index + 1}. ${item.title}${item.details ? ` — ${item.details}` : ''}`
+    )).join('\n');
+    sections.push(`**Best options:**\n${bestOptions}`);
+    sections.push('**Why these match:**\nYour request overlaps with current Career Pakistan listings and keywords.');
+  } else {
+    sections.push('**Best options:**\nI could not find a direct listing match in loaded data.');
+    sections.push('**Why these match:**\nThe local assistant can only use on-page data when APIs are unavailable.');
+  }
+  const nextStepLinks = usefulLinks
+    .slice(0, 3)
+    .map((link) => `${link.label}: ${link.url}`)
+    .join('\n');
+  sections.push(`**Next step:**\nOpen one of these pages and refine your search:\n${nextStepLinks || '/search.html'}`);
+  sections.push(`_Your query: "${queryText}"_`);
+  return sections.join('\n\n');
+}
+
+function updateProviderStatus(mode) {
+  const statusNode = document.getElementById('chatbotStatus');
+  if (!statusNode) return;
+  const labels = {
+    auto: '● Smart combo (Gemini → Groq)',
+    gemini: '● Gemini API',
+    groq: '● Groq API',
+    local: '● Local only (no API)'
+  };
+  statusNode.textContent = labels[mode] || labels.auto;
+}
+
 function isAIEnabled() {
   return safeStorageGet(AI_ENABLED_KEY) !== '0';
 }
@@ -249,9 +307,10 @@ async function sendChat() {
 
   appendUserMessage(text);
   chatHistory.push({ role: 'user', parts: [{ text }] });
-    const usefulLinks = getRelevantLinks(text);
+  const usefulLinks = getRelevantLinks(text);
   const internalMatches = searchInternalListings(text);
-  const webResults = await fetchWebContext(text, shouldUseWebSearch(text, internalMatches));
+  const providerMode = getProviderMode();
+  const webResults = await fetchWebContext(text, providerMode !== 'local' && shouldUseWebSearch(text, internalMatches));
   const webContext = webResults.length
     ? webResults.map((r, idx) => `${idx + 1}. ${r.title} — ${r.snippet} (${r.url})`).join('\n')
     : 'No external web results used.';
@@ -259,7 +318,19 @@ async function sendChat() {
   const typingId = appendTyping();
 
   try {
+     if (providerMode === 'local') {
+    removeTyping(typingId);
+     const localReply = buildLocalAssistantReply(text, internalMatches, usefulLinks);
+     appendBotMessage(`${formatBotReply(localReply)}${formatUsefulLinks(usefulLinks)}`, localReply);
+     chatHistory.push({ role: 'model', parts: [{ text: localReply }] });
+     storeMemory(text, localReply, 0);
+     input.disabled = false;
+     input.focus();
+     return;
+    }
+
     const payload = {
+      provider: providerMode,
        system_instruction: { parts: [{ text: `${buildContext()}
 
 Answer policy:
@@ -289,10 +360,10 @@ ${webContext}` }] },
     removeTyping(typingId);
 
     if (!res.ok || data.error) {
-      const errMsg = data.error || 'Unable to reach AI service.';
-      appendBotMessage(`❌ ${errMsg}`);
-      // Remove the failed user message from history
-      chatHistory.pop();
+      const fallbackReply = buildLocalAssistantReply(text, internalMatches, usefulLinks);
+      appendBotMessage(`⚠️ ${escapeHtml(data.error || 'Unable to reach AI service.')}<br><br>${formatBotReply(fallbackReply)}${formatUsefulLinks(usefulLinks)}`, fallbackReply);
+      chatHistory.push({ role: 'model', parts: [{ text: fallbackReply }] });
+      storeMemory(text, fallbackReply, 0);
     } else if (data.reply) {
       chatHistory.push({ role: 'model', parts: [{ text: data.reply }] });
       const sourceLinks = webResults.length
@@ -305,8 +376,10 @@ ${webContext}` }] },
     }
   } catch (err) {
     removeTyping(typingId);
-    appendBotMessage('❌ Network error. Please check your connection.');
-    chatHistory.pop();
+    const fallbackReply = buildLocalAssistantReply(text, internalMatches, usefulLinks);
+    appendBotMessage(`⚠️ Network issue detected. Showing local guidance.<br><br>${formatBotReply(fallbackReply)}${formatUsefulLinks(usefulLinks)}`, fallbackReply);
+    chatHistory.push({ role: 'model', parts: [{ text: fallbackReply }] });
+    storeMemory(text, fallbackReply, 0);
     console.error('[ChatBot] Error:', err);
   }
 
@@ -316,7 +389,7 @@ ${webContext}` }] },
 
 // Simple markdown-to-HTML for bot replies
 function formatBotReply(text) {
-  return text
+  return escapeHtml(text)
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/\*(.*?)\*/g, '<em>$1</em>')
     .replace(/\n/g, '<br>');
@@ -364,7 +437,35 @@ function appendBotMessage(html, rawText) {
     });
     div.appendChild(actions);
   }
+
   
+  if (rawText) {
+    const utility = document.createElement('div');
+    utility.className = 'chat-msg-actions';
+    utility.innerHTML = `
+      <button class="chat-feedback-btn" aria-label="Copy response">📋 Copy</button>
+      <button class="chat-feedback-btn" aria-label="Download response">⬇️ Save</button>`;
+
+    const [copyBtn, saveBtn] = utility.querySelectorAll('button');
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(rawText);
+        copyBtn.textContent = '✅ Copied';
+      } catch {
+        copyBtn.textContent = '⚠️ Copy failed';
+      }
+    });
+    saveBtn.addEventListener('click', () => {
+      const blob = new Blob([rawText], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `careerpk-ai-${Date.now()}.txt`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 500);
+    });
+    div.appendChild(utility);
+  }
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -432,7 +533,7 @@ function injectChatbot() {
         <div class="chatbot-avatar">🤖</div>
         <div>
           <strong>Career Pakistan AI</strong>
-          <span class="chatbot-status">● Online</span>
+          <span class="chatbot-status" id="chatbotStatus">● Smart combo (Gemini → Groq)</span>
         </div>
       </div>
       <button class="chatbot-close-btn" id="chatbotCloseBtn" aria-label="Close chat">✕</button>
@@ -453,6 +554,13 @@ function injectChatbot() {
       </button>
     </div>
     <div class="chatbot-footer">
+      <label for="chatbotProviderSelect" class="chatbot-provider-label">Mode</label>
+      <select id="chatbotProviderSelect" class="chatbot-provider-select" aria-label="Select AI mode">
+        <option value="auto">Smart combo</option>
+        <option value="gemini">Gemini API</option>
+        <option value="groq">Groq API</option>
+        <option value="local">Local only (no API)</option>
+      </select>
       <button class="chatbot-mini-link" id="chatbotHideBtn">Hide AI on this device</button>
     </div>
   </div>`);
@@ -464,12 +572,20 @@ function bindChatbotEvents() {
   const sendBtn = document.getElementById('chatbotSendBtn');
   const enableBtn = document.getElementById('chatbotEnableBtn');
   const hideBtn = document.getElementById('chatbotHideBtn');
-
+  const providerSelect = document.getElementById('chatbotProviderSelect');
+  
   if (toggleBtn) toggleBtn.addEventListener('click', toggleChatbot);
   if (closeBtn) closeBtn.addEventListener('click', toggleChatbot);
   if (sendBtn) sendBtn.addEventListener('click', sendChat);
   if (enableBtn) enableBtn.addEventListener('click', toggleAIEnabled);
   if (hideBtn) hideBtn.addEventListener('click', toggleAIEnabled);
+  if (providerSelect) {
+    providerSelect.value = getProviderMode();
+    providerSelect.addEventListener('change', (event) => {
+      setProviderMode(event.target.value);
+    });
+    updateProviderStatus(providerSelect.value);
+  }
 }
 
 // ── Styles ────────────────────────────────────────────────────
@@ -620,10 +736,19 @@ function injectChatbotStyles() {
       transition: transform 0.2s, box-shadow 0.2s;
     }
     .chatbot-send-btn:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
-        .chatbot-footer {
+    .chatbot-footer {
       border-top: 1px solid var(--border, #e5e7eb);
-      padding: 7px 12px; display: flex; justify-content: center;
+      padding: 7px 12px; display: flex; justify-content: center; align-items: center; gap: 8px;
       background: var(--bg-main, #f8fafc);
+    }
+        .chatbot-provider-label { font-size: 0.72rem; color: #6b7280; }
+    .chatbot-provider-select {
+      border: 1px solid var(--border, #d1d5db);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      padding: 4px 9px;
+      background: var(--bg-card, #fff);
+      color: var(--text-main, #1f2937);
     }
     .chatbot-mini-link {
       background: transparent; border: none; color: #6b7280;
@@ -642,6 +767,7 @@ function injectChatbotStyles() {
     body.dark .chatbot-suggestions { background: #181825; border-color: #374151; }
     body.dark .chatbot-suggestions button { background: #2a2a3e; color: #e5e7eb; border-color: #374151; }
     body.dark .chatbot-close-btn { color: rgba(255,255,255,0.7); }
+    body.dark .chatbot-provider-select { background: #2a2a3e; color: #e5e7eb; border-color: #374151; }
   `;
   document.head.appendChild(style);
 }
