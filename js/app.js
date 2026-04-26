@@ -99,6 +99,51 @@ function escapeJsSingleQuote(value) {
     .replace(/<\/script/gi, '<\\/script');
 }
 
+function extractUrls(value) {
+  const raw = text(value);
+  const matches = raw.match(/https?:\/\/[^\s<>"')\]]+/gi) || [];
+  return [...new Set(matches.map(safeUrl).filter(u => u !== '#'))];
+}
+
+function isPdfUrl(url) {
+  return /\.pdf($|[?#])/i.test(text(url)) || /[?&]format=pdf\b/i.test(text(url));
+}
+
+function isImageUrl(url) {
+  return /\.(png|jpe?g|gif|webp|svg)($|[?#])/i.test(text(url));
+}
+
+function isTeraBoxUrl(url) {
+  return /(terabox|1024tera|terashare)/i.test(text(url));
+}
+
+function collectResourceLinks(item) {
+  const fields = [
+    'pdf_link', 'pdf_links', 'image_links', 'media_links', 'source_link', 'details',
+    'description', 'download_link', 'apply_link', 'registration_link', 'syllabus_link', 'past_papers_link'
+  ];
+  const urls = [];
+  fields.forEach((field) => {
+    extractUrls(item?.[field]).forEach((u) => urls.push(u));
+  });
+  return [...new Set(urls)];
+}
+
+function renderResourceActions(item, title) {
+  const links = collectResourceLinks(item);
+  if (!links.length) return '';
+  const pdf = links.find(isPdfUrl);
+  const image = links.find(isImageUrl);
+  const tera = links.find(isTeraBoxUrl);
+  return `
+    <div class="resource-actions">
+      ${pdf ? `<button class="btn btn-ghost" onclick="openResourcePreview('${escapeJsSingleQuote(pdf)}','${escapeJsSingleQuote(title)}')"><i class="fa fa-file-pdf"></i> Preview PDF</button>` : ''}
+      ${image ? `<a href="${safeUrl(image)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-image"></i> View Image</a>` : ''}
+      ${tera ? `<a href="${safeUrl(tera)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-cloud"></i> Open TeraBox</a>` : ''}
+    </div>
+  `;
+}
+
 // ── Days until deadline ──────────────────────────────────────
 function daysUntil(dateStr) {
   if (!dateStr) return null;
@@ -191,6 +236,7 @@ function cardScholarship(s) {
     </div>
     <div class="card-footer">
       <a href="${safeUrl(s.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
+      ${renderResourceActions(s, s.title)}
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" aria-label="Save">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -226,6 +272,7 @@ function cardJob(j) {
     </div>
     <div class="card-footer">
       <a href="${safeUrl(j.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
+      ${renderResourceActions(j, j.title)}
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -262,6 +309,7 @@ function cardInternship(i) {
     </div>
     <div class="card-footer">
       <a href="${safeUrl(i.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
+      ${renderResourceActions(i, i.title)}
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -296,6 +344,7 @@ function cardExam(e) {
       ${e.registration_link ? `<a href="${safeUrl(e.registration_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Register <i class="fa fa-arrow-right"></i></a>` : ''}
       ${e.syllabus_link ? `<a href="${safeUrl(e.syllabus_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Syllabus</a>` : ''}
       ${e.past_papers_link ? `<a href="${safeUrl(e.past_papers_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Past Papers</a>` : ''}
+      ${renderResourceActions(e, e.title)}
     </div>
   </div>`;
 }
@@ -326,8 +375,52 @@ function cardBook(b) {
     <div class="card-footer">
       ${b.is_free && b.download_link ? `<a href="${safeUrl(b.download_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">📥 Download PDF</a>` : ''}
       ${b.buy_link ? `<a href="${safeUrl(b.buy_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">🛒 Buy</a>` : ''}
+      ${renderResourceActions(b, b.title)}
     </div>
   </div>`;
+}
+
+function ensureResourcePreviewModal() {
+  if (document.getElementById('resourcePreviewOverlay')) return;
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div id="resourcePreviewOverlay" class="resource-preview-overlay" onclick="closeResourcePreview()"></div>
+    <div id="resourcePreviewModal" class="resource-preview-modal" role="dialog" aria-modal="true" aria-label="Document preview">
+      <div class="resource-preview-head">
+        <h3 id="resourcePreviewTitle">Document Preview</h3>
+        <button class="resource-preview-close" onclick="closeResourcePreview()" aria-label="Close preview"><i class="fa fa-times"></i></button>
+      </div>
+      <p id="resourcePreviewHint" class="resource-preview-hint"></p>
+      <iframe id="resourcePreviewFrame" class="resource-preview-frame" loading="lazy" referrerpolicy="no-referrer"></iframe>
+      <a id="resourcePreviewOpen" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Open in new tab</a>
+    </div>`;
+  document.body.appendChild(wrapper);
+}
+
+function openResourcePreview(url, title) {
+  ensureResourcePreviewModal();
+  const frame = document.getElementById('resourcePreviewFrame');
+  const link = document.getElementById('resourcePreviewOpen');
+  const hint = document.getElementById('resourcePreviewHint');
+  const safe = safeUrl(url);
+  const hostHint = isTeraBoxUrl(safe)
+    ? 'TeraBox links may block embedded preview in some browsers. Use “Open in new tab” if needed.'
+    : 'If this file does not render, open it in a new tab.';
+  document.getElementById('resourcePreviewTitle').textContent = text(title || 'Document Preview');
+  hint.textContent = hostHint;
+  frame.src = safe;
+  link.href = safe;
+  document.getElementById('resourcePreviewOverlay').style.display = 'block';
+  document.getElementById('resourcePreviewModal').style.display = 'block';
+}
+
+function closeResourcePreview() {
+  const frame = document.getElementById('resourcePreviewFrame');
+  if (frame) frame.src = 'about:blank';
+  const overlay = document.getElementById('resourcePreviewOverlay');
+  const modal = document.getElementById('resourcePreviewModal');
+  if (overlay) overlay.style.display = 'none';
+  if (modal) modal.style.display = 'none';
 }
 
 // ── Generic renderCards dispatcher ───────────────────────────
@@ -548,6 +641,7 @@ function loadFavoritesPage() {
 
 // ── Init on DOM ready ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  ensureResourcePreviewModal();
   initDarkMode();
   updateFavCount();
   ensureChatbotLoaded();
