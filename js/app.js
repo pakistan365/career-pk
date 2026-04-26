@@ -1,5 +1,5 @@
 // ============================================================
-// CareerHub Pakistan — app.js  (v4 — always reads window.CMS_DATA)
+// Career Pakistan — app.js  (v4 — always reads window.CMS_DATA)
 // ============================================================
 // IMPORTANT: Never cache window.CMS_DATA into a local const.
 // Always read via window.CMS_DATA so live updates are reflected.
