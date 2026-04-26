@@ -1170,14 +1170,14 @@ body.dark .exam-info-box { background: #1A1A1A; border-color: #2E2E2E; }
 
 /* ── Logo image support ── */
 .nav-logo img {
-  height: 40px;
+  height: 52px;
   width: auto;
   display: block;
   transition: opacity 0.2s;
 }
 .nav-logo img:hover { opacity: 0.85; }
 @media (max-width: 768px) {
-  .nav-logo img { height: 34px; }
+  .nav-logo img { height: 42px; }
 }
 
 
