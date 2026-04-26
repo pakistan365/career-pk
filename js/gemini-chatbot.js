@@ -5,6 +5,7 @@
 
 const CHAT_ENDPOINT = '/api/gemini-chat';
 const FEEDBACK_ENDPOINT = '/api/chat-feedback';
+const WEB_SEARCH_ENDPOINT = '/api/web-search';
 const AI_ENABLED_KEY = 'ch_ai_enabled';
 const CHAT_FEEDBACK_KEY = 'ch_ai_feedback';
 const CHAT_MEMORY_KEY = 'ch_ai_memory';
@@ -127,6 +128,76 @@ function formatUsefulLinks(links) {
   return `<div class="chat-useful-links"><strong>Useful Career Pakistan links:</strong><br>${list}</div>`;
 }
 
+function inferCategoryFromText(text) {
+  const q = String(text || '').toLowerCase();
+  if (/(scholarship|funded|financial aid|bursary|hec)/.test(q)) return 'Scholarships';
+  if (/(internship|trainee|intern)/.test(q)) return 'Internships';
+  if (/(job|vacancy|hiring|career|government|govt|private)/.test(q)) return 'Jobs';
+  if (/(book|notes|pdf|past paper)/.test(q)) return 'Books';
+  if (/(exam|mdcat|css|test prep|syllabus)/.test(q)) return 'Exams';
+  return null;
+}
+
+function scoreItem(item, query) {
+  const text = [
+    item.title, item.description, item.country, item.type, item.tags,
+    item.location, item.organization, item.exam_type, item.author
+  ].join(' ').toLowerCase();
+  const tokens = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+  return tokens.reduce((acc, token) => acc + (text.includes(token) ? 1 : 0), 0);
+}
+
+function searchInternalListings(queryText) {
+  const data = window.CMS_DATA || {};
+  const preferred = inferCategoryFromText(queryText);
+  const categories = preferred ? [preferred] : ['Scholarships', 'Jobs', 'Internships', 'Books', 'Exams'];
+  const results = [];
+
+  categories.forEach((category) => {
+    const list = Array.isArray(data[category]) ? data[category] : [];
+    list.forEach((item) => {
+      const score = scoreItem(item, queryText);
+      if (score > 0) {
+        results.push({
+          category,
+          score,
+          title: item.title || 'Untitled',
+          details: [item.country, item.location, item.deadline, item.type].filter(Boolean).join(' • '),
+          link: item.apply_link || item.source_link || ''
+        });
+      }
+    });
+  });
+
+  return results.sort((a, b) => b.score - a.score).slice(0, 6);
+}
+
+function formatInternalResults(results) {
+  if (!results.length) return 'No direct internal listing match found.';
+  return results.map((r, idx) => (
+    `${idx + 1}. [${r.category}] ${r.title}${r.details ? ` — ${r.details}` : ''}${r.link ? ` (link: ${r.link})` : ''}`
+  )).join('\n');
+}
+
+async function fetchWebContext(queryText, shouldSearch) {
+  if (!shouldSearch) return [];
+  try {
+    const response = await fetch(`${WEB_SEARCH_ENDPOINT}?q=${encodeURIComponent(queryText)}&limit=4`);
+    const data = await response.json();
+    if (!response.ok || !Array.isArray(data.results)) return [];
+    return data.results;
+  } catch (err) {
+    console.warn('[ChatBot] web search unavailable:', err);
+    return [];
+  }
+}
+
+function shouldUseWebSearch(queryText, internalMatches) {
+  const q = queryText.toLowerCase();
+  const explicitRealtime = /(latest|today|new|recent|breaking|update|deadline|202[6-9]|official)/.test(q);
+  return explicitRealtime || internalMatches.length < 2;
+}
+
 function isAIEnabled() {
   return safeStorageGet(AI_ENABLED_KEY) !== '0';
 }
@@ -178,12 +249,32 @@ async function sendChat() {
 
   appendUserMessage(text);
   chatHistory.push({ role: 'user', parts: [{ text }] });
+    const usefulLinks = getRelevantLinks(text);
+  const internalMatches = searchInternalListings(text);
+  const webResults = await fetchWebContext(text, shouldUseWebSearch(text, internalMatches));
+  const webContext = webResults.length
+    ? webResults.map((r, idx) => `${idx + 1}. ${r.title} — ${r.snippet} (${r.url})`).join('\n')
+    : 'No external web results used.';
 
   const typingId = appendTyping();
 
   try {
     const payload = {
-       system_instruction: { parts: [{ text: `${buildContext()}\n\nRelevant internal pages for this query:\n${usefulLinks.map(link => `- ${link.label}: ${link.url}`).join('\n')}` }] },
+       system_instruction: { parts: [{ text: `${buildContext()}
+
+Answer policy:
+- First use Career Pakistan internal listings/pages for answers about jobs, scholarships, books, internships, and exams.
+- If internal data is limited or user asks for latest/outside info, use provided web context carefully and mention source URLs.
+- Keep responses targeted and practical; do not provide generic filler.
+
+Relevant internal pages for this query:
+${usefulLinks.map(link => `- ${link.label}: ${link.url}`).join('\n')}
+
+Best internal listing matches:
+${formatInternalResults(internalMatches)}
+
+Optional external web context:
+${webContext}` }] },
       contents: chatHistory.map(m => ({ role: m.role, parts: m.parts })),
       generationConfig: { maxOutputTokens: 500, temperature: 0.7 }
     };
@@ -204,7 +295,10 @@ async function sendChat() {
       chatHistory.pop();
     } else if (data.reply) {
       chatHistory.push({ role: 'model', parts: [{ text: data.reply }] });
-      appendBotMessage(`${formatBotReply(data.reply)}${formatUsefulLinks(usefulLinks)}`, data.reply);
+      const sourceLinks = webResults.length
+        ? `<div class="chat-useful-links"><strong>External references:</strong><br>${webResults.map(w => `• <a href="${w.url}" target="_blank" rel="noopener">${w.title || w.url}</a>`).join('<br>')}</div>`
+        : '';
+      appendBotMessage(`${formatBotReply(data.reply)}${formatUsefulLinks(usefulLinks)}${sourceLinks}`, data.reply);
       storeMemory(text, data.reply, 0);
     } else {
       appendBotMessage('Sorry, no response received. Please try again.');
