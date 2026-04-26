@@ -1,5 +1,5 @@
 // ============================================================
-// CareerHub Pakistan — gemini-chatbot.js  (FIXED v2)
+// Career Pakistan — gemini-chatbot.js  (FIXED v2)
 // Floating AI chatbot powered by Google Gemini via Cloudflare Function
 // ============================================================
 
@@ -18,13 +18,13 @@ function buildContext() {
   const b = (d.Books || []).slice(0, 4).map(x => `- ${x.title} by ${x.author || 'Unknown'} (${x.exam_type || ''})`).join('\n');
   const i = (d.Internships || []).slice(0, 4).map(x => `- ${x.title} at ${x.organization || ''} (${x.stipend || 'N/A'}, ${x.location || ''})`).join('\n');
   const memory = getMemoryContext();
-  return `You are CareerHub AI — a helpful assistant for CareerHub Pakistan. Help users find scholarships, jobs, internships, exam prep resources, and books. Be friendly, concise, and practical. Respond in the same language the user uses (Urdu or English).
-Before long answers, ask one short clarifying question if user intent is broad.
+  return `You are Career Pakistan AI — a helpful assistant for Career Pakistan. Help users find scholarships, jobs, internships, exam prep resources, and books. Be friendly, concise, and practical. Respond in the same language the user uses (Urdu or English).
+  Before long answers, ask one short clarifying question if user intent is broad.
 Give answers in 3 parts: (1) best options, (2) why they match, (3) next step.
 Do not invent deadlines or links. If uncertain, clearly say data may be incomplete.
-When relevant, recommend CareerHub internal pages directly using site links provided in prompt.
+When relevant, recommend Career Pakistan internal pages directly using site links provided in prompt.
 
-Current CareerHub listings:
+Current Career Pakistan listings:
 SCHOLARSHIPS:\n${s || 'Loading…'}
 JOBS:\n${j || 'Loading…'}
 EXAMS:\n${e || 'Loading…'}
@@ -33,7 +33,7 @@ INTERNSHIPS:\n${i || 'Loading…'}
 
 Learned user preference memory (recent interactions):\n${memory}
 
-Help users find opportunities, prepare for exams, build careers, and navigate CareerHub.`;
+Help users find opportunities, prepare for exams, build careers, and navigate Career Pakistan.`;
 }
 
 let chatHistory = [];
@@ -124,7 +124,7 @@ function getRelevantLinks(queryText) {
 function formatUsefulLinks(links) {
   if (!links.length) return '';
   const list = links.map(link => `• <a href="${link.url}">${link.label}</a>`).join('<br>');
-  return `<div class="chat-useful-links"><strong>Useful CareerHub links:</strong><br>${list}</div>`;
+  return `<div class="chat-useful-links"><strong>Useful Career Pakistan links:</strong><br>${list}</div>`;
 }
 
 function isAIEnabled() {
@@ -158,7 +158,7 @@ function toggleChatbot() {
     document.getElementById('chatbotInput')?.focus();
     if (!chatbotReady) {
       chatbotReady = true;
-      appendBotMessage("👋 Hi! I'm <strong>CareerHub AI</strong>. Ask me about scholarships, jobs, exams, or career advice!");
+      appendBotMessage("👋 Hi! I'm <strong>Career Pakistan AI</strong>. Ask me about scholarships, jobs, exams, or career advice!");
     }
   }
 }
@@ -326,18 +326,18 @@ function injectChatbot() {
     <button class="chatbot-enable-btn" id="chatbotEnableBtn" aria-label="Enable AI Adviser" title="Enable AI Adviser">
     🤖 Enable AI
   </button>
-  <button class="chatbot-toggle-btn" id="chatbotBtn" aria-label="Open AI Chat" title="CareerHub AI">
+  <button class="chatbot-toggle-btn" id="chatbotBtn" aria-label="Open AI Chat" title="Career Pakistan AI">
   <svg class="chat-icon-open" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     <svg class="chat-icon-close" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     <span class="chatbot-badge">AI</span>
   </button>
 
-  <div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-label="CareerHub AI Chat">
+  <div class="chatbot-panel" id="chatbotPanel" role="dialog" aria-label="Career Pakistan AI Chat">
     <div class="chatbot-header">
       <div class="chatbot-header-info">
         <div class="chatbot-avatar">🤖</div>
         <div>
-          <strong>CareerHub AI</strong>
+          <strong>Career Pakistan AI</strong>
           <span class="chatbot-status">● Online</span>
         </div>
       </div>
