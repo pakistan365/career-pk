@@ -1,4 +1,4 @@
-// CareerHub Pakistan — central SEO manager
+// Career Pakistan — central SEO manager
 (function () {
   const currentUrl = new URL(window.location.href);
   const siteUrl = `${currentUrl.protocol}//${currentUrl.host}`;
@@ -6,68 +6,68 @@
 
   const pageSEO = {
     '/': {
-      title: 'CareerHub Pakistan — Scholarships, Jobs, Internships, Exams & Books',
+      title: 'Career Pakistan — Scholarships, Jobs, Internships, Exams & Books',
       description: 'Explore scholarships, jobs, internships, exam updates, and study books in one place for Pakistani students and professionals.'
     },
     '/scholarships.html': {
-      title: 'Scholarships in Pakistan | CareerHub Pakistan',
+      title: 'Scholarships in Pakistan | Career Pakistan',
       description: 'Find the latest national and international scholarships for Pakistani students, including fully funded and need-based options.'
     },
     '/scholarships-national.html': {
-      title: 'National Scholarships in Pakistan | CareerHub Pakistan',
+      title: 'National Scholarships in Pakistan | Career Pakistan',
       description: 'Browse national scholarship opportunities in Pakistan including HEC, provincial, and merit-based programs.'
     },
     '/scholarships-international.html': {
-      title: 'International Scholarships for Pakistanis | CareerHub Pakistan',
+      title: 'International Scholarships for Pakistanis | Career Pakistan',
       description: 'Discover international scholarship opportunities for Pakistani students across undergraduate, masters, and PhD levels.'
     },
     '/jobs.html': {
-      title: 'Jobs in Pakistan — Government, Private & NGO | CareerHub Pakistan',
+      title: 'Jobs in Pakistan — Government, Private & NGO | Career Pakistan',
       description: 'Search the latest jobs in Pakistan including government, private sector, NGO, and remote opportunities.'
     },
     '/jobs-government.html': {
-      title: 'Government Jobs in Pakistan | CareerHub Pakistan',
+      title: 'Government Jobs in Pakistan | Career Pakistan',
       description: 'Latest government jobs in Pakistan from federal and provincial departments with regularly updated listings.'
     },
     '/jobs-private.html': {
-      title: 'Private, NGO & Remote Jobs in Pakistan | CareerHub Pakistan',
+      title: 'Private, NGO & Remote Jobs in Pakistan | Career Pakistan',
       description: 'Find private company, NGO, and remote jobs in Pakistan across technology, healthcare, media, and more.'
     },
     '/internships.html': {
-      title: 'Internships in Pakistan | CareerHub Pakistan',
+      title: 'Internships in Pakistan | Career Pakistan',
       description: 'Explore paid and unpaid internship opportunities in Pakistan for students and fresh graduates.'
     },
     '/exams.html': {
-      title: 'Exam Preparation Hub — MDCAT, CSS, PPSC & More | CareerHub Pakistan',
+      title: 'Exam Preparation Hub — MDCAT, CSS, PPSC & More | Career Pakistan',
       description: 'Get exam guidance, dates, and resources for MDCAT, CSS, PPSC, FPSC, IELTS, NTS and other competitive exams.'
     },
     '/exams-mdcat.html': {
-      title: 'MDCAT Exam Guide | CareerHub Pakistan',
+      title: 'MDCAT Exam Guide | Career Pakistan',
       description: 'Prepare for MDCAT with the latest updates, resources, and practical guidance for students in Pakistan.'
     },
     '/exams-css.html': {
-      title: 'CSS Exam Guide | CareerHub Pakistan',
+      title: 'CSS Exam Guide | Career Pakistan',
       description: 'Access CSS exam guidance, resources, and updates to help you prepare effectively for civil services exams.'
     },
     '/exams-ppsc.html': {
-      title: 'PPSC Exam Guide | CareerHub Pakistan',
+      title: 'PPSC Exam Guide | Career Pakistan',
       description: 'Stay updated with PPSC exam information, preparation resources, and relevant announcements.'
     },
     '/books.html': {
-      title: 'Books & Study Material | CareerHub Pakistan',
+      title: 'Books & Study Material | Career Pakistan',
       description: 'Find useful books and study material for scholarships, jobs tests, and major exams in Pakistan.'
     },
     '/resume-builder.html': {
-      title: 'Resume Builder — ATS-Friendly CV Creator | CareerHub Pakistan',
-      description: 'Create a clean and ATS-friendly resume quickly using the free CareerHub Pakistan resume builder.'
+      title: 'Resume Builder — ATS-Friendly CV Creator | Career Pakistan',
+      description: 'Create a clean and ATS-friendly resume quickly using the free Career Pakistan resume builder.'
     },
     '/search.html': {
-      title: 'Search Results | CareerHub Pakistan',
-      description: 'Search scholarships, jobs, internships, exams, and books across CareerHub Pakistan.'
+      title: 'Search Results | Career Pakistan',
+      description: 'Search scholarships, jobs, internships, exams, and books across Career Pakistan.'
     },
     '/favorites.html': {
-      title: 'Saved Items | CareerHub Pakistan',
-      description: 'Access your saved scholarships, jobs, internships, exams, and books on CareerHub Pakistan.'
+      title: 'Saved Items | Career Pakistan',
+      description: 'Access your saved scholarships, jobs, internships, exams, and books on Career Pakistan.'
      }
   };
 
@@ -78,8 +78,8 @@
   const canonicalUrl = `${siteUrl}${path}${isSearch ? currentUrl.search : ''}`;
 
     const seo = pageSEO[path] || {};
-  const title = seo.title || (document.title || 'CareerHub Pakistan').trim();
-  const description = seo.description || document.querySelector('meta[name="description"]')?.content || 'CareerHub Pakistan';
+  const title = seo.title || (document.title || 'Career Pakistan').trim();
+  const description = seo.description || document.querySelector('meta[name="description"]')?.content || 'Career Pakistan';
 
   document.title = title;
 
@@ -141,7 +141,7 @@
     el.setAttribute('property', 'og:site_name');
     document.head.appendChild(el);
     return el;
-  }, 'CareerHub Pakistan');
+  }, 'Career Pakistan');
 
   setMeta('meta[name="twitter:card"]', () => {
     const el = document.createElement('meta');
@@ -196,7 +196,7 @@
   addJsonLd({
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'CareerHub Pakistan',
+    name: 'Career Pakistan',
     url: siteUrl,
     potentialAction: {
       '@type': 'SearchAction',
