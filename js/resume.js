@@ -1,5 +1,5 @@
 // ============================================================
-// CareerHub Pakistan — resume.js
+// Career Pakistan — resume.js
 // Resume builder: live preview, multi-template, PDF export
 // ============================================================
 
