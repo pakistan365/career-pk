@@ -76,6 +76,8 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 /* ── Card footer ──────────────────────────────────────────── */
 .card-footer { padding: 10px 14px; border-top: 1px solid var(--border, #e5e7eb); display: flex; align-items: center; gap: 8px; }
 .card-footer.exam-links { flex-wrap: wrap; gap: 6px; }
+.resource-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+.resource-actions .btn { padding: 7px 10px; font-size: 0.75rem; border-radius: 8px; }
 .btn-fav {
   margin-left: auto; background: none; border: 1px solid var(--border, #e5e7eb);
   color: var(--text-secondary, #6b7280); width: 36px; height: 36px;
@@ -185,6 +187,33 @@ body.dark .card-title { color: #f3f4f6; }
 body.dark .card-footer { border-color: #374151; }
 body.dark .view-btn { background: #1e1e2e; border-color: #374151; color: #9ca3af; }
 body.dark .results-info { border-color: #374151; }
+
+/* ── Resource preview modal ─────────────────────────────── */
+.resource-preview-overlay {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5);
+  z-index: 3000; display: none;
+}
+.resource-preview-modal {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  width: min(960px, 95vw); height: min(88vh, 760px);
+  background: var(--bg-card, #fff); border: 1px solid var(--border, #e5e7eb);
+  border-radius: 14px; box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  z-index: 3001; display: none; padding: 14px;
+}
+.resource-preview-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+.resource-preview-head h3 { font-size: 1rem; margin: 0; }
+.resource-preview-close {
+  border: 1px solid var(--border, #e5e7eb); width: 34px; height: 34px; border-radius: 50%;
+  background: transparent; color: var(--text-secondary, #6b7280);
+}
+.resource-preview-hint { font-size: 0.8rem; color: var(--text-secondary, #6b7280); margin: 0 0 10px; }
+.resource-preview-frame {
+  width: 100%; height: calc(100% - 96px); border: 1px solid var(--border, #e5e7eb);
+  border-radius: 10px; background: #fff;
+}
+@media (max-width: 640px) {
+  .resource-preview-modal { width: 96vw; height: 90vh; padding: 10px; }
+}
 
 /* ── btn-clear ───────────────────────────────────────────── */
 .btn-clear {
