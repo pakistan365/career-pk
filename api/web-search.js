@@ -2,6 +2,14 @@
 // Lightweight external search used only when internal Career Pakistan data is insufficient.
 
 const DUCK_API = 'https://api.duckduckgo.com/';
+const DEFAULT_LIMIT = 4;
+const MAX_LIMIT = 8;
+
+function parseLimit(rawLimit) {
+  const parsed = Number.parseInt(String(rawLimit ?? DEFAULT_LIMIT), 10);
+  if (!Number.isFinite(parsed) || parsed <= 0) return DEFAULT_LIMIT;
+  return Math.min(parsed, MAX_LIMIT);
+}
 
 function normalizeResult(item) {
   const title = String(item.Text || item.Heading || '').trim();
@@ -25,6 +33,15 @@ function flattenTopics(topics = []) {
   return out;
 }
 
+function dedupeByUrl(items = []) {
+  const seen = new Set();
+  return items.filter((item) => {
+    if (!item?.url || seen.has(item.url)) return false;
+    seen.add(item.url);
+    return true;
+  });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
@@ -35,8 +52,8 @@ export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
   const q = String(req.query?.q || '').trim();
-  const limit = Math.min(Number(req.query?.limit || 4), 8);
-
+  const limit = parseLimit(req.query?.limit);
+  
   if (!q) return res.status(400).json({ error: 'Missing q query parameter' });
 
   try {
@@ -50,11 +67,11 @@ export default async function handler(req, res) {
     }
 
     const data = await upstream.json();
-    const related = flattenTopics(data?.RelatedTopics || [])
-      .map(normalizeResult)
+    const related = dedupeByUrl(flattenTopics(data?.RelatedTopics || [])
+.map(normalizeResult)
       .filter((r) => r.url)
-      .slice(0, limit);
-
+      .slice(0, limit));
+    
     if (!related.length && data?.AbstractURL) {
       related.push({
         title: data?.Heading || data?.AbstractURL,
