@@ -68,7 +68,11 @@
     '/favorites.html': {
       title: 'Saved Items | Career Pakistan',
       description: 'Access your saved scholarships, jobs, internships, exams, and books on Career Pakistan.'
-     }
+          },
+    '/opportunity.html': {
+      title: 'Opportunity Details | Career Pakistan',
+      description: 'Read full details, deadlines, and related opportunities for jobs, scholarships, internships, exams, and preparation content.'
+    },
   };
 
   const path = currentUrl.pathname.endsWith('/index.html')
@@ -219,7 +223,8 @@
     '/exams-css.html': [{ name: 'Home', url: '/' }, { name: 'Exams', url: '/exams.html' }, { name: 'CSS', url: '/exams-css.html' }],
     '/exams-ppsc.html': [{ name: 'Home', url: '/' }, { name: 'Exams', url: '/exams.html' }, { name: 'PPSC', url: '/exams-ppsc.html' }],
     '/books.html': [{ name: 'Home', url: '/' }, { name: 'Books', url: '/books.html' }],
-    '/resume-builder.html': [{ name: 'Home', url: '/' }, { name: 'Resume Builder', url: '/resume-builder.html' }]
+    '/resume-builder.html': [{ name: 'Home', url: '/' }, { name: 'Resume Builder', url: '/resume-builder.html' }],
+    '/opportunity.html': [{ name: 'Home', url: '/' }, { name: 'Opportunity Details', url: '/opportunity.html' }]
   };
 
   const crumbs = breadcrumbMap[path];
