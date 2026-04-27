@@ -299,6 +299,11 @@ function getCardDetailsUrl(id, type) {
   return `opportunity.html?type=${encodeURIComponent(type)}&id=${encodeURIComponent(String(Number(id) || 0))}`;
 }
 
+function getFavButtonStateAttrs(isActive) {
+  const label = isActive ? 'Saved to bookmarks' : 'Save to bookmarks';
+  return `aria-label="${label}" title="${label}" aria-pressed="${isActive ? 'true' : 'false'}"`;
+}
+
 // ── Card renderers ───────────────────────────────────────────
 function cardScholarship(s) {
   const fav = isFav(s.id, 'scholarship');
@@ -324,8 +329,9 @@ function cardScholarship(s) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(s.id, 'scholarship')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" aria-label="Save">
+      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" ${getFavButtonStateAttrs(fav)}>
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
+        <span class="visually-hidden">${fav ? 'Saved' : 'Save'}</span>
       </button>
     </div>
   </div>`;
@@ -353,8 +359,9 @@ function cardJob(j) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(j.id, 'job')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)">
+      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)" ${getFavButtonStateAttrs(fav)}>
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
+        <span class="visually-hidden">${fav ? 'Saved' : 'Save'}</span>
       </button>
     </div>
   </div>`;
@@ -386,8 +393,9 @@ function cardInternship(i) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(i.id, 'internship')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)">
+      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)" ${getFavButtonStateAttrs(fav)}>
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
+        <span class="visually-hidden">${fav ? 'Saved' : 'Save'}</span>
       </button>
     </div>
   </div>`;
@@ -779,6 +787,11 @@ function handleFav(id, title, type, btn) {
   if (btn) {
     btn.classList.toggle('active', added);
     btn.querySelector('i').className = `fa${added ? 's' : 'r'} fa-bookmark`;
+    btn.setAttribute('aria-pressed', added ? 'true' : 'false');
+    btn.setAttribute('aria-label', added ? 'Saved to bookmarks' : 'Save to bookmarks');
+    btn.setAttribute('title', added ? 'Saved to bookmarks' : 'Save to bookmarks');
+    const srText = btn.querySelector('.visually-hidden');
+    if (srText) srText.textContent = added ? 'Saved' : 'Save';
   }
 }
 
