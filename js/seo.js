@@ -7,59 +7,73 @@
   const pageSEO = {
     '/': {
       title: 'Career Pakistan — Scholarships, Jobs, Internships, Exams & Books',
-      description: 'Explore scholarships, jobs, internships, exam updates, and study books in one place for Pakistani students and professionals.'
+      description: 'Explore scholarships, jobs, internships, exam updates, and study books in one place for Pakistani students and professionals.',
+      keywords: 'career pakistan, scholarships pakistan, jobs pakistan, internships pakistan, exam updates pakistan, career guidance pakistan'
     },
     '/scholarships.html': {
       title: 'Scholarships in Pakistan | Career Pakistan',
-      description: 'Find the latest national and international scholarships for Pakistani students, including fully funded and need-based options.'
+      description: 'Find the latest national and international scholarships for Pakistani students, including fully funded and need-based options.',
+      keywords: 'scholarships in pakistan, fully funded scholarships, hec scholarships, masters scholarships, phd scholarships'
     },
     '/scholarships-national.html': {
       title: 'National Scholarships in Pakistan | Career Pakistan',
-      description: 'Browse national scholarship opportunities in Pakistan including HEC, provincial, and merit-based programs.'
+      description: 'Browse national scholarship opportunities in Pakistan including HEC, provincial, and merit-based programs.',
+      keywords: 'national scholarships pakistan, hec scholarship, merit scholarship pakistan, need based scholarship pakistan'
     },
     '/scholarships-international.html': {
       title: 'International Scholarships for Pakistanis | Career Pakistan',
-      description: 'Discover international scholarship opportunities for Pakistani students across undergraduate, masters, and PhD levels.'
+      description: 'Discover international scholarship opportunities for Pakistani students across undergraduate, masters, and PhD levels.',
+      keywords: 'international scholarships for pakistanis, study abroad scholarship, fully funded abroad scholarships'
     },
     '/jobs.html': {
       title: 'Jobs in Pakistan — Government, Private & NGO | Career Pakistan',
-      description: 'Search the latest jobs in Pakistan including government, private sector, NGO, and remote opportunities.'
+      description: 'Search the latest jobs in Pakistan including government, private sector, NGO, and remote opportunities.',
+      keywords: 'jobs in pakistan, government jobs pakistan, private jobs pakistan, ngo jobs, remote jobs pakistan'
     },
     '/jobs-government.html': {
       title: 'Government Jobs in Pakistan | Career Pakistan',
-      description: 'Latest government jobs in Pakistan from federal and provincial departments with regularly updated listings.'
+      description: 'Latest government jobs in Pakistan from federal and provincial departments with regularly updated listings.',
+      keywords: 'government jobs pakistan, fpsc jobs, ppsc jobs, public sector jobs pakistan'
     },
     '/jobs-private.html': {
       title: 'Private, NGO & Remote Jobs in Pakistan | Career Pakistan',
-      description: 'Find private company, NGO, and remote jobs in Pakistan across technology, healthcare, media, and more.'
+      description: 'Find private company, NGO, and remote jobs in Pakistan across technology, healthcare, media, and more.',
+      keywords: 'private jobs pakistan, ngo jobs pakistan, remote jobs pakistan, latest vacancies pakistan'
     },
     '/internships.html': {
       title: 'Internships in Pakistan | Career Pakistan',
-      description: 'Explore paid and unpaid internship opportunities in Pakistan for students and fresh graduates.'
+      description: 'Explore paid and unpaid internship opportunities in Pakistan for students and fresh graduates.',
+      keywords: 'internships in pakistan, paid internships, student internships pakistan, graduate trainee programs'
     },
     '/exams.html': {
       title: 'Exam Preparation Hub — MDCAT, CSS, PPSC & More | Career Pakistan',
-      description: 'Get exam guidance, dates, and resources for MDCAT, CSS, PPSC, FPSC, IELTS, NTS and other competitive exams.'
+      description: 'Get exam guidance, dates, and resources for MDCAT, CSS, PPSC, FPSC, IELTS, NTS and other competitive exams.',
+      keywords: 'mdcat preparation, css exam guide, ppsc exam dates, fpsc test updates, nts test preparation'
     },
     '/exams-mdcat.html': {
       title: 'MDCAT Exam Guide | Career Pakistan',
-      description: 'Prepare for MDCAT with the latest updates, resources, and practical guidance for students in Pakistan.'
+      description: 'Prepare for MDCAT with the latest updates, resources, and practical guidance for students in Pakistan.',
+      keywords: 'mdcat syllabus, mdcat dates, mdcat past papers, medical entry test pakistan'
     },
     '/exams-css.html': {
       title: 'CSS Exam Guide | Career Pakistan',
-      description: 'Access CSS exam guidance, resources, and updates to help you prepare effectively for civil services exams.'
+      description: 'Access CSS exam guidance, resources, and updates to help you prepare effectively for civil services exams.',
+      keywords: 'css exam pakistan, css syllabus, css preparation strategy, civil service exam guide'
     },
     '/exams-ppsc.html': {
       title: 'PPSC Exam Guide | Career Pakistan',
-      description: 'Stay updated with PPSC exam information, preparation resources, and relevant announcements.'
+      description: 'Stay updated with PPSC exam information, preparation resources, and relevant announcements.',
+      keywords: 'ppsc exam guide, ppsc preparation, ppsc syllabus, ppsc latest jobs and tests'
     },
     '/books.html': {
       title: 'Books & Study Material | Career Pakistan',
-      description: 'Find useful books and study material for scholarships, jobs tests, and major exams in Pakistan.'
+      description: 'Find useful books and study material for scholarships, jobs tests, and major exams in Pakistan.',
+      keywords: 'exam preparation books pakistan, css books, mdcat books, scholarship test books'
     },
     '/resume-builder.html': {
       title: 'Resume Builder — ATS-Friendly CV Creator | Career Pakistan',
-      description: 'Create a clean and ATS-friendly resume quickly using the free Career Pakistan resume builder.'
+      description: 'Create a clean and ATS-friendly resume quickly using the free Career Pakistan resume builder.',
+      keywords: 'resume builder pakistan, ats cv maker, free cv builder, job resume template'
     },
     '/search.html': {
       title: 'Search Results | Career Pakistan',
@@ -85,6 +99,7 @@
   const title = seo.title || (document.title || 'Career Pakistan').trim();
   const description = seo.description || document.querySelector('meta[name="description"]')?.content || 'Career Pakistan';
 
+  const keywords = seo.keywords || document.querySelector('meta[name="keywords"]')?.content || '';
   document.title = title;
 
   const setMeta = (selector, make, content) => {
@@ -101,7 +116,12 @@
     document.head.appendChild(el);
     return el;
   }, description);
-
+    setMeta('meta[name="keywords"]', () => {
+    const el = document.createElement('meta');
+    el.setAttribute('name', 'keywords');
+    document.head.appendChild(el);
+    return el;
+  }, keywords);
   const canonical = document.querySelector('link[rel="canonical"]') || (() => {
     const el = document.createElement('link');
     el.setAttribute('rel', 'canonical');
@@ -208,6 +228,20 @@
       'query-input': 'required name=search_term_string'
     }
   }, 'seo-website-schema');
+
+    addJsonLd({
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: canonicalUrl,
+    inLanguage: 'en-PK',
+    isPartOf: {
+      '@type': 'WebSite',
+      name: 'Career Pakistan',
+      url: siteUrl
+    }
+  }, 'seo-webpage-schema');
 
   const breadcrumbMap = {
     '/': [{ name: 'Home', url: '/' }],
