@@ -205,6 +205,11 @@ function imgSrc(url, type) {
   return url;
 }
 
+
+function getCardDetailsUrl(id, type) {
+  return `opportunity.html?type=${encodeURIComponent(type)}&id=${encodeURIComponent(String(Number(id) || 0))}`;
+}
+
 // ── Card renderers ───────────────────────────────────────────
 function cardScholarship(s) {
   const fav = isFav(s.id, 'scholarship');
@@ -232,7 +237,7 @@ function cardScholarship(s) {
       </div>
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(s.id) || 0}, 'scholarship')">View Details <i class="fa fa-arrow-right"></i></button>
+      <a class="btn btn-primary" href="${getCardDetailsUrl(s.id, 'scholarship')}">View Details <i class="fa fa-arrow-right"></i></a>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" aria-label="Save">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -264,7 +269,7 @@ function cardJob(j) {
       </div>
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(j.id) || 0}, 'job')">View Details <i class="fa fa-arrow-right"></i></button>
+      <a class="btn btn-primary" href="${getCardDetailsUrl(j.id, 'job')}">View Details <i class="fa fa-arrow-right"></i></a>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -297,7 +302,7 @@ function cardInternship(i) {
       </div>
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(i.id) || 0}, 'internship')">View Details <i class="fa fa-arrow-right"></i></button>
+      <a class="btn btn-primary" href="${getCardDetailsUrl(i.id, 'internship')}">View Details <i class="fa fa-arrow-right"></i></a>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -329,7 +334,7 @@ function cardExam(e) {
       ${renderTags(e.tags)}
     </div>
     <div class="card-footer exam-links">
-      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(e.id) || 0}, 'exam')">View Details <i class="fa fa-arrow-right"></i></button>
+      <a class="btn btn-primary" href="${getCardDetailsUrl(e.id, 'exam')}">View Details <i class="fa fa-arrow-right"></i></a>
     </div>
   </div>`;
 }
@@ -358,7 +363,7 @@ function cardBook(b) {
       ${renderTags(b.tags)}
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(b.id) || 0}, 'book')">View Details <i class="fa fa-arrow-right"></i></button>
+      <a class="btn btn-primary" href="${getCardDetailsUrl(b.id, 'book')}">View Details <i class="fa fa-arrow-right"></i></a>
     </div>
   </div>`;
 }
