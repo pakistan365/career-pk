@@ -273,6 +273,16 @@ function renderTags(tags) {
   ).join('');
 }
 
+function renderMetaTags(values = []) {
+  const tags = values
+    .map((value) => text(value).trim())
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (!tags.length) return '';
+  return tags.map((tag) => `<span class="card-tag">${escapeHtml(tag)}</span>`).join('');
+}
+
 // ── Fallback image ───────────────────────────────────────────
 function imgSrc(url, type) {
   if (!url || url.includes('REPLACE_WITH')) {
@@ -305,10 +315,7 @@ function cardScholarship(s) {
       ${urgencyBadge(s.deadline)}
     </div>
     <div class="card-body">
-      <div class="card-meta">
-        <span class="card-tag">${escapeHtml(s.type || '')}</span>
-        <span class="card-tag fund-${escapeHtml((s.funding || '').toLowerCase().replace(/\s+/g, '-'))}">${escapeHtml(s.funding || '')}</span>
-      </div>
+      <div class="card-meta">${renderMetaTags([s.type])}${s.funding ? `<span class="card-tag fund-${escapeHtml((s.funding || '').toLowerCase().replace(/\s+/g, '-'))}">${escapeHtml(s.funding || '')}</span>` : ''}</div>
       <h3 class="card-title">${escapeHtml(s.title)}</h3>
       <div class="card-details">
         ${s.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(s.location)}</span>` : ''}
@@ -337,10 +344,7 @@ function cardJob(j) {
       ${urgencyBadge(j.deadline)}
     </div>
     <div class="card-body">
-      <div class="card-meta">
-        <span class="card-tag">${escapeHtml(j.type || '')}</span>
-        <span class="card-tag">${escapeHtml(j.category || '')}</span>
-      </div>
+      <div class="card-meta">${renderMetaTags([j.type, j.category])}</div>
       <h3 class="card-title">${escapeHtml(j.title)}</h3>
       <div class="card-details">
         ${j.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(j.location)}</span>` : ''}
@@ -371,7 +375,7 @@ function cardInternship(i) {
     </div>
     <div class="card-body">
       <div class="card-meta">
-        <span class="card-tag ${paidClass}">${escapeHtml(i.type || '')}</span>
+        ${i.type ? `<span class="card-tag ${paidClass}">${escapeHtml(i.type)}</span>` : ''}
         ${i.duration ? `<span class="card-tag">${escapeHtml(i.duration)}</span>` : ''}
       </div>
       <h3 class="card-title">${escapeHtml(i.title)}</h3>
@@ -400,10 +404,7 @@ function cardExam(e) {
       ${urgencyBadge(e.test_date)}
     </div>
     <div class="card-body">
-      <div class="card-meta">
-        <span class="card-tag">${escapeHtml(e.exam_type || '')}</span>
-        ${e.fee ? `<span class="card-tag">${escapeHtml(e.fee)}</span>` : ''}
-      </div>
+      <div class="card-meta">${renderMetaTags([e.exam_type, e.fee])}</div>
       <h3 class="card-title">${escapeHtml(e.title)}</h3>
       <div class="card-details">
         ${e.test_date ? `<span><i class="fa fa-calendar"></i> Test: ${formatDate(e.test_date)}</span>` : ''}
@@ -429,10 +430,7 @@ function cardBook(b) {
       ${b.is_free ? '<span class="featured-badge free-badge">📥 Free PDF</span>' : ''}
     </div>
     <div class="card-body">
-      <div class="card-meta">
-        <span class="card-tag">${escapeHtml(b.exam_type || '')}</span>
-        ${b.language ? `<span class="card-tag">${escapeHtml(b.language)}</span>` : ''}
-      </div>
+      <div class="card-meta">${renderMetaTags([b.exam_type, b.language])}</div>
       <h3 class="card-title">${escapeHtml(b.title)}</h3>
       <div class="card-details">
         ${b.author ? `<span><i class="fa fa-user"></i> ${escapeHtml(b.author)}</span>` : ''}
