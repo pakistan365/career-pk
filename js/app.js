@@ -770,6 +770,9 @@ function renderCards(items, gridId, type) {
   setTimeout(() => {
     if (typeof observeCards === 'function') observeCards();
   }, 60);
+  
+  enhanceCardsSection(grid, items, type);
+  updateListSchema(items, type);
 }
 
 // ── Favourite handler ─────────────────────────────────────────
