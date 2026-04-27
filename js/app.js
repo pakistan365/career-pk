@@ -129,6 +129,85 @@ function collectResourceLinks(item) {
   return [...new Set(urls)];
 }
 
+function classifyResourceUrl(url) {
+  const safe = safeUrl(url);
+  if (safe === '#') return { kind: 'link', icon: 'fa-link', label: 'Open Link', url: '#' };
+  if (isPdfUrl(safe)) return { kind: 'pdf', icon: 'fa-file-pdf', label: 'PDF', url: safe };
+  if (isImageUrl(safe)) return { kind: 'image', icon: 'fa-image', label: 'Image', url: safe };
+  if (isTeraBoxUrl(safe)) return { kind: 'cloud', icon: 'fa-cloud', label: 'Cloud File', url: safe };
+  if (/books\.google\./i.test(safe)) return { kind: 'book', icon: 'fa-book-open', label: 'Book Preview', url: safe };
+  return { kind: 'link', icon: 'fa-link', label: 'Open Link', url: safe };
+}
+
+function renderInlineResourcePreview(url) {
+  const meta = classifyResourceUrl(url);
+  if (meta.url === '#') return '';
+  const host = (() => {
+    try { return new URL(meta.url).hostname.replace(/^www\./, ''); } catch { return 'External source'; }
+  })();
+  if (meta.kind === 'image') {
+    return `
+      <a class="resource-inline resource-inline-image" href="${meta.url}" target="_blank" rel="noopener noreferrer">
+        <img src="${escapeHtml(meta.url)}" alt="Resource image preview" loading="lazy">
+        <span><i class="fa fa-up-right-from-square"></i> Open full image • ${escapeHtml(host)}</span>
+      </a>
+    `;
+  }
+  if (meta.kind === 'pdf' || meta.kind === 'book') {
+    const previewSrc = meta.kind === 'pdf'
+      ? `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(meta.url)}`
+      : meta.url;
+    const previewTitle = meta.kind === 'pdf' ? 'PDF preview' : 'Book preview';
+    return `
+      <a class="resource-inline resource-inline-embed" href="${meta.url}" target="_blank" rel="noopener noreferrer">
+        <div class="resource-inline-embed-frame-wrap">
+          <iframe
+            class="resource-inline-embed-frame"
+            src="${previewSrc}"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            title="${previewTitle}">
+          </iframe>
+        </div>
+        <span><i class="fa fa-up-right-from-square"></i> Open full ${escapeHtml(meta.label.toLowerCase())} • ${escapeHtml(host)}</span>
+      </a>
+    `;
+  }
+  if (meta.kind === 'link') {
+    return `<a href="${meta.url}" target="_blank" rel="noopener noreferrer">${escapeHtml(meta.url)}</a>`;
+  }
+  return `
+    <a class="resource-inline resource-inline-card" href="${meta.url}" target="_blank" rel="noopener noreferrer">
+      <div class="resource-mini-icon"><i class="fa ${meta.icon}"></i></div>
+      <div class="resource-mini-meta">
+        <strong>${escapeHtml(meta.label)}</strong>
+        <span>${escapeHtml(host)}</span>
+      </div>
+      <i class="fa fa-up-right-from-square"></i>
+    </a>
+  `;
+}
+
+function renderRichTextWithPreviews(value) {
+  const raw = text(value).trim();
+  if (!raw) return '';
+  const lines = raw
+    .split(/\n{2,}/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  return lines.map((line) => {
+    const parts = line.split(/(https?:\/\/[^\s<>"')\]]+)/gi);
+    const content = parts.map((part) => {
+      if (!/^https?:\/\//i.test(part)) return escapeHtml(part);
+      const safe = safeUrl(part);
+      if (safe === '#') return escapeHtml(part);
+      return renderInlineResourcePreview(safe);
+    }).join('');
+    return `<div class="rich-text-block">${content}</div>`;
+  }).join('');
+}
+
 function renderResourceActions(item, title) {
   const links = collectResourceLinks(item);
   if (!links.length) return '';
@@ -432,7 +511,7 @@ function openCardDetails(item, type) {
   document.getElementById('cardDetailType').textContent = (type || '').toUpperCase();
   document.getElementById('cardDetailTitle').textContent = title;
   document.getElementById('cardDetailSummary').textContent = text(item.description || item.details || 'Verified opportunity details are listed below.');
-  document.getElementById('cardDetailLong').textContent = text(item.details || '');
+  document.getElementById('cardDetailLong').innerHTML = renderRichTextWithPreviews(item.details || item.description || '');
   document.getElementById('cardDetailTags').innerHTML = renderTags(item.tags || '');
   if (src) {
     image.src = src;
