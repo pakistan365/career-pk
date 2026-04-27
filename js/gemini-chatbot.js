@@ -221,7 +221,7 @@ function escapeHtml(text) {
 function buildLocalAssistantReply(queryText, internalMatches, usefulLinks) {
   const modeLabel = getProviderMode() === 'local'
     ? 'Local mode (no API)'
-    : 'Fallback mode (API temporarily unavailable)';
+    : 'Assistant response';
   const topMatches = internalMatches.slice(0, 4);
   const sections = [];
   sections.push(`**${modeLabel}**`);
