@@ -36,14 +36,19 @@ body.dark .card-img-placeholder { background: linear-gradient(135deg, #1e1e2e, #
 @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
 
 /* ── Card body ────────────────────────────────────────────── */
-.card { cursor: pointer; height: 100%; min-height: 100%; }
+.card {
+  cursor: pointer;
+  height: 100%;
+  min-height: 100%;
+  min-width: 0;
+}
 .card:focus-visible {
   outline: 2px solid var(--primary, #6366f1);
   outline-offset: 2px;
 }
 .cards-grid { align-items: stretch; }
 .cards-grid > .card { height: 100%; }
-.card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; }
+.card-body { padding: 14px; flex: 1; display: flex; flex-direction: column; gap: 9px; min-height: 0; }
 .card-meta  { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 2px; min-height: 20px; }
 .card-tag   {
   font-size: 0.7rem; font-weight: 600; padding: 3px 9px;
@@ -58,10 +63,10 @@ body.dark .card-img-placeholder { background: linear-gradient(135deg, #1e1e2e, #
 .card-tag.unpaid { background: #fee2e2; color: #991b1b; border-color: #fca5a5; }
 body.dark .card-tag { background: #2a2a3e; color: #9ca3af; border-color: #374151; }
 
-.card-title { 
-  font-size: 0.92rem; font-weight: 700; margin: 0 0 8px; line-height: 1.4; color: var(--text-main, #111);
+.card-title {
+  font-size: 0.95rem; font-weight: 700; margin: 0 0 8px; line-height: 1.45; color: var(--text-main, #111);
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
-  min-height: calc(1.4em * 2);
+  min-height: calc(1.45em * 2);
   word-break: break-word;
 }
 .card-desc  { 
@@ -83,18 +88,40 @@ body.dark .card-tag { background: #2a2a3e; color: #9ca3af; border-color: #374151
 body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 
 /* ── Card footer ──────────────────────────────────────────── */
-.card-footer { padding: 10px 14px; border-top: 1px solid var(--border, #e5e7eb); display: flex; align-items: center; gap: 8px; }
-.card-footer { padding: 10px 14px; border-top: 1px solid var(--border, #e5e7eb); display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.card-footer { padding: 12px 14px; border-top: 1px solid var(--border, #e5e7eb); display: flex; align-items: center; gap: 10px; margin-top: auto; }
 .card-footer .btn-primary { flex: 1; justify-content: center; }
 .resource-actions { display: inline-flex; flex-wrap: wrap; gap: 6px; }
 .resource-actions .btn { padding: 7px 10px; font-size: 0.75rem; border-radius: 8px; }
 .btn-fav {
-  margin-left: auto; background: none; border: 1px solid var(--border, #e5e7eb);
-  color: var(--text-secondary, #6b7280); width: 36px; height: 36px;
+  margin-left: auto;
+  background: var(--bg-card, #fff);
+  border: 1px solid color-mix(in srgb, var(--border, #e5e7eb) 78%, var(--primary, #6366f1) 22%);
+  color: var(--text-secondary, #6b7280);
+  width: 40px; height: 40px;
   border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s; flex-shrink: 0;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(2, 6, 23, 0.08);
+  flex-shrink: 0;
 }
-.btn-fav:hover, .btn-fav.active { background: #fef3c7; border-color: #f59e0b; color: #f59e0b; }
+.btn-fav:hover,
+.btn-fav:focus-visible,
+.btn-fav.active {
+  background: #fff7e6;
+  border-color: #f59e0b;
+  color: #c97a05;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+}
+
+.btn-fav:focus-visible {
+  outline: 2px solid color-mix(in srgb, #f59e0b 65%, white 35%);
+  outline-offset: 2px;
+}
+
+.card-footer .btn-primary {
+  min-height: 40px;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
 
 /* ── Results info bar ─────────────────────────────────────── */
 .results-info {
@@ -163,6 +190,19 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 @media (max-width: 600px) {
   .cards-list .card { flex-direction: column; }
   .cards-list .card-img { width: 100%; height: 140px; }
+   .card-footer {
+    padding: 11px 12px;
+    gap: 8px;
+  }
+  .card-footer .btn-primary {
+    min-height: 38px;
+    font-size: 0.8rem;
+    padding-inline: 10px;
+  }
+  .btn-fav {
+    width: 38px;
+    height: 38px;
+  }
 }
 
 /* ── Empty / error states ────────────────────────────────── */
