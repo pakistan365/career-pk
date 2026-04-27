@@ -213,7 +213,7 @@ function cardScholarship(s) {
     ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(s.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
     : '';
   return `
-  <div class="card" data-id="${s.id}" data-type="scholarship">
+  <div class="card" data-id="${s.id}" data-type="scholarship" role="button" tabindex="0" aria-label="View details for ${escapeHtml(s.title)}">
     <div class="card-img">
       ${imgHTML}
       <div class="card-img-placeholder" style="${src ? 'display:none' : ''}">🎓</div>
@@ -226,17 +226,13 @@ function cardScholarship(s) {
         <span class="card-tag fund-${escapeHtml((s.funding || '').toLowerCase().replace(/\s+/g, '-'))}">${escapeHtml(s.funding || '')}</span>
       </div>
       <h3 class="card-title">${escapeHtml(s.title)}</h3>
-      <p class="card-desc">${escapeHtml(s.description)}</p>
       <div class="card-details">
         ${s.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(s.location)}</span>` : ''}
-        ${s.level ? `<span><i class="fa fa-graduation-cap"></i> ${escapeHtml(s.level)}</span>` : ''}
         ${s.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(s.deadline)}</span>` : ''}
       </div>
-      ${renderTags(s.tags)}
     </div>
     <div class="card-footer">
-      <a href="${safeUrl(s.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
-      ${renderResourceActions(s, s.title)}
+      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(s.id) || 0}, 'scholarship')">View Details <i class="fa fa-arrow-right"></i></button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" aria-label="Save">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -249,7 +245,7 @@ function cardJob(j) {
   const src = imgSrc(j.image_url, 'job');
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(j.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   return `
-  <div class="card" data-id="${j.id}" data-type="job">
+  <div class="card" data-id="${j.id}" data-type="job" role="button" tabindex="0" aria-label="View details for ${escapeHtml(j.title)}">
     <div class="card-img">
       ${imgHTML}
       <div class="card-img-placeholder" style="${src ? 'display:none' : ''}">💼</div>
@@ -262,17 +258,13 @@ function cardJob(j) {
         <span class="card-tag">${escapeHtml(j.category || '')}</span>
       </div>
       <h3 class="card-title">${escapeHtml(j.title)}</h3>
-      <p class="card-desc">${escapeHtml(j.description)}</p>
       <div class="card-details">
         ${j.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(j.location)}</span>` : ''}
-        ${j.salary ? `<span><i class="fa fa-money-bill"></i> ${escapeHtml(j.salary)}</span>` : ''}
         ${j.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(j.deadline)}</span>` : ''}
       </div>
-      ${renderTags(j.tags)}
     </div>
     <div class="card-footer">
-      <a href="${safeUrl(j.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
-      ${renderResourceActions(j, j.title)}
+      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(j.id) || 0}, 'job')">View Details <i class="fa fa-arrow-right"></i></button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -286,7 +278,7 @@ function cardInternship(i) {
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(i.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   const paidClass = (i.type || '').toLowerCase() === 'paid' ? 'paid' : 'unpaid';
   return `
-  <div class="card" data-id="${i.id}" data-type="internship">
+  <div class="card" data-id="${i.id}" data-type="internship" role="button" tabindex="0" aria-label="View details for ${escapeHtml(i.title)}">
     <div class="card-img">
       ${imgHTML}
       <div class="card-img-placeholder" style="${src ? 'display:none' : ''}">🚀</div>
@@ -299,17 +291,13 @@ function cardInternship(i) {
         ${i.duration ? `<span class="card-tag">${escapeHtml(i.duration)}</span>` : ''}
       </div>
       <h3 class="card-title">${escapeHtml(i.title)}</h3>
-      <p class="card-desc">${escapeHtml(i.description)}</p>
       <div class="card-details">
         ${i.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(i.location)}</span>` : ''}
-        ${i.stipend ? `<span><i class="fa fa-money-bill"></i> ${escapeHtml(i.stipend)}</span>` : ''}
         ${i.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(i.deadline)}</span>` : ''}
       </div>
-      ${renderTags(i.tags)}
     </div>
     <div class="card-footer">
-      <a href="${safeUrl(i.apply_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Apply Now <i class="fa fa-arrow-right"></i></a>
-      ${renderResourceActions(i, i.title)}
+      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(i.id) || 0}, 'internship')">View Details <i class="fa fa-arrow-right"></i></button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)">
         <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
       </button>
@@ -321,7 +309,7 @@ function cardExam(e) {
   const src = imgSrc(e.image_url, 'exam');
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(e.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   return `
-  <div class="card" data-id="${e.id}" data-type="exam">
+  <div class="card" data-id="${e.id}" data-type="exam" role="button" tabindex="0" aria-label="View details for ${escapeHtml(e.title)}">
     <div class="card-img">
       ${imgHTML}
       <div class="card-img-placeholder" style="${src ? 'display:none' : ''}">📋</div>
@@ -341,10 +329,7 @@ function cardExam(e) {
       ${renderTags(e.tags)}
     </div>
     <div class="card-footer exam-links">
-      ${e.registration_link ? `<a href="${safeUrl(e.registration_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Register <i class="fa fa-arrow-right"></i></a>` : ''}
-      ${e.syllabus_link ? `<a href="${safeUrl(e.syllabus_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Syllabus</a>` : ''}
-      ${e.past_papers_link ? `<a href="${safeUrl(e.past_papers_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Past Papers</a>` : ''}
-      ${renderResourceActions(e, e.title)}
+      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(e.id) || 0}, 'exam')">View Details <i class="fa fa-arrow-right"></i></button>
     </div>
   </div>`;
 }
@@ -353,7 +338,7 @@ function cardBook(b) {
   const src = imgSrc(b.image_url, 'book');
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(b.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   return `
-  <div class="card" data-id="${b.id}" data-type="book">
+  <div class="card" data-id="${b.id}" data-type="book" role="button" tabindex="0" aria-label="View details for ${escapeHtml(b.title)}">
     <div class="card-img">
       ${imgHTML}
       <div class="card-img-placeholder" style="${src ? 'display:none' : ''}">📚</div>
@@ -373,11 +358,142 @@ function cardBook(b) {
       ${renderTags(b.tags)}
     </div>
     <div class="card-footer">
-      ${b.is_free && b.download_link ? `<a href="${safeUrl(b.download_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">📥 Download PDF</a>` : ''}
-      ${b.buy_link ? `<a href="${safeUrl(b.buy_link)}" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">🛒 Buy</a>` : ''}
-      ${renderResourceActions(b, b.title)}
+      <button class="btn btn-primary" onclick="openCardDetailsById(${Number(b.id) || 0}, 'book')">View Details <i class="fa fa-arrow-right"></i></button>
     </div>
   </div>`;
+}
+
+function detailField(label, value, icon) {
+  if (!value) return '';
+  return `<div class="detail-row"><span class="detail-label"><i class="fa ${icon}"></i> ${escapeHtml(label)}</span><span class="detail-value">${escapeHtml(String(value))}</span></div>`;
+}
+
+function detailAction(label, url, primary = false) {
+  if (!url) return '';
+  const cls = primary ? 'btn btn-primary' : 'btn btn-secondary';
+  return `<a href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer" class="${cls}">${escapeHtml(label)}</a>`;
+}
+
+function ensureCardDetailsModal() {
+  if (document.getElementById('cardDetailOverlay')) return;
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = `
+    <div id="cardDetailOverlay" class="card-detail-overlay" onclick="closeCardDetails()"></div>
+    <div id="cardDetailModal" class="card-detail-modal" role="dialog" aria-modal="true" aria-label="Opportunity details">
+      <div class="card-detail-head">
+        <div>
+          <p id="cardDetailType" class="card-detail-type"></p>
+          <h3 id="cardDetailTitle"></h3>
+        </div>
+        <button class="card-detail-close" onclick="closeCardDetails()" aria-label="Close details"><i class="fa fa-times"></i></button>
+      </div>
+      <div class="card-detail-content">
+        <div class="card-detail-media"><img id="cardDetailImage" alt="" loading="lazy"><div id="cardDetailImageFallback" class="card-detail-image-fallback">📌</div></div>
+        <div>
+          <p id="cardDetailSummary" class="card-detail-summary"></p>
+          <div id="cardDetailFields" class="detail-grid"></div>
+          <p id="cardDetailLong" class="card-detail-long"></p>
+          <div id="cardDetailTags" class="card-detail-tags"></div>
+          <div id="cardDetailActions" class="card-detail-actions"></div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(wrapper);
+}
+
+function getCardItemById(id, type) {
+  const map = {
+    scholarship: 'Scholarships',
+    job: 'Jobs',
+    internship: 'Internships',
+    exam: 'Exams',
+    book: 'Books'
+  };
+  return (window.CMS_DATA[map[type]] || []).find(item => Number(item.id) === Number(id));
+}
+
+function openCardDetailsById(id, type) {
+  const item = getCardItemById(id, type);
+  if (!item) return;
+  openCardDetails(item, type);
+}
+
+function openCardDetails(item, type) {
+  ensureCardDetailsModal();
+  const image = document.getElementById('cardDetailImage');
+  const fallback = document.getElementById('cardDetailImageFallback');
+  const title = text(item.title);
+  const src = imgSrc(item.image_url, type);
+  document.getElementById('cardDetailType').textContent = (type || '').toUpperCase();
+  document.getElementById('cardDetailTitle').textContent = title;
+  document.getElementById('cardDetailSummary').textContent = text(item.description || item.details || 'Verified opportunity details are listed below.');
+  document.getElementById('cardDetailLong').textContent = text(item.details || '');
+  document.getElementById('cardDetailTags').innerHTML = renderTags(item.tags || '');
+  if (src) {
+    image.src = src;
+    image.alt = title;
+    image.style.display = 'block';
+    fallback.style.display = 'none';
+  } else {
+    image.src = '';
+    image.style.display = 'none';
+    fallback.style.display = 'flex';
+  }
+
+  const fields = [];
+  if (type === 'scholarship') {
+    fields.push(detailField('Type', item.type, 'fa-layer-group'));
+    fields.push(detailField('Funding', item.funding, 'fa-wallet'));
+    fields.push(detailField('Level', item.level, 'fa-graduation-cap'));
+    fields.push(detailField('Location', item.location, 'fa-map-marker-alt'));
+    fields.push(detailField('Deadline', formatDate(item.deadline), 'fa-calendar'));
+  } else if (type === 'job') {
+    fields.push(detailField('Type', item.type, 'fa-briefcase'));
+    fields.push(detailField('Category', item.category, 'fa-folder-open'));
+    fields.push(detailField('Location', item.location, 'fa-map-marker-alt'));
+    fields.push(detailField('Salary', item.salary, 'fa-money-bill'));
+    fields.push(detailField('Deadline', formatDate(item.deadline), 'fa-calendar'));
+  } else if (type === 'internship') {
+    fields.push(detailField('Type', item.type, 'fa-briefcase'));
+    fields.push(detailField('Duration', item.duration, 'fa-hourglass-half'));
+    fields.push(detailField('Location', item.location, 'fa-map-marker-alt'));
+    fields.push(detailField('Stipend', item.stipend, 'fa-money-bill'));
+    fields.push(detailField('Deadline', formatDate(item.deadline), 'fa-calendar'));
+  } else if (type === 'exam') {
+    fields.push(detailField('Exam Type', item.exam_type, 'fa-book'));
+    fields.push(detailField('Fee', item.fee, 'fa-money-bill'));
+    fields.push(detailField('Test Date', formatDate(item.test_date), 'fa-calendar'));
+    fields.push(detailField('Eligibility', item.eligibility, 'fa-user-check'));
+    fields.push(detailField('Conducting Body', item.conducting_body, 'fa-building'));
+  } else if (type === 'book') {
+    fields.push(detailField('Exam', item.exam_type, 'fa-book'));
+    fields.push(detailField('Author', item.author, 'fa-user'));
+    fields.push(detailField('Edition', item.edition, 'fa-book-open'));
+    fields.push(detailField('Language', item.language, 'fa-language'));
+    fields.push(detailField('Category', item.category, 'fa-tag'));
+  }
+  document.getElementById('cardDetailFields').innerHTML = fields.filter(Boolean).join('');
+
+  const actions = [
+    detailAction('Apply Now', item.apply_link, true),
+    detailAction('Register', item.registration_link, true),
+    detailAction('Download', item.download_link, true),
+    detailAction('Buy Book', item.buy_link),
+    detailAction('Syllabus', item.syllabus_link),
+    detailAction('Past Papers', item.past_papers_link),
+    detailAction('Official Link', item.source_link)
+  ];
+  document.getElementById('cardDetailActions').innerHTML = actions.filter(Boolean).join('') + renderResourceActions(item, title);
+
+  document.getElementById('cardDetailOverlay').style.display = 'block';
+  document.getElementById('cardDetailModal').style.display = 'block';
+}
+
+function closeCardDetails() {
+  const overlay = document.getElementById('cardDetailOverlay');
+  const modal = document.getElementById('cardDetailModal');
+  if (overlay) overlay.style.display = 'none';
+  if (modal) modal.style.display = 'none';
 }
 
 function ensureResourcePreviewModal() {
@@ -642,6 +758,7 @@ function loadFavoritesPage() {
 // ── Init on DOM ready ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   ensureResourcePreviewModal();
+  ensureCardDetailsModal();
   initDarkMode();
   updateFavCount();
   ensureChatbotLoaded();
@@ -666,6 +783,28 @@ document.addEventListener('DOMContentLoaded', () => {
       runSearch(q);
     }
   });
+});
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!target) return;
+  const interactive = target.closest('a, button, .btn-fav, .resource-actions');
+  if (interactive) return;
+  const card = target.closest('.card[data-id][data-type]');
+  if (!card) return;
+  openCardDetailsById(card.dataset.id, card.dataset.type);
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeCardDetails();
+    closeResourcePreview();
+  }
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  const card = event.target?.closest?.('.card[data-id][data-type]');
+  if (!card) return;
+  event.preventDefault();
+  openCardDetailsById(card.dataset.id, card.dataset.type);
 });
 
 // ── Scroll-triggered card animations ────────────────────────
