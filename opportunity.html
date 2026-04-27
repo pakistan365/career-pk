@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="author" content="Career Pakistan"/>
+  <meta name="theme-color" content="#0f766e"/>
+  <title>Opportunity Details | Career Pakistan</title>
+  <meta name="description" content="Read complete scholarship, job, internship, exam, and preparation details with related recommendations on Career Pakistan."/>
+  <link rel="canonical" href="https://careerhub.pk/opportunity.html"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/cms-additions.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="icon" href="logo.png" type="image/png"/>
+  <script src="js/seo.js" defer></script>
+</head>
+<body>
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo"><img src="logo.png" alt="CareerPK" height="44"/></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="scholarships.html">Scholarships</a></li>
+      <li><a href="jobs.html">Jobs</a></li>
+      <li><a href="internships.html">Internships</a></li>
+      <li><a href="exams.html">Exams</a></li>
+      <li><a href="books.html">Books</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="favorites.html" class="nav-icon-btn"><i class="fa fa-bookmark"></i><span class="fav-count" id="favCount">0</span></a>
+      <button class="nav-icon-btn" onclick="toggleDarkMode()" id="themeBtn"><i class="fa fa-moon"></i></button>
+      <button class="hamburger" id="hamburger" onclick="toggleMenu()"><i class="fa fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<header class="page-header opportunity-header">
+  <div class="container">
+    <div class="breadcrumb" id="opportunityBreadcrumb"></div>
+    <h1 class="page-title" id="opportunityTitle">Loading details...</h1>
+    <p class="page-subtitle" id="opportunitySubtitle">Please wait while we fetch complete details.</p>
+  </div>
+</header>
+
+<main class="section">
+  <div class="container opportunity-layout" id="opportunityLayout">
+    <article class="opportunity-article card-surface">
+      <div class="opportunity-cover-wrap">
+        <img id="opportunityCover" class="opportunity-cover" alt="Opportunity cover" loading="lazy"/>
+      </div>
+      <div class="opportunity-meta" id="opportunityMeta"></div>
+      <section>
+        <h2>Overview</h2>
+        <p id="opportunityOverview"></p>
+      </section>
+      <section>
+        <h2>Complete Details</h2>
+        <div id="opportunityBody" class="opportunity-body"></div>
+      </section>
+      <section>
+        <h2>Action Links</h2>
+        <div id="opportunityActions" class="card-detail-actions"></div>
+      </section>
+      <section class="engagement-box">
+        <h2>Stay Engaged for Better Opportunities</h2>
+        <p>Save this post, explore related opportunities below, and keep checking daily to improve your chances of selection.</p>
+        <div class="engagement-actions">
+          <button class="btn btn-secondary" id="saveOpportunityBtn"><i class="fa fa-bookmark"></i> Save this Opportunity</button>
+          <a class="btn btn-primary" href="jobs.html">Explore More Fresh Jobs</a>
+        </div>
+      </section>
+    </article>
+
+    <aside class="opportunity-sidebar">
+      <section class="related-block card-surface">
+        <h3>Related Jobs</h3>
+        <div id="relatedJobs" class="related-list"></div>
+      </section>
+      <section class="related-block card-surface">
+        <h3>Related Exams & Preparation</h3>
+        <div id="relatedExams" class="related-list"></div>
+      </section>
+      <section class="related-block card-surface">
+        <h3>Recommended Study Content</h3>
+        <div id="relatedBooks" class="related-list"></div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>© 2026 Career Pakistan. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="terms.html">Terms</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="js/google-sheet-loader.js"></script>
+<script src="js/app.js"></script>
+<script src="js/opportunity-detail.js"></script>
+</body>
+</html>
