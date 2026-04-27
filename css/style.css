@@ -1248,6 +1248,11 @@ body.dark .exam-info-box { background: #1A1A1A; border-color: #2E2E2E; }
   margin-bottom: 0.9rem;
   line-height: 1.7;
 }
+.opportunity-body a {
+  color: var(--primary, #0f766e);
+  text-decoration: underline;
+  word-break: break-all;
+}
 .opportunity-sidebar {
   display: grid;
   gap: 1rem;
