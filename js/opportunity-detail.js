@@ -129,8 +129,12 @@
 
     document.getElementById('opportunityOverview').textContent = text(item.description || item.details || 'Full details will be updated shortly.');
 
-    const paragraphs = splitParagraphs(item.details || item.description);
-    document.getElementById('opportunityBody').innerHTML = paragraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    const longContent = item.details || item.description;
+    const fallbackParagraphs = splitParagraphs(longContent);
+    const richBody = typeof renderRichTextWithPreviews === 'function'
+      ? renderRichTextWithPreviews(longContent)
+      : fallbackParagraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
+    document.getElementById('opportunityBody').innerHTML = richBody;
 
     document.getElementById('opportunityActions').innerHTML = [
       actionButton('Apply Now', item.apply_link, true),
