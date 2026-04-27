@@ -623,6 +623,122 @@ function closeResourcePreview() {
   if (modal) modal.style.display = 'none';
 }
 
+function detectPageTopic(type) {
+  const path = (window.location.pathname || '').toLowerCase();
+  const topicByPath = [
+    { match: '/scholarships', key: 'scholarship', label: 'Scholarship' },
+    { match: '/jobs', key: 'job', label: 'Job' },
+    { match: '/internships', key: 'internship', label: 'Internship' },
+    { match: '/exams', key: 'exam', label: 'Exam' },
+    { match: '/books', key: 'book', label: 'Book' }
+  ];
+  const found = topicByPath.find((entry) => path.includes(entry.match));
+  if (found) return found;
+  const byType = {
+    scholarship: { key: 'scholarship', label: 'Scholarship' },
+    job: { key: 'job', label: 'Job' },
+    internship: { key: 'internship', label: 'Internship' },
+    exam: { key: 'exam', label: 'Exam' },
+    book: { key: 'book', label: 'Book' }
+  };
+  return byType[type] || { key: 'opportunity', label: 'Opportunity' };
+}
+
+function getTimelineValue(item) {
+  return item?.deadline || item?.test_date || item?.posted_date || '';
+}
+
+function renderInsightItems(items, topic) {
+  if (!items.length) return '<li>Live updates will appear here as soon as content is loaded.</li>';
+  const sorted = [...items]
+    .sort((a, b) => new Date(getTimelineValue(a) || 0) - new Date(getTimelineValue(b) || 0))
+    .slice(0, 5);
+  return sorted.map((item) => {
+    const name = escapeHtml(item.title || `${topic.label} update`);
+    const dateText = formatDate(getTimelineValue(item));
+    const sub = escapeHtml(item.country || item.location || item.organization || item.exam_type || item.category || '');
+    return `<li><strong>${name}</strong><span>${escapeHtml(dateText)}${sub ? ` • ${sub}` : ''}</span></li>`;
+  }).join('');
+}
+
+function renderSEOLinks(items) {
+  if (!items.length) return '';
+  const links = items
+    .slice(0, 6)
+    .map((item) => {
+      const title = escapeHtml(item.title || 'Opportunity');
+      const url = safeUrl(item.apply_link || item.source_link || item.registration_link || item.download_link || '#');
+      if (url === '#') return `<li>${title}</li>`;
+      return `<li><a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a></li>`;
+    })
+    .join('');
+  return `<ul class="seo-rich-list">${links}</ul>`;
+}
+
+function enhanceCardsSection(grid, items, type) {
+  if (!grid) return;
+  const topic = detectPageTopic(type);
+  let layout = grid.closest('.cards-layout');
+  if (!layout) {
+    const parent = grid.parentElement;
+    if (!parent) return;
+    layout = document.createElement('div');
+    layout.className = 'cards-layout';
+    const main = document.createElement('div');
+    main.className = 'cards-layout-main';
+    parent.insertBefore(layout, grid);
+    layout.appendChild(main);
+    main.appendChild(grid);
+  }
+  let aside = layout.querySelector('.cards-insights');
+  if (!aside) {
+    aside = document.createElement('aside');
+    aside.className = 'cards-insights';
+    layout.appendChild(aside);
+  }
+  aside.innerHTML = `
+    <h3>Latest ${topic.label} Timeline</h3>
+    <p>Quick updates tailored to this page topic.</p>
+    <ul>${renderInsightItems(items, topic)}</ul>
+  `;
+
+  let seoBlock = layout.querySelector('.seo-rich-block');
+  if (!seoBlock) {
+    seoBlock = document.createElement('section');
+    seoBlock.className = 'seo-rich-block';
+    layout.insertAdjacentElement('afterend', seoBlock);
+  }
+  seoBlock.innerHTML = `
+    <h2>${topic.label} Updates, Guidance & Useful Links</h2>
+    <p>Explore verified ${topic.label.toLowerCase()} opportunities, compare deadlines, and shortlist options that match your profile, location, and goals.</p>
+    ${renderSEOLinks(items)}
+  `;
+}
+
+function updateListSchema(items, type) {
+  const topic = detectPageTopic(type);
+  const id = 'dynamic-item-list-schema';
+  const existing = document.getElementById(id);
+  if (existing) existing.remove();
+  const top = (items || []).slice(0, 8);
+  if (!top.length) return;
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.id = id;
+  script.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: `${topic.label} listings`,
+    itemListElement: top.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.title || `${topic.label} listing`,
+      url: safeUrl(item.apply_link || item.source_link || item.registration_link || item.download_link || window.location.href)
+    }))
+  });
+  document.head.appendChild(script);
+}
+
 // ── Generic renderCards dispatcher ───────────────────────────
 function renderCards(items, gridId, type) {
   const grid = document.getElementById(gridId);
