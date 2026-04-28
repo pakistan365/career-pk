@@ -148,6 +148,14 @@
     return `<a href="${safeUrl(url)}" target="_blank" rel="noopener noreferrer" class="btn ${primary ? 'btn-primary' : 'btn-secondary'}">${escapeHtml(label)}</a>`;
   }
 
+    function toggleGroupLandingSections(show) {
+    ['overviewSection', 'detailsSection', 'actionsSection'].forEach((sectionId) => {
+      const section = document.getElementById(sectionId);
+      if (!section) return;
+      section.style.display = show ? '' : 'none';
+    });
+  }
+
   function updateDynamicSeo(item) {
     const pageTitle = `${item.title} | ${config.label} Details | Career Pakistan`;
     const pageDesc = text(item.description || item.details || `Complete ${config.label.toLowerCase()} details, deadlines, and preparation guidance.`).slice(0, 155);
@@ -201,6 +209,7 @@
   }
 
   function mountOpportunity(item) {
+    toggleGroupLandingSections(true);
     const title = text(item.title || 'Opportunity Details');
     document.getElementById('opportunityTitle').textContent = `${config.icon} ${title}`;
     document.getElementById('opportunitySubtitle').textContent = text(item.description || 'In-depth overview, eligibility guidance, timeline, and resources.');
@@ -299,6 +308,7 @@
 
     function mountGroupBlog() {
     const groupItems = getListByType(type).filter((entry) => itemMatchesGroup(entry, group, type));
+    toggleGroupLandingSections(false);
     document.getElementById('opportunityTitle').textContent = `${config.icon} ${group} ${config.label} Guide`;
     document.getElementById('opportunitySubtitle').textContent = `All ${group} related ${config.label.toLowerCase()} with connected updates in one place.`;
     document.getElementById('opportunityBreadcrumb').innerHTML = `<a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <a href="${config.base}">${config.label}</a> <i class="fa fa-chevron-right fa-xs"></i> <span>${escapeHtml(group)}</span>`;
@@ -306,9 +316,6 @@
     const cover = document.getElementById('opportunityCover');
     cover.style.display = 'none';
     document.getElementById('opportunityMeta').innerHTML = detailField('Category', `${group} ${config.label}`, 'fa-layer-group');
-    document.getElementById('opportunityOverview').textContent = `This blog section shows every ${config.label.toLowerCase().slice(0, -1)} linked with ${group}. Click any card below to open full post details.`;
-    document.getElementById('opportunityBody').innerHTML = `<p>Total listings in this category: <strong>${groupItems.length}</strong>.</p><p>You can open each listing for full details, links, and related resources.</p>`;
-    document.getElementById('opportunityActions').innerHTML = `<a class="btn btn-primary" href="${config.base}?${type === 'book' ? 'book_group' : 'exam_group'}=${encodeURIComponent(group)}#resultsGrid">Open ${escapeHtml(group)} ${config.label} List</a>`;
     document.getElementById('saveOpportunityBtn').style.display = 'none';
     const engagementBox = document.querySelector('.engagement-box');
     if (engagementBox) engagementBox.style.display = 'none';
