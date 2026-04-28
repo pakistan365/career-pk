@@ -678,7 +678,17 @@ function getBookGroupName(book) {
 
 function renderInsightItems(items, topic) {
   if (!items.length) return '<li>Live updates will appear here as soon as content is loaded.</li>';
-  const sorted = [...items];
+  const deduped = [];
+  const seen = new Set();
+  (items || []).forEach((item) => {
+    const timeline = text(getTimelineValue(item));
+    const titleKey = text(item?.title).toLowerCase().trim();
+    const dedupeKey = `${titleKey}|${timeline}`;
+    if (seen.has(dedupeKey)) return;
+    seen.add(dedupeKey);
+    deduped.push(item);
+  });
+  const sorted = [...deduped];
   if (isBookTopic(topic)) {
     sorted.sort((a, b) => new Date(b.posted_date || b.created_at || 0) - new Date(a.posted_date || a.created_at || 0));
   } else {
@@ -906,7 +916,7 @@ function renderHomeLatestList(containerId, rows, type) {
     job: 'jobs.html',
     internship: 'internships.html'
   };
-  const sortMode = type === 'exam' ? 'deadline' : 'newest';
+  const sortMode = type === 'book' ? 'newest' : 'deadline';
   const deduped = [];
   const seen = new Set();
   (sortItems(rows || [], sortMode)).forEach((item) => {
@@ -928,8 +938,10 @@ function renderHomeLatestList(containerId, rows, type) {
     else if (type === 'job') groupName = text(item.category || item.type || 'Jobs');
     else if (type === 'scholarship') groupName = text(item.type || item.category || 'Scholarship');
     else if (type === 'internship') groupName = text(item.type || item.duration || 'Internship');
-    const dateLabel = type === 'exam' ? 'Test date' : 'Updated';
-    const dateValue = type === 'exam' ? (item.test_date || item.deadline || item.posted_date) : (item.posted_date || item.deadline || item.test_date);
+    const dateLabel = type === 'book' ? 'Updated' : 'Deadline';
+    const dateValue = type === 'book'
+      ? (item.posted_date || item.deadline || item.test_date)
+      : (item.deadline || item.test_date || item.posted_date);
     return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${dateLabel}: ${formatDate(dateValue)}</span></a>`;
   }).join('');
 }
