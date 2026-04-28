@@ -729,6 +729,28 @@ ul { list-style: none; }
   background: var(--bg-card);
   box-shadow: var(--shadow-sm);
 }
+#homeExamBlocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+#homeExamBlocks .cat-pill {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  font-weight: 700;
+}
+#homeExamBlocks .cat-pill span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+#homeExamBlocks .cat-pill:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
 .home-latest-sidebar {
   background: var(--bg-card);
   border: 1px solid var(--border);
