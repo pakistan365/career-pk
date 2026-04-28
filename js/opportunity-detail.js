@@ -11,14 +11,39 @@
     job: { sidebar: ['exam', 'book'], end: 'job' },
     scholarship: { sidebar: ['exam', 'book'], end: 'scholarship' },
     internship: { sidebar: ['job', 'exam'], end: 'internship' },
-    exam: { sidebar: ['job', 'book'], end: 'exam' },
-    book: { sidebar: ['exam', 'scholarship'], end: 'book' }
+    exam: { sidebar: ['book', 'exam'], end: 'exam' },
+    book: { sidebar: ['exam', 'book'], end: 'book' }
   };
 
   const params = new URLSearchParams(window.location.search);
   const type = (params.get('type') || 'job').toLowerCase();
+  const group = text(params.get('group')).trim();
   const id = Number(params.get('id'));
   const config = typeMap[type] || typeMap.job;
+
+    function getExamGroup(item) {
+    const fromHelper = typeof getExamGroupName === 'function' ? getExamGroupName(item) : '';
+    return text(fromHelper || item.exam_type || item.category || item.type || 'General').trim();
+  }
+
+  function getBookGroup(item) {
+    return text(item.category || item.exam_type || 'General').trim();
+  }
+
+  function itemMatchesGroup(item, groupName, targetType) {
+    if (!groupName) return true;
+    if (targetType === 'book') {
+      return matchesFilterValue(getBookGroup(item), groupName) ||
+        matchesFilterValue(item.category, groupName) ||
+        matchesFilterValue(item.exam_type, groupName);
+    }
+    if (targetType === 'exam') {
+      return matchesFilterValue(getExamGroup(item), groupName) ||
+        matchesFilterValue(item.exam_type, groupName) ||
+        includesFilterValue(item.title, groupName);
+    }
+    return includesFilterValue(item.title, groupName) || includesFilterValue(item.details, groupName);
+  }
 
   function splitParagraphs(value) {
     const raw = text(value).trim();
@@ -82,6 +107,22 @@
         <span>${escapeHtml(getTargetDetail(targetType, item))}</span>
       </a>`;
     }).join('');
+  }
+
+    function renderGroupCards(items, targetType) {
+    const mount = document.getElementById('relatedSameTypeCards');
+    if (!mount) return;
+    if (!items.length) {
+      mount.innerHTML = `<p class="muted">No ${typeMap[targetType].label.toLowerCase()} found in this category yet.</p>`;
+      return;
+    }
+    mount.innerHTML = items.map((item) => `
+      <a class="related-card" href="opportunity.html?type=${targetType}&id=${Number(item.id) || 0}">
+        <h3>${escapeHtml(item.title || 'Untitled')}</h3>
+        <p>${escapeHtml(text(item.description || item.details || 'Open to read complete details.').slice(0, 130))}</p>
+        <span>${escapeHtml(getTargetDetail(targetType, item))} ${item.deadline || item.test_date ? `• ${escapeHtml(formatDate(item.deadline || item.test_date))}` : ''}</span>
+      </a>
+    `).join('');
   }
 
   function actionButton(label, url, primary) {
@@ -232,8 +273,57 @@
     document.getElementById('opportunityLayout').innerHTML = '<div class="empty-state" style="display:flex"><i class="fa fa-inbox"></i><h3>Listing not available</h3><p>Please return to the listings page and select another opportunity.</p><a href="jobs.html" class="btn btn-primary">Back to Jobs</a></div>';
   }
 
+    function mountGroupBlog() {
+    const groupItems = getListByType(type).filter((entry) => itemMatchesGroup(entry, group, type));
+    document.getElementById('opportunityTitle').textContent = `${config.icon} ${group} ${config.label} Guide`;
+    document.getElementById('opportunitySubtitle').textContent = `All ${group} related ${config.label.toLowerCase()} with connected updates in one place.`;
+    document.getElementById('opportunityBreadcrumb').innerHTML = `<a href="index.html">Home</a> <i class="fa fa-chevron-right fa-xs"></i> <a href="${config.base}">${config.label}</a> <i class="fa fa-chevron-right fa-xs"></i> <span>${escapeHtml(group)}</span>`;
+
+    const cover = document.getElementById('opportunityCover');
+    cover.style.display = 'none';
+    document.getElementById('opportunityMeta').innerHTML = detailField('Category', `${group} ${config.label}`, 'fa-layer-group');
+    document.getElementById('opportunityOverview').textContent = `This blog section shows every ${config.label.toLowerCase().slice(0, -1)} linked with ${group}. Click any card below to open full post details.`;
+    document.getElementById('opportunityBody').innerHTML = `<p>Total listings in this category: <strong>${groupItems.length}</strong>.</p><p>You can open each listing for full details, links, and related resources.</p>`;
+    document.getElementById('opportunityActions').innerHTML = `<a class="btn btn-primary" href="${config.base}?${type === 'book' ? 'book_group' : 'exam_group'}=${encodeURIComponent(group)}#resultsGrid">Open ${escapeHtml(group)} ${config.label} List</a>`;
+    document.getElementById('saveOpportunityBtn').style.display = 'none';
+    const engagementBox = document.querySelector('.engagement-box');
+    if (engagementBox) engagementBox.style.display = 'none';
+
+    document.getElementById('relatedSameTypeTitle').textContent = `${group} ${config.label}`;
+    renderGroupCards(groupItems, type);
+
+    if (type === 'book') {
+      const relatedExams = getListByType('exam')
+        .filter((entry) => itemMatchesGroup(entry, group, 'exam'))
+        .sort((a, b) => new Date(a.test_date || a.deadline || 0) - new Date(b.test_date || b.deadline || 0))
+        .slice(0, 6);
+      document.getElementById('sidebarRelatedOneTitle').textContent = 'Related Exams & Dates';
+      document.getElementById('sidebarRelatedTwoTitle').textContent = 'Related Books';
+      renderRelatedList(relatedExams, 'sidebarRelatedOne', 'exam', 'Exams');
+      renderRelatedList(groupItems.slice(0, 6), 'sidebarRelatedTwo', 'book', 'Books');
+      return;
+    }
+
+    if (type === 'exam') {
+      const relatedBooks = getListByType('book')
+        .filter((entry) => itemMatchesGroup(entry, group, 'book'))
+        .slice(0, 6);
+      const relatedExams = groupItems
+        .sort((a, b) => new Date(a.test_date || a.deadline || 0) - new Date(b.test_date || b.deadline || 0))
+        .slice(0, 6);
+      document.getElementById('sidebarRelatedOneTitle').textContent = 'Related Books';
+      document.getElementById('sidebarRelatedTwoTitle').textContent = 'Related Exams & Dates';
+      renderRelatedList(relatedBooks, 'sidebarRelatedOne', 'book', 'Books');
+      renderRelatedList(relatedExams, 'sidebarRelatedTwo', 'exam', 'Exams');
+    }
+  }
+
   function init() {
     updateFavCount();
+    if (!id && group && (type === 'book' || type === 'exam')) {
+      mountGroupBlog();
+      return;
+    }
     const list = window.CMS_DATA[config.sheet] || [];
     const item = list.find((entry) => Number(entry.id) === id);
     if (!item) {
