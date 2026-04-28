@@ -911,9 +911,9 @@ function loadHomePageData() {
   const exams        = window.CMS_DATA.Exams || [];
   const books        = window.CMS_DATA.Books || [];
 
-  renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
-  renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
-  renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
+  renderCards(sortItems(scholarships, 'newest').slice(0, 3), 'scholarshipsGrid', 'scholarship');
+  renderCards(sortItems(jobs, 'newest').slice(0, 3), 'jobsGrid', 'job');
+  renderCards(sortItems(internships, 'newest').slice(0, 3), 'internshipsGrid', 'internship');
   renderHomeLatestList('homeLatestScholarshipsList', scholarships, 'scholarship');
   renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
   renderHomeLatestList('homeLatestExamList', sortItems(exams, 'deadline'), 'exam');
