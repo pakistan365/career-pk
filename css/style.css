@@ -701,6 +701,48 @@ ul { list-style: none; }
   color: var(--text-secondary);
 }
 
+.split-blocks {
+  display: grid;
+  gap: 18px;
+}
+.split-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+.split-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.split-block-head h3 {
+  font-size: 16px;
+  margin: 0;
+}
+.split-block-head span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+.cards-grid-embedded {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 700px) {
+  .cards-grid-embedded {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.empty-mini {
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-alt);
+}
+
 .seo-rich-block {
   margin-top: 14px;
   background: color-mix(in srgb, var(--primary-bg) 42%, var(--bg-card) 58%);
@@ -800,6 +842,32 @@ ul { list-style: none; }
 .exam-tile-name { font-size: 15px; font-weight: 700; color: var(--black); }
 .exam-tile-date { font-size: 12px; color: var(--red); font-weight: 600; }
 .exam-tile-body { font-size: 12px; color: var(--gray-mid); margin-top: 2px; }
+.exam-types-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+@media (min-width: 560px) { .exam-types-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .exam-types-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.exam-type-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  background: var(--bg-card);
+}
+.exam-type-card h3 {
+  margin: 0;
+  font-size: 16px;
+}
+.exam-type-card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
 
 /* ── Badges on exam tiles ────────────────────────────────── */
 .badge-red  { background: var(--red); color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 99px; font-weight: 600; margin-top: 6px; display: inline-block; }
