@@ -384,7 +384,7 @@ function cardScholarship(s) {
       <h3 class="card-title">${escapeHtml(s.title)}</h3>
       <div class="card-details">
         ${s.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(s.location)}</span>` : ''}
-        ${s.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(s.deadline)}</span>` : ''}
+        ${s.deadline ? `<span><i class="fa fa-calendar"></i> <span class="deadline-date">${formatDate(s.deadline)}</span></span>` : ''}
       </div>
     </div>
     <div class="card-footer">
@@ -417,7 +417,7 @@ function cardJob(j) {
       <h3 class="card-title">${escapeHtml(j.title)}</h3>
       <div class="card-details">
         ${j.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(j.location)}</span>` : ''}
-        ${j.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(j.deadline)}</span>` : ''}
+        ${j.deadline ? `<span><i class="fa fa-calendar"></i> <span class="deadline-date">${formatDate(j.deadline)}</span></span>` : ''}
       </div>
     </div>
     <div class="card-footer">
@@ -454,7 +454,7 @@ function cardInternship(i) {
       <h3 class="card-title">${escapeHtml(i.title)}</h3>
       <div class="card-details">
         ${i.location ? `<span><i class="fa fa-map-marker-alt"></i> ${escapeHtml(i.location)}</span>` : ''}
-        ${i.deadline ? `<span><i class="fa fa-calendar"></i> ${formatDate(i.deadline)}</span>` : ''}
+        ${i.deadline ? `<span><i class="fa fa-calendar"></i> <span class="deadline-date">${formatDate(i.deadline)}</span></span>` : ''}
       </div>
     </div>
     <div class="card-footer">
@@ -485,7 +485,7 @@ function cardExam(e) {
       <div class="card-meta">${renderMetaTags([e.exam_type, e.fee])}</div>
       <h3 class="card-title">${escapeHtml(e.title)}</h3>
       <div class="card-details">
-        ${e.test_date ? `<span><i class="fa fa-calendar"></i> Test: ${formatDate(e.test_date)}</span>` : ''}
+        ${e.test_date ? `<span><i class="fa fa-calendar"></i> Test: <span class="deadline-date">${formatDate(e.test_date)}</span></span>` : ''}
         ${e.conducting_body ? `<span><i class="fa fa-building"></i> ${escapeHtml(e.conducting_body)}</span>` : ''}
       </div>
     </div>
@@ -536,7 +536,8 @@ function cardBook(b) {
 
 function detailField(label, value, icon) {
   if (!value) return '';
-  return `<div class="detail-row"><span class="detail-label"><i class="fa ${icon}"></i> ${escapeHtml(label)}</span><span class="detail-value">${escapeHtml(String(value))}</span></div>`;
+  const valueClass = /deadline|test date/i.test(label) ? 'detail-value deadline-date' : 'detail-value';
+  return `<div class="detail-row"><span class="detail-label"><i class="fa ${icon}"></i> ${escapeHtml(label)}</span><span class="${valueClass}">${escapeHtml(String(value))}</span></div>`;
 }
 
 function detailAction(label, url, primary = false) {
@@ -947,7 +948,10 @@ function loadHomePageData() {
   renderCards(sortItems(scholarships, 'newest'), 'scholarshipsGrid', 'scholarship');
   renderCards(sortItems(jobs, 'newest'), 'jobsGrid', 'job');
   renderCards(sortItems(internships, 'newest'), 'internshipsGrid', 'internship');
-  renderHomeLatestList('homeLatestScholarshipsList', scholarships, 'scholarship');
+  renderHomeLatestList('homeLatestScholarshipsList', scholarships, 'scholarship', {
+    initialCount: 3,
+    toggleButtonId: 'homeLatestScholarshipsToggle'
+  });
   renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
   renderHomeLatestList('homeLatestExamList', sortItems(exams, 'deadline'), 'exam');
   renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
@@ -1054,9 +1058,14 @@ function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, quer
     : '<span class="cat-pill active">No categories yet</span>';
 }
 
-function renderHomeLatestList(containerId, rows, type) {
-  const container = document.getElementById(containerId);
+function renderHomeLatestList(containerId, rows, type, options = {}) {
+const container = document.getElementById(containerId);
   if (!container) return;
+  const {
+    initialCount = 5,
+    toggleButtonId = '',
+    urgentThresholdDays = 10
+  } = options;
   const pageByType = {
     scholarship: 'scholarships.html',
     exam: 'exams.html',
@@ -1073,9 +1082,13 @@ function renderHomeLatestList(containerId, rows, type) {
     seen.add(key);
     deduped.push(item);
   });
-  const latestRows = deduped.slice(0, 5);
-  if (!latestRows.length) {
+  const toggleButton = toggleButtonId ? document.getElementById(toggleButtonId) : null;
+  const isExpanded = container.dataset.expanded === 'true';
+  const visibleCount = toggleButton && !isExpanded ? initialCount : deduped.length;
+  const latestRows = deduped.slice(0, visibleCount);
+  if (!deduped.length) {
     container.innerHTML = `<a class="home-latest-item" href="${pageByType[type] || 'index.html'}">No updates yet.</a>`;
+  if (toggleButton) toggleButton.hidden = true;
     return;
   }
   
@@ -1090,8 +1103,23 @@ function renderHomeLatestList(containerId, rows, type) {
     const dateValue = type === 'book'
       ? (item.posted_date || item.deadline || item.test_date)
       : (item.deadline || item.test_date || item.posted_date);
-    return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${dateLabel}: ${formatDate(dateValue)}</span></a>`;
+    const d = daysUntil(dateValue);
+    const urgencyBadgeHTML = (type !== 'book' && d >= 0 && d <= urgentThresholdDays)
+      ? '<span class="badge badge-urgent">Closing Soon</span>'
+      : '';
+    return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${dateLabel}: <span class="deadline-date">${formatDate(dateValue)}</span></span>${urgencyBadgeHTML}</a>`;
   }).join('');
+
+  if (!toggleButton) return;
+  const canExpand = deduped.length > initialCount;
+  toggleButton.hidden = !canExpand;
+  if (!canExpand) return;
+  toggleButton.textContent = isExpanded ? 'View Less' : 'View More';
+  toggleButton.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+  toggleButton.onclick = () => {
+    container.dataset.expanded = isExpanded ? 'false' : 'true';
+    renderHomeLatestList(containerId, rows, type, options);
+  };
 }
 
 // ── Notification bar loader ───────────────────────────────────
