@@ -954,6 +954,81 @@ function loadHomePageData() {
   renderHomeLatestList('homeLatestBooksList', books, 'book');
   renderHomeLatestList('homeLatestJobsList', jobs, 'job');
   renderHomeLatestList('homeLatestInternshipsList', internships, 'internship');
+    initHomeCardSliders();
+}
+
+function initHomeCardSliders() {
+  if (!document.body.classList.contains('home-page')) return;
+  const sliderIds = ['scholarshipsGrid', 'jobsGrid', 'internshipsGrid'];
+
+  sliderIds.forEach((id) => {
+    const grid = document.getElementById(id);
+    if (!grid || grid.children.length < 2) return;
+
+    grid.classList.add('home-card-slider');
+
+    let nav = grid.previousElementSibling;
+    if (!nav || !nav.classList.contains('home-slider-nav')) {
+      nav = document.createElement('div');
+      nav.className = 'home-slider-nav';
+      nav.innerHTML = `
+        <button type="button" class="home-slider-btn home-slider-prev" aria-label="Previous cards"><i class="fa fa-chevron-left"></i></button>
+        <button type="button" class="home-slider-btn home-slider-next" aria-label="Next cards"><i class="fa fa-chevron-right"></i></button>
+      `;
+      grid.parentNode.insertBefore(nav, grid);
+    }
+
+    const prevBtn = nav.querySelector('.home-slider-prev');
+    const nextBtn = nav.querySelector('.home-slider-next');
+    const scrollStep = () => Math.max(180, Math.round(grid.clientWidth * 0.52));
+
+    function updateButtons() {
+      const maxScroll = grid.scrollWidth - grid.clientWidth;
+      prevBtn.disabled = grid.scrollLeft <= 4;
+      nextBtn.disabled = grid.scrollLeft >= (maxScroll - 4);
+    }
+
+    if (!grid.dataset.sliderBound) {
+      prevBtn.addEventListener('click', () => {
+        grid.scrollBy({ left: -scrollStep(), behavior: 'smooth' });
+      });
+      nextBtn.addEventListener('click', () => {
+        grid.scrollBy({ left: scrollStep(), behavior: 'smooth' });
+      });
+      grid.addEventListener('scroll', updateButtons, { passive: true });
+      window.addEventListener('resize', updateButtons);
+      grid.dataset.sliderBound = 'true';
+    }
+
+    updateButtons();
+
+    if (!grid.dataset.autoSlideBound) {
+      let autoSlide = setInterval(() => {
+        const maxScroll = grid.scrollWidth - grid.clientWidth;
+        const nearEnd = grid.scrollLeft >= (maxScroll - 6);
+        grid.scrollTo({ left: nearEnd ? 0 : Math.min(maxScroll, grid.scrollLeft + scrollStep()), behavior: 'smooth' });
+      }, 4200);
+
+      const pause = () => {
+        clearInterval(autoSlide);
+        autoSlide = null;
+      };
+      const resume = () => {
+        if (autoSlide) return;
+        autoSlide = setInterval(() => {
+          const maxScroll = grid.scrollWidth - grid.clientWidth;
+          const nearEnd = grid.scrollLeft >= (maxScroll - 6);
+          grid.scrollTo({ left: nearEnd ? 0 : Math.min(maxScroll, grid.scrollLeft + scrollStep()), behavior: 'smooth' });
+        }, 4200);
+      };
+
+      grid.addEventListener('mouseenter', pause);
+      grid.addEventListener('mouseleave', resume);
+      grid.addEventListener('touchstart', pause, { passive: true });
+      grid.addEventListener('touchend', resume, { passive: true });
+      grid.dataset.autoSlideBound = 'true';
+    }
+  });
 }
 
 function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, queryKey) {
