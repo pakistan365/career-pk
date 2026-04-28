@@ -615,7 +615,7 @@ body.dark .home-hero-title {
 
 .card-img {
   aspect-ratio: 16 / 9;
-  min-height: clamp(168px, 20vw, 220px);
+  min-height: clamp(148px, 16.5vw, 184px);
 }
 
 .card-body {
@@ -664,7 +664,7 @@ body.dark .home-hero-title {
   }
 
   .card-img {
-    min-height: clamp(132px, 38vw, 164px);
+    min-height: clamp(122px, 35vw, 146px);
   }
 
   .card-body {
