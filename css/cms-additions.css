@@ -285,7 +285,8 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 body.home-page .cards-grid.home-card-slider {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 10px) / 2);
+  --home-visible-cards: 1;
+  grid-auto-columns: calc((100% - (var(--home-visible-cards) - 1) * 14px) / var(--home-visible-cards));
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
@@ -293,6 +294,8 @@ body.home-page .cards-grid.home-card-slider {
   scroll-behavior: smooth;
   padding-bottom: 2px;
   scrollbar-width: none;
+  align-items: stretch;
+  grid-auto-rows: 1fr;
 }
 
 body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
@@ -303,11 +306,41 @@ body.home-page .cards-grid.home-card-slider > .card {
   min-width: 0;
   scroll-snap-align: start;
   min-height: 100%;
+  height: 100%;
+}
+
+@media (min-width: 520px) {
+  body.home-page .cards-grid.home-card-slider {
+    --home-visible-cards: 2;
+  }
+}
+
+@media (min-width: 1120px) {
+  body.home-page .cards-grid.home-card-slider {
+    --home-visible-cards: 3;
+  }
 }
 
 @media (min-width: 901px) {
-  body.home-page .cards-grid.home-card-slider > .card {
-    min-height: 420px;
+  body.home-page .cards-grid.home-card-slider > .card,
+  body.home-page .cards-grid.home-card-slider > .exam-card,
+  body.home-page .cards-grid.home-card-slider > .skeleton-card {
+    height: 410px;
+    min-height: 410px;
+    max-height: 410px;
+  }
+
+  body.home-page .cards-grid.home-card-slider .card-img {
+    height: 165px;
+    min-height: 165px;
+  }
+
+  body.home-page .cards-grid.home-card-slider .card-body {
+    min-height: 178px;
+  }
+
+  body.home-page .cards-grid.home-card-slider .card-footer {
+    min-height: 67px;
   }
 }
 
@@ -349,7 +382,6 @@ body.home-page .home-slider-btn:disabled {
   body.home-page .cards-grid.home-card-slider {
      grid-auto-flow: column;
      grid-template-columns: none;
-     grid-auto-columns: calc((100% - 14px) / 2);
      gap: 14px;
      overflow-x: auto;
      scroll-snap-type: x mandatory;
