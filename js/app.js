@@ -1033,6 +1033,8 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('click', (event) => {
   const target = event.target;
   if (!target) return;
+  const selectedText = window.getSelection ? String(window.getSelection()) : '';
+  if (selectedText && selectedText.trim()) return;
   const interactive = target.closest('a, button, .btn-fav, .resource-actions');
   if (interactive) return;
   const card = target.closest('.card[data-id][data-type]');
