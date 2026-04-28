@@ -12,6 +12,9 @@
   background: var(--bg-alt, #efefef);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
 }
+body.home-page .card-img {
+  height: clamp(124px, 13.5vw, 156px);
+}
 .card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
 .card:hover .card-img img { transform: scale(1.05); }
 .card-img-placeholder {
@@ -245,6 +248,7 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 @media (max-width: 600px) {
   .cards-list .card { flex-direction: column; }
   .cards-list .card-img { width: 100%; height: 140px; }
+   body.home-page .card-img { height: clamp(110px, 33vw, 130px); }
   .card-img { height: clamp(126px, 38vw, 152px); }
   .card-body { padding: 14px; }
   .card-title {
