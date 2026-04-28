@@ -207,9 +207,7 @@
         <span><i class="fa fa-layer-group"></i> Category: ${escapeHtml(group.type)}</span>
       </div>
       <div class="quick-access-actions">
-        <a class="btn btn-primary" href="exams.html?exam_group=${typeParam}#resultsGrid">Explore ${escapeHtml(group.type)} exams <i class="fa fa-arrow-right"></i></a>
-        <a class="btn btn-secondary" href="books.html?book_group=${typeParam}#resultsGrid">Related Books</a>
-        <a class="btn btn-secondary" href="opportunity.html?type=exam&id=${Number(group.latestItem.id) || 0}">Open Latest Blog</a>
+        <a class="btn btn-primary" href="opportunity.html?type=exam&group=${typeParam}">Open ${escapeHtml(group.type)} Blog <i class="fa fa-arrow-right"></i></a>
       </div>
     </article>`;
     }
@@ -238,7 +236,7 @@
     document.getElementById('examTypeLatestGrid').innerHTML = groups.length ? groups.map(renderExamTypeCard).join('') : '<div class="empty-mini">No exam types yet.</div>';
      const sidebar=document.getElementById('examDeadlineSidebar');
     if(sidebar){
-      sidebar.innerHTML=groups.length?groups.slice(0,6).map((group)=>`<a class="home-latest-item" href="exams.html?exam_group=${encodeURIComponent(group.type)}#resultsGrid"><strong>${escapeHtml(group.type)}</strong><span>Exam date: ${formatDate(group.latestDate)} • ${group.count} listing${group.count!==1?'s':''}</span></a>`).join(''):'<a class="home-latest-item" href="exams.html">No upcoming deadlines yet.</a>';
+      sidebar.innerHTML=groups.length?groups.slice(0,6).map((group)=>`<a class="home-latest-item" href="opportunity.html?type=exam&group=${encodeURIComponent(group.type)}"><strong>${escapeHtml(group.type)}</strong><span>Exam date: ${formatDate(group.latestDate)} • ${group.count} listing${group.count!==1?'s':''}</span></a>`).join(''):'<a class="home-latest-item" href="exams.html">No upcoming deadlines yet.</a>';
     }
   }
   function applyFilters() {
