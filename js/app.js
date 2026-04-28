@@ -336,6 +336,11 @@ function shareOpportunity(id, type, title) {
   window.prompt('Copy and share this link:', shareUrl);
 }
 
+function openCardPost(id, type) {
+  const nextUrl = getCardDetailsUrl(id, type);
+  window.location.href = nextUrl;
+}
+
 // ── Card renderers ───────────────────────────────────────────
 function cardScholarship(s) {
   const fav = isFav(s.id, 'scholarship');
@@ -843,25 +848,7 @@ function renderCards(items, gridId, type) {
     book: cardBook
   };
   const fn = renderers[type] || cardScholarship;
-  const isSubpageResultsGrid = gridId === 'resultsGrid' && !document.body.classList.contains('home-page');
-  if (isSubpageResultsGrid) {
-    const latestItems = items.slice(0, 4);
-    const otherItems = items.slice(4);
-    grid.innerHTML = `
-      <div class="split-blocks">
-        <section class="split-block">
-          <div class="split-block-head"><h3>Latest</h3><span>${latestItems.length}</span></div>
-          <div class="cards-grid cards-grid-embedded">${latestItems.map(fn).join('')}</div>
-        </section>
-        <section class="split-block">
-          <div class="split-block-head"><h3>Other</h3><span>${otherItems.length}</span></div>
-          <div class="cards-grid cards-grid-embedded">${otherItems.length ? otherItems.map(fn).join('') : '<div class="empty-mini">No additional items.</div>'}</div>
-        </section>
-      </div>
-    `;
-  } else {
-    grid.innerHTML = items.map(fn).join('');
-  }
+  grid.innerHTML = items.map(fn).join('');
   
   // Ensure cards are always visible — force opacity & visibility
   // This is the primary visibility fix for all sub-pages
@@ -1175,7 +1162,7 @@ document.addEventListener('click', (event) => {
   if (interactive) return;
   const card = target.closest('.card[data-id][data-type]');
   if (!card) return;
-  openCardDetailsById(card.dataset.id, card.dataset.type);
+  openCardPost(card.dataset.id, card.dataset.type);
 });
 
 document.addEventListener('keydown', (event) => {
@@ -1187,7 +1174,7 @@ document.addEventListener('keydown', (event) => {
   const card = event.target?.closest?.('.card[data-id][data-type]');
   if (!card) return;
   event.preventDefault();
-  openCardDetailsById(card.dataset.id, card.dataset.type);
+  openCardPost(card.dataset.id, card.dataset.type);
 });
 
 // ── Scroll-triggered card animations ────────────────────────
