@@ -1445,9 +1445,14 @@ function injectAdPlaceholders() {
     firstSection.insertAdjacentElement('beforebegin', buildAdSlot('incontent', 'In-content Banner'));
   }
 
-  const sidebar = document.querySelector('.home-latest-sidebar, .opportunity-sidebar, .footer-col');
-  if (sidebar && sidebar.parentNode) {
-    sidebar.insertAdjacentElement('beforebegin', buildAdSlot('sidebar', 'Sidebar Rectangle'));
+  const opportunitySidebar = document.querySelector('.opportunity-sidebar');
+  if (opportunitySidebar) {
+    opportunitySidebar.insertAdjacentElement('afterbegin', buildAdSlot('sidebar', 'Sidebar Rectangle'));
+  } else {
+    const sidebar = document.querySelector('.home-latest-sidebar, .footer-col');
+    if (sidebar && sidebar.parentNode) {
+      sidebar.insertAdjacentElement('beforebegin', buildAdSlot('sidebar', 'Sidebar Rectangle'));
+    }
   }
 
   const footer = document.querySelector('footer.footer');
