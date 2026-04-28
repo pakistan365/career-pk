@@ -198,13 +198,36 @@ function renderRichTextWithPreviews(value) {
 
   return lines.map((line) => {
     const parts = line.split(/(https?:\/\/[^\s<>"')\]]+)/gi);
-    const content = parts.map((part) => {
-      if (!/^https?:\/\//i.test(part)) return escapeHtml(part);
+    const blocks = [];
+    let inlineText = '';
+
+    const flushInlineText = () => {
+      const trimmed = inlineText.trim();
+      if (trimmed) blocks.push(`<p class="rich-text-paragraph">${trimmed}</p>`);
+      inlineText = '';
+    };
+
+    parts.forEach((part) => {
+      if (!/^https?:\/\//i.test(part)) {
+        inlineText += escapeHtml(part);
+        return;
+      }
       const safe = safeUrl(part);
-      if (safe === '#') return escapeHtml(part);
-      return renderInlineResourcePreview(safe);
-    }).join('');
-    return `<div class="rich-text-block">${content}</div>`;
+      if (safe === '#') {
+        inlineText += escapeHtml(part);
+        return;
+      }
+      const meta = classifyResourceUrl(safe);
+      if (meta.kind === 'image' || meta.kind === 'pdf' || meta.kind === 'book') {
+        flushInlineText();
+        blocks.push(`<figure class="rich-text-media">${renderInlineResourcePreview(safe)}</figure>`);
+        return;
+      }
+      inlineText += renderInlineResourcePreview(safe);
+    });
+
+    flushInlineText();
+    return `<div class="rich-text-block">${blocks.join('')}</div>`;
   }).join('');
 }
 
