@@ -68,9 +68,17 @@
       <h2 class="section-title">Quick Access by Exam Type</h2>
       <p class="section-subtitle">Open each category as a complete blog-style guide with related books and resources.</p>
     </div>
-    <div id="examTypeLatestGrid" class="exam-types-grid quick-access-grid">
-    <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
-    </div>
+    <div class="quick-access-layout">
+      <div id="examTypeLatestGrid" class="exam-types-grid quick-access-grid">
+      <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+      </div>
+      <aside class="quick-access-sidebar" aria-label="Upcoming exam deadlines">
+        <h3>Deadline Session</h3>
+        <div id="examDeadlineSidebar" class="home-latest-list">
+          <a class="home-latest-item" href="exams.html">Loading deadlines...</a>
+        </div>
+      </aside>
+  </div>
   </div>
 </section>
 
@@ -228,6 +236,10 @@
     });
     const groups = Object.values(grouped).sort((a,b)=>new Date(b.latestDate||0)-new Date(a.latestDate||0));
     document.getElementById('examTypeLatestGrid').innerHTML = groups.length ? groups.map(renderExamTypeCard).join('') : '<div class="empty-mini">No exam types yet.</div>';
+     const sidebar=document.getElementById('examDeadlineSidebar');
+    if(sidebar){
+      sidebar.innerHTML=groups.length?groups.slice(0,6).map((group)=>`<a class="home-latest-item" href="exams.html?exam_group=${encodeURIComponent(group.type)}#resultsGrid"><strong>${escapeHtml(group.type)}</strong><span>Exam date: ${formatDate(group.latestDate)} • ${group.count} listing${group.count!==1?'s':''}</span></a>`).join(''):'<a class="home-latest-item" href="exams.html">No upcoming deadlines yet.</a>';
+    }
   }
   function applyFilters() {
     const examType = document.getElementById('filterExamType').value;
