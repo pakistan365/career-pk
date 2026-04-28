@@ -1394,6 +1394,12 @@ ul { list-style: none; }
   font-size: 13px;
   color: var(--gray-mid);
 }
+@media (max-width: 640px) {
+  .home-details-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
 .home-seo-copy {
   margin-top: 14px;
   font-size: 14px;
@@ -1825,6 +1831,9 @@ textarea:focus-visible {
   margin: 0;
   padding: 0;
   align-self: start;
+}
+.opportunity-sidebar > .ad-slot-sidebar {
+  max-width: 100%;
 }
 .ad-slot-sidebar .ad-slot-inner {
   min-height: 260px;
