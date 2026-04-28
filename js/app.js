@@ -654,16 +654,29 @@ function getTimelineValue(item) {
   return item?.deadline || item?.test_date || item?.posted_date || '';
 }
 
+function shortTitle(value, max = 44) {
+  const clean = text(value).trim().replace(/\s+/g, ' ');
+  if (clean.length <= max) return clean;
+  return `${clean.slice(0, max - 1).trimEnd()}…`;
+}
+
+function isBookTopic(topic) {
+  return normalizeText(topic?.key) === 'book';
+}
+
 function renderInsightItems(items, topic) {
   if (!items.length) return '<li>Live updates will appear here as soon as content is loaded.</li>';
-  const sorted = [...items]
-    .sort((a, b) => new Date(getTimelineValue(a) || 0) - new Date(getTimelineValue(b) || 0))
-    .slice(0, 5);
-  return sorted.map((item) => {
-    const name = escapeHtml(item.title || `${topic.label} update`);
+  const sorted = [...items];
+  if (isBookTopic(topic)) {
+    sorted.sort((a, b) => new Date(b.posted_date || b.created_at || 0) - new Date(a.posted_date || a.created_at || 0));
+  } else {
+    sorted.sort((a, b) => new Date(getTimelineValue(a) || 0) - new Date(getTimelineValue(b) || 0));
+  }
+  const top = sorted.slice(0, 4);
+  return top.map((item) => {
+    const name = escapeHtml(shortTitle(item.title || `${topic.label} update`));
     const dateText = formatDate(getTimelineValue(item));
-    const sub = escapeHtml(item.country || item.location || item.organization || item.exam_type || item.category || '');
-    return `<li><strong>${name}</strong><span>${escapeHtml(dateText)}${sub ? ` • ${sub}` : ''}</span></li>`;
+    return `<li><strong>${name}</strong><span>${escapeHtml(dateText)}</span></li>`;
   }).join('');
 }
 
@@ -703,8 +716,8 @@ function enhanceCardsSection(grid, items, type) {
     layout.appendChild(aside);
   }
   aside.innerHTML = `
-    <h3>Latest ${topic.label} Timeline</h3>
-    <p>Quick updates tailored to this page topic.</p>
+    <h3>${isBookTopic(topic) ? 'Latest books' : 'Upcoming deadlines'}</h3>
+    <p>${isBookTopic(topic) ? 'Newest titles from this category.' : 'Short deadline timeline for this category.'}</p>
     <ul>${renderInsightItems(items, topic)}</ul>
   `;
 
@@ -761,7 +774,25 @@ function renderCards(items, gridId, type) {
     book: cardBook
   };
   const fn = renderers[type] || cardScholarship;
-  grid.innerHTML = items.map(fn).join('');
+  const isSubpageResultsGrid = gridId === 'resultsGrid' && !document.body.classList.contains('home-page');
+  if (isSubpageResultsGrid) {
+    const latestItems = items.slice(0, 4);
+    const otherItems = items.slice(4);
+    grid.innerHTML = `
+      <div class="split-blocks">
+        <section class="split-block">
+          <div class="split-block-head"><h3>Latest</h3><span>${latestItems.length}</span></div>
+          <div class="cards-grid cards-grid-embedded">${latestItems.map(fn).join('')}</div>
+        </section>
+        <section class="split-block">
+          <div class="split-block-head"><h3>Other</h3><span>${otherItems.length}</span></div>
+          <div class="cards-grid cards-grid-embedded">${otherItems.length ? otherItems.map(fn).join('') : '<div class="empty-mini">No additional items.</div>'}</div>
+        </section>
+      </div>
+    `;
+  } else {
+    grid.innerHTML = items.map(fn).join('');
+  }
   
   // Ensure cards are always visible — force opacity & visibility
   // This is the primary visibility fix for all sub-pages
@@ -820,10 +851,10 @@ function loadHomePageData() {
   const internships  = window.CMS_DATA.Internships || [];
   const books        = window.CMS_DATA.Books || [];
 
-  renderCards(scholarships.slice(0, 4), 'scholarshipsGrid', 'scholarship');
-  renderCards(jobs.slice(0, 4), 'jobsGrid', 'job');
-  renderCards(books.slice(0, 4), 'booksGrid', 'book');
-  renderCards(internships.slice(0, 4), 'internshipsGrid', 'internship');
+  renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
+  renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
+  renderCards(sortItems(books, 'newest').slice(0, 4), 'booksGrid', 'book');
+  renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
 }
 
 // ── Notification bar loader ───────────────────────────────────
