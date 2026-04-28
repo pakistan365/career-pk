@@ -83,6 +83,27 @@
       title: 'Saved Items | Career Pakistan',
       description: 'Access your saved scholarships, jobs, internships, exams, and books on Career Pakistan.'
           },
+    
+    '/about.html': {
+      title: 'About Career Pakistan | Scholarships, Jobs & Exam Guidance',
+      description: 'Learn about Career Pakistan, our mission, and how we help students discover scholarships, jobs, internships, exams, and books.',
+      keywords: 'about career pakistan, pakistan career platform, scholarships jobs exams pakistan'
+    },
+    '/contact.html': {
+      title: 'Contact Career Pakistan | Submit Opportunities & Feedback',
+      description: 'Contact Career Pakistan to submit scholarships, jobs, internships, exam updates, or partnership and feedback requests.',
+      keywords: 'contact career pakistan, submit scholarship, submit jobs pakistan'
+    },
+    '/privacy.html': {
+      title: 'Privacy Policy | Career Pakistan',
+      description: 'Read the Career Pakistan privacy policy to understand data handling, cookies, and user privacy protection.',
+      keywords: 'career pakistan privacy policy, user data policy, website privacy pakistan'
+    },
+    '/terms.html': {
+      title: 'Terms of Use | Career Pakistan',
+      description: 'Review the Career Pakistan terms of use for content usage, responsibilities, and platform guidelines.',
+      keywords: 'career pakistan terms, terms of use pakistan website'
+    },
     '/opportunity.html': {
       title: 'Opportunity Details | Career Pakistan',
       description: 'Read full details, deadlines, and related opportunities for jobs, scholarships, internships, exams, and preparation content.'
@@ -258,6 +279,11 @@
     '/exams-ppsc.html': [{ name: 'Home', url: '/' }, { name: 'Exams', url: '/exams.html' }, { name: 'PPSC', url: '/exams-ppsc.html' }],
     '/books.html': [{ name: 'Home', url: '/' }, { name: 'Books', url: '/books.html' }],
     '/resume-builder.html': [{ name: 'Home', url: '/' }, { name: 'Resume Builder', url: '/resume-builder.html' }],
+  
+    '/about.html': [{ name: 'Home', url: '/' }, { name: 'About', url: '/about.html' }],
+    '/contact.html': [{ name: 'Home', url: '/' }, { name: 'Contact', url: '/contact.html' }],
+    '/privacy.html': [{ name: 'Home', url: '/' }, { name: 'Privacy Policy', url: '/privacy.html' }],
+    '/terms.html': [{ name: 'Home', url: '/' }, { name: 'Terms of Use', url: '/terms.html' }],
     '/opportunity.html': [{ name: 'Home', url: '/' }, { name: 'Opportunity Details', url: '/opportunity.html' }]
   };
 
