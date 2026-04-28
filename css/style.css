@@ -700,6 +700,79 @@ ul { list-style: none; }
   }
 }
 
+/* ── Homepage Horizontal Card Sliders ────────────────────── */
+.home-slider-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.home-slider-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.home-slider-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.home-slider-btn:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.home-card-slider {
+  --home-visible-cards: 1;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--home-visible-cards) - 1) * 14px) / var(--home-visible-cards));
+  grid-template-columns: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.home-card-slider::-webkit-scrollbar {
+  display: none;
+}
+.home-card-slider > .card,
+.home-card-slider > .exam-card,
+.home-card-slider > .skeleton-card {
+  scroll-snap-align: start;
+}
+#scholarshipsGrid.home-card-slider {
+  --home-visible-cards: 1;
+}
+#jobsGrid.home-card-slider,
+#internshipsGrid.home-card-slider {
+  --home-visible-cards: 1;
+}
+@media (min-width: 720px) {
+  #scholarshipsGrid.home-card-slider {
+    --home-visible-cards: 2;
+  }
+  #jobsGrid.home-card-slider,
+  #internshipsGrid.home-card-slider {
+    --home-visible-cards: 2;
+  }
+}
+@media (min-width: 1120px) {
+  #scholarshipsGrid.home-card-slider {
+    --home-visible-cards: 2;
+  }
+  #jobsGrid.home-card-slider,
+  #internshipsGrid.home-card-slider {
+    --home-visible-cards: 3;
+  }
+}
+
 .cards-layout {
   display: grid;
   grid-template-columns: 1fr;
