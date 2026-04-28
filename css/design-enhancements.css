@@ -602,3 +602,76 @@ body.dark .home-hero-title {
   border-radius: 50%;
   animation: titlePulse 2s ease infinite;
 }
+
+/* ── CARD SIZING TUNE-UP (home + all listing pages) ─────── */
+.cards-grid {
+  gap: 18px;
+}
+
+.cards-grid .card {
+  height: 100%;
+  min-height: 100%;
+}
+
+.card-img {
+  aspect-ratio: 16 / 9;
+  min-height: clamp(168px, 20vw, 220px);
+}
+
+.card-body {
+  padding: 16px;
+  gap: 10px;
+}
+
+.card-title {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  min-height: calc(1.45em * 2);
+}
+
+.card-desc {
+  font-size: 0.89rem;
+  line-height: 1.6;
+}
+
+.card-footer {
+  padding: 12px 16px;
+}
+
+.home-latest-item {
+  padding: 10px 12px;
+  gap: 4px;
+}
+
+.home-latest-item strong {
+  font-size: 13.5px;
+}
+
+.home-latest-item span {
+  font-size: 12px;
+}
+
+@media (min-width: 1280px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .cards-grid {
+    gap: 14px;
+  }
+
+  .card-img {
+    min-height: clamp(156px, 42vw, 186px);
+  }
+
+  .card-body {
+    padding: 14px;
+  }
+
+  .card-footer {
+    padding: 11px 14px;
+  }
+}
