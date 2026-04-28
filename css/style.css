@@ -712,11 +712,13 @@ ul { list-style: none; }
   height: 34px;
   border-radius: 999px;
   border: 1px solid var(--border);
+  min-height: calc(1.2em * 1);
   background: var(--bg-card);
   color: var(--text-main);
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: calc(1.25em * 1);
   cursor: pointer;
   transition: all var(--transition);
 }
