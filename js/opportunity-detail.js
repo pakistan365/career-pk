@@ -197,12 +197,17 @@
       cover.style.display = 'none';
     }
 
-    document.getElementById('opportunityMeta').innerHTML = [
-      detailField('Category', item.category || item.type || item.exam_type, 'fa-folder-open'),
-      detailField('Location', item.location || item.country, 'fa-map-marker-alt'),
-      detailField('Deadline', formatDate(item.deadline || item.test_date), 'fa-calendar'),
-      detailField('Posted', formatDate(item.posted_date), 'fa-clock')
-    ].filter(Boolean).join('');
+    const metaFields = [
+    detailField('Category', item.category || item.type || item.exam_type, 'fa-folder-open'),
+      detailField('Location', item.location || item.country, 'fa-map-marker-alt')
+    ];
+    if (type !== 'book') {
+      metaFields.push(
+        detailField('Deadline', formatDate(item.deadline || item.test_date), 'fa-calendar'),
+        detailField('Posted', formatDate(item.posted_date), 'fa-clock')
+      );
+    }
+    document.getElementById('opportunityMeta').innerHTML = metaFields.filter(Boolean).join('');
 
     const overviewText = text(item.description || item.details || 'Full details will be updated shortly.');
     document.getElementById('opportunityOverview').textContent = overviewText;
