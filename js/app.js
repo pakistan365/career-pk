@@ -416,10 +416,8 @@ function cardExam(e) {
       <h3 class="card-title">${escapeHtml(e.title)}</h3>
       <div class="card-details">
         ${e.test_date ? `<span><i class="fa fa-calendar"></i> Test: ${formatDate(e.test_date)}</span>` : ''}
-        ${e.eligibility ? `<span><i class="fa fa-user-check"></i> ${escapeHtml(e.eligibility)}</span>` : ''}
         ${e.conducting_body ? `<span><i class="fa fa-building"></i> ${escapeHtml(e.conducting_body)}</span>` : ''}
       </div>
-      ${renderTags(e.tags)}
     </div>
     <div class="card-footer exam-links">
       <a class="btn btn-primary" href="${getCardDetailsUrl(e.id, 'exam')}">View Details <i class="fa fa-arrow-right"></i></a>
@@ -442,10 +440,8 @@ function cardBook(b) {
       <h3 class="card-title">${escapeHtml(b.title)}</h3>
       <div class="card-details">
         ${b.author ? `<span><i class="fa fa-user"></i> ${escapeHtml(b.author)}</span>` : ''}
-        ${b.edition ? `<span><i class="fa fa-book"></i> ${escapeHtml(b.edition)}</span>` : ''}
         ${b.category ? `<span><i class="fa fa-tag"></i> ${escapeHtml(b.category)}</span>` : ''}
       </div>
-      ${renderTags(b.tags)}
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(b.id, 'book')}">View Details <i class="fa fa-arrow-right"></i></a>
@@ -872,7 +868,6 @@ function loadHomePageData() {
   const books        = window.CMS_DATA.Books || [];
 
   renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
-  renderCards(sortItems(exams, 'newest').slice(0, 4), 'examsGrid', 'exam');
   renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
   renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
   renderHomeLatestList('homeLatestScholarshipsList', scholarships, 'scholarship');
