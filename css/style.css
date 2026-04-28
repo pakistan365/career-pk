@@ -884,6 +884,15 @@ ul { list-style: none; }
   margin: 0 0 10px;
   font-size: 15px;
 }
+.scholarship-deadlines-panel {
+  display: grid;
+  gap: 10px;
+}
+.scholarship-deadlines-heading {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.35;
+}
 .home-latest-list {
   display: grid;
   gap: 8px;
@@ -904,6 +913,29 @@ ul { list-style: none; }
 .home-latest-item span {
   font-size: 11.5px;
   color: var(--text-secondary);
+}
+.home-latest-item .deadline-date {
+  color: var(--red);
+  font-weight: 700;
+}
+.home-latest-toggle-btn {
+  justify-self: start;
+  border: 1px solid color-mix(in srgb, var(--primary) 45%, var(--border));
+  background: var(--bg-alt);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.home-latest-toggle-btn:hover {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary-bg) 55%, var(--bg-alt));
+}
+.deadline-date {
+  color: var(--red) !important;
+  font-weight: 700;
 }
 .home-latest-item:hover {
   border-color: var(--primary);
