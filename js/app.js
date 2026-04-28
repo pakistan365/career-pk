@@ -980,8 +980,14 @@ function initHomeCardSliders() {
 
     const prevBtn = nav.querySelector('.home-slider-prev');
     const nextBtn = nav.querySelector('.home-slider-next');
-    const scrollStep = () => Math.max(180, Math.round(grid.clientWidth * 0.52));
-
+    const scrollStep = () => {
+      const firstCard = grid.querySelector('.card, .exam-card, .skeleton-card');
+      if (!firstCard) return Math.max(180, Math.round(grid.clientWidth * 0.5));
+      const styles = window.getComputedStyle(grid);
+      const gap = parseFloat(styles.columnGap || styles.gap || '14') || 14;
+      return Math.round(firstCard.getBoundingClientRect().width + gap);
+    };
+    
     function updateButtons() {
       const maxScroll = grid.scrollWidth - grid.clientWidth;
       prevBtn.disabled = grid.scrollLeft <= 4;
