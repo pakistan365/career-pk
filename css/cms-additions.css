@@ -302,6 +302,13 @@ body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
 body.home-page .cards-grid.home-card-slider > .card {
   min-width: 0;
   scroll-snap-align: start;
+  min-height: 100%;
+}
+
+@media (min-width: 901px) {
+  body.home-page .cards-grid.home-card-slider > .card {
+    min-height: 420px;
+  }
 }
 
 body.home-page .home-slider-nav {
@@ -340,8 +347,11 @@ body.home-page .home-slider-btn:disabled {
   }
 
   body.home-page .cards-grid.home-card-slider {
-    grid-auto-columns: calc((100% - 8px) / 2);
-    gap: 8px;
+     grid-auto-flow: row;
+     grid-template-columns: 1fr;
+     gap: 8px;
+     overflow-x: visible;
+     scroll-snap-type: none;
   }
 
   body.home-page .cards-grid.home-card-slider .card-img {
