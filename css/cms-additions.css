@@ -7,7 +7,7 @@
 .card-img {
   position: relative;
   overflow: hidden;
-  height: clamp(160px, 18vw, 192px);
+  height: clamp(142px, 15.5vw, 176px);
   aspect-ratio: 16 / 9;
   background: var(--bg-alt, #efefef);
   border-radius: var(--radius-md) var(--radius-md) 0 0;
@@ -245,7 +245,7 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 @media (max-width: 600px) {
   .cards-list .card { flex-direction: column; }
   .cards-list .card-img { width: 100%; height: 140px; }
-  .card-img { height: clamp(150px, 42vw, 178px); }
+  .card-img { height: clamp(126px, 38vw, 152px); }
   .card-body { padding: 14px; }
   .card-title {
     font-size: 0.95rem;
@@ -270,6 +270,10 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
   .btn-share {
     width: 38px;
     height: 38px;
+  }
+   
+  .card-detail-media {
+    min-height: 168px;
   }
 }
 
