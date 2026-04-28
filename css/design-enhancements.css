@@ -660,18 +660,42 @@ body.dark .home-hero-title {
 
 @media (max-width: 680px) {
   .cards-grid {
-    gap: 14px;
+    gap: 11px;
   }
 
   .card-img {
-    min-height: clamp(156px, 42vw, 186px);
+    min-height: clamp(132px, 38vw, 164px);
   }
 
   .card-body {
-    padding: 14px;
+    padding: 11px;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 0.94rem;
+    line-height: 1.35;
+    min-height: calc(1.35em * 2);
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
   }
 
   .card-footer {
-    padding: 11px 14px;
+    padding: 10px 11px;
+  }
+
+  .home-latest-item {
+    padding: 8px 9px;
+  }
+
+  .home-latest-item strong {
+    font-size: 12.5px;
+  }
+
+  .home-latest-item span {
+    font-size: 11px;
   }
 }
