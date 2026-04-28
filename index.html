@@ -150,13 +150,21 @@
 
 <!-- EXAMS -->
 <section class="section section-alt">
-    <div class="container">
+  <div class="container">
     <div class="section-header">
       <h2 class="section-title">Latest Exams</h2>
       <a class="view-all" href="exams.html">View all</a>
     </div>
-    <div class="category-pills" id="homeExamBlocks">
-      <span class="cat-pill active">Loading exam categories...</span>
+    <div class="home-category-layout">
+      <div class="category-pills category-pills-enhanced" id="homeExamBlocks">
+        <span class="cat-pill active">Loading exam categories...</span>
+      </div>
+      <aside class="home-latest-sidebar" aria-label="Exam deadlines">
+        <h3>Upcoming Deadlines</h3>
+        <div id="homeLatestExamList" class="home-latest-list">
+          <a class="home-latest-item" href="exams.html">Loading exam deadlines...</a>
+        </div>
+      </aside>
     </div>
     <div class="cards-grid" id="examsGrid"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
   </div>
@@ -170,8 +178,8 @@
       <a class="view-all" href="books.html">View all</a>
     </div>
     <div class="home-books-layout">
-      <div class="category-pills" id="homeBookBlocks">
-        <span class="cat-pill active">Loading book categories...</span>
+      <div class="category-pills category-pills-enhanced" id="homeBookBlocks">
+      <span class="cat-pill active">Loading book categories...</span>
       </div>
       <aside class="home-latest-sidebar" aria-label="Latest books">
         <h3>Latest Books</h3>
