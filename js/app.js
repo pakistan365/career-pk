@@ -871,10 +871,10 @@ function loadHomePageData() {
   renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
   renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
   renderCards(sortItems(exams, 'newest').slice(0, 4), 'examsGrid', 'exam');
-  renderCards(sortItems(books, 'newest').slice(0, 4), 'booksGrid', 'book');
   renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
-    renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
+  renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
   renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
+  renderHomeLatestList('homeLatestBooksList', books, 'book');
 }
 
 function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, queryKey) {
@@ -892,6 +892,20 @@ function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, quer
       `<a class="cat-pill" href="${pageUrl}?${queryKey}=${encodeURIComponent(group.name)}#resultsGrid">${escapeHtml(group.name)} <span>(${group.count})</span></a>`
     )).join('')
     : '<span class="cat-pill active">No categories yet</span>';
+}
+
+function renderHomeLatestList(containerId, rows, type) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const latestRows = sortItems(rows || [], 'newest').slice(0, 5);
+  if (!latestRows.length) {
+    container.innerHTML = `<a class="home-latest-item" href="${type === 'book' ? 'books.html' : '#'}">No updates yet.</a>`;
+    return;
+  }
+  container.innerHTML = latestRows.map((item) => {
+    const groupName = type === 'book' ? getBookGroupName(item) : (item.category || item.type || 'General');
+    return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${formatDate(item.posted_date)}</span></a>`;
+  }).join('');
 }
 
 // ── Notification bar loader ───────────────────────────────────
