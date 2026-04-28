@@ -51,12 +51,12 @@
         <img id="opportunityCover" class="opportunity-cover" alt="Opportunity cover" loading="lazy"/>
       </div>
       <div class="opportunity-meta" id="opportunityMeta"></div>
-      <section>
+       <section id="overviewSection">
         <h2>Overview</h2>
         <p id="opportunityOverview"></p>
       </section>
-      <section>
-        <h2>Complete Details</h2>
+      <section id="detailsSection">
+      <h2>Complete Details</h2>
         <div id="opportunityBody" class="opportunity-body"></div>
       </section>
       <section>
@@ -71,20 +71,21 @@
           <a class="btn btn-primary" href="jobs.html">Explore More Fresh Jobs</a>
         </div>
       </section>
+      
+      <section class="related-end-section">
+        <h2 id="relatedSameTypeTitle">More Related Opportunities</h2>
+        <div id="relatedSameTypeCards" class="related-card-grid"></div>
+      </section>
     </article>
 
     <aside class="opportunity-sidebar">
-      <section class="related-block card-surface">
-        <h3>Related Jobs</h3>
-        <div id="relatedJobs" class="related-list"></div>
+        <section class="related-block card-surface">
+        <h3 id="sidebarRelatedOneTitle">Related Updates</h3>
+        <div id="sidebarRelatedOne" class="related-list"></div>
       </section>
       <section class="related-block card-surface">
-        <h3>Related Exams & Preparation</h3>
-        <div id="relatedExams" class="related-list"></div>
-      </section>
-      <section class="related-block card-surface">
-        <h3>Recommended Study Content</h3>
-        <div id="relatedBooks" class="related-list"></div>
+        <h3 id="sidebarRelatedTwoTitle">Recommended Content</h3>
+        <div id="sidebarRelatedTwo" class="related-list"></div>
       </section>
     </aside>
   </div>
