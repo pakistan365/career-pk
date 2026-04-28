@@ -347,11 +347,19 @@ body.home-page .home-slider-btn:disabled {
   }
 
   body.home-page .cards-grid.home-card-slider {
-     grid-auto-flow: row;
-     grid-template-columns: 1fr;
-     gap: 8px;
-     overflow-x: visible;
-     scroll-snap-type: none;
+     grid-auto-flow: column;
+     grid-template-columns: none;
+     grid-auto-columns: calc((100% - 14px) / 2);
+     gap: 14px;
+     overflow-x: auto;
+     scroll-snap-type: x mandatory;
+     align-items: stretch;
+  }
+
+  body.home-page .cards-grid.home-card-slider > .card,
+  body.home-page .cards-grid.home-card-slider > .exam-card,
+  body.home-page .cards-grid.home-card-slider > .skeleton-card {
+    height: 100%;
   }
 
   body.home-page .cards-grid.home-card-slider .card-img {
