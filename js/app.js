@@ -873,6 +873,7 @@ function loadHomePageData() {
   renderCards(sortItems(exams, 'newest').slice(0, 4), 'examsGrid', 'exam');
   renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
   renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
+  renderHomeLatestList('homeLatestExamList', sortItems(exams, 'deadline'), 'exam');
   renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
   renderHomeLatestList('homeLatestBooksList', books, 'book');
 }
@@ -897,14 +898,16 @@ function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, quer
 function renderHomeLatestList(containerId, rows, type) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const latestRows = sortItems(rows || [], 'newest').slice(0, 5);
+  const latestRows = (type === 'exam' ? sortItems(rows || [], 'deadline') : sortItems(rows || [], 'newest')).slice(0, 5);
   if (!latestRows.length) {
-    container.innerHTML = `<a class="home-latest-item" href="${type === 'book' ? 'books.html' : '#'}">No updates yet.</a>`;
+    container.innerHTML = `<a class="home-latest-item" href="${type === 'book' ? 'books.html' : 'exams.html'}">No updates yet.</a>`;
     return;
   }
   container.innerHTML = latestRows.map((item) => {
-    const groupName = type === 'book' ? getBookGroupName(item) : (item.category || item.type || 'General');
-    return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${formatDate(item.posted_date)}</span></a>`;
+    const groupName = type === 'book' ? getBookGroupName(item) : getExamGroupName(item);
+    const dateLabel = type === 'exam' ? 'Test date' : 'Updated';
+    const dateValue = type === 'exam' ? (item.test_date || item.deadline || item.posted_date) : item.posted_date;
+    return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${dateLabel}: ${formatDate(dateValue)}</span></a>`;
   }).join('');
 }
 
