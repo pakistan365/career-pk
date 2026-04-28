@@ -471,6 +471,7 @@ function cardInternship(i) {
 }
 
 function cardExam(e) {
+  const fav = isFav(e.id, 'exam');
   const src = imgSrc(e.image_url, 'exam');
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(e.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   return `
@@ -493,11 +494,16 @@ function cardExam(e) {
       <button class="btn-share" onclick="shareOpportunity(${Number(e.id) || 0},'exam','${escapeJsSingleQuote(e.title)}')" ${shareButtonAttrs(e.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
+      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(e.id) || 0},'${escapeJsSingleQuote(e.title)}','exam',this)" ${getFavButtonStateAttrs(fav)}>
+        <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
+        <span class="visually-hidden">${fav ? 'Saved' : 'Save'}</span>
+      </button>
     </div>
   </div>`;
 }
 
 function cardBook(b) {
+  const fav = isFav(b.id, 'book');
   const src = imgSrc(b.image_url, 'book');
   const imgHTML = src ? `<img src="${escapeHtml(src)}" alt="${escapeHtml(b.title)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
   return `
@@ -519,6 +525,10 @@ function cardBook(b) {
       <a class="btn btn-primary" href="${getCardDetailsUrl(b.id, 'book')}">View Details <i class="fa fa-arrow-right"></i></a>
       <button class="btn-share" onclick="shareOpportunity(${Number(b.id) || 0},'book','${escapeJsSingleQuote(b.title)}')" ${shareButtonAttrs(b.title)}>
         <i class="fa fa-share-nodes"></i>
+      </button>
+      <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(b.id) || 0},'${escapeJsSingleQuote(b.title)}','book',this)" ${getFavButtonStateAttrs(fav)}>
+        <i class="fa${fav ? 's' : 'r'} fa-bookmark"></i>
+        <span class="visually-hidden">${fav ? 'Saved' : 'Save'}</span>
       </button>
     </div>
   </div>`;
