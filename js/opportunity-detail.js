@@ -7,6 +7,14 @@
     book: { sheet: 'Books', icon: '📚', base: 'books.html', label: 'Books' }
   };
 
+    const relatedPlan = {
+    job: { sidebar: ['exam', 'book'], end: 'job' },
+    scholarship: { sidebar: ['exam', 'book'], end: 'scholarship' },
+    internship: { sidebar: ['job', 'exam'], end: 'internship' },
+    exam: { sidebar: ['job', 'book'], end: 'exam' },
+    book: { sidebar: ['exam', 'scholarship'], end: 'book' }
+  };
+
   const params = new URLSearchParams(window.location.search);
   const type = (params.get('type') || 'job').toLowerCase();
   const id = Number(params.get('id'));
@@ -34,17 +42,45 @@
     return score;
   }
 
-  function renderRelatedList(items, mountId, label) {
-    const mount = document.getElementById(mountId);
+  function getListByType(targetType) {
+    const sheet = (typeMap[targetType] || {}).sheet;
+    if (!sheet) return [];
+    return window.CMS_DATA[sheet] || [];
+  }
+
+  function getTargetDetail(targetType, item) {
+    return text(item.type || item.exam_type || item.category || item.location || 'Updated listing');
+  }
+
+  function renderRelatedList(items, mountId, targetType, emptyLabel) {
+  const mount = document.getElementById(mountId);
     if (!mount) return;
     if (!items.length) {
-      mount.innerHTML = `<p class="muted">No ${label.toLowerCase()} found yet.</p>`;
+      mount.innerHTML = `<p class="muted">No ${emptyLabel.toLowerCase()} found yet.</p>`;
       return;
     }
-    mount.innerHTML = items.map((item) => {
-      const targetType = label === 'Jobs' ? 'job' : (label === 'Exams' ? 'exam' : 'book');
+    mount.innerHTML = items.map((entry) => {
+      const item = entry.item || entry;
       const url = `opportunity.html?type=${targetType}&id=${Number(item.id) || 0}`;
-      return `<a class="related-item" href="${url}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(item.type || item.exam_type || item.category || 'Updated resource')}</span></a>`;
+      return `<a class="related-item" href="${url}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(getTargetDetail(targetType, item))}</span></a>`;
+    }).join('');
+  }
+
+  function renderSameTypeCards(items, targetType) {
+    const mount = document.getElementById('relatedSameTypeCards');
+    if (!mount) return;
+    if (!items.length) {
+      mount.innerHTML = `<p class="muted">More ${typeMap[targetType].label.toLowerCase()} will appear here soon.</p>`;
+      return;
+    }
+    mount.innerHTML = items.map((entry) => {
+      const item = entry.item || entry;
+      return `
+      <a class="related-card" href="opportunity.html?type=${targetType}&id=${Number(item.id) || 0}">
+        <h3>${escapeHtml(item.title || 'Untitled')}</h3>
+        <p>${escapeHtml(text(item.description || item.details || 'Open this card to read complete details.').slice(0, 120))}</p>
+        <span>${escapeHtml(getTargetDetail(targetType, item))}</span>
+      </a>`;
     }).join('');
   }
 
@@ -127,14 +163,22 @@
       detailField('Posted', formatDate(item.posted_date), 'fa-clock')
     ].filter(Boolean).join('');
 
-    document.getElementById('opportunityOverview').textContent = text(item.description || item.details || 'Full details will be updated shortly.');
-
+    const overviewText = text(item.description || item.details || 'Full details will be updated shortly.');
+    document.getElementById('opportunityOverview').textContent = overviewText;
+    
     const longContent = item.details || item.description;
     const fallbackParagraphs = splitParagraphs(longContent);
     const richBody = typeof renderRichTextWithPreviews === 'function'
       ? renderRichTextWithPreviews(longContent)
       : fallbackParagraphs.map((p) => `<p>${escapeHtml(p)}</p>`).join('');
     document.getElementById('opportunityBody').innerHTML = richBody;
+
+        const normalizedOverview = overviewText.replace(/\s+/g, ' ').trim().toLowerCase();
+    const normalizedDetails = text(longContent).replace(/\s+/g, ' ').trim().toLowerCase();
+    const detailsSection = document.getElementById('detailsSection');
+    if (detailsSection && normalizedOverview && normalizedOverview === normalizedDetails) {
+      detailsSection.style.display = 'none';
+    }
 
     document.getElementById('opportunityActions').innerHTML = [
       actionButton('Apply Now', item.apply_link, true),
@@ -153,31 +197,33 @@
 
     updateDynamicSeo(item);
 
-    const jobs = (window.CMS_DATA.Jobs || []).filter((j) => Number(j.id) !== Number(item.id));
-    const exams = window.CMS_DATA.Exams || [];
-    const books = window.CMS_DATA.Books || [];
+    const plan = relatedPlan[type] || relatedPlan.job;
+    const sideOneType = plan.sidebar[0];
+    const sideTwoType = plan.sidebar[1];
 
-    const relatedJobs = jobs
-      .map((j) => ({ score: relevance(item, j), item: j }))
+    document.getElementById('sidebarRelatedOneTitle').textContent = `Related ${typeMap[sideOneType].label}`;
+    document.getElementById('sidebarRelatedTwoTitle').textContent = `Related ${typeMap[sideTwoType].label}`;
+    document.getElementById('relatedSameTypeTitle').textContent = `More ${config.label}`;
+
+    const sameTypeItems = getListByType(plan.end)
+      .filter((row) => Number(row.id) !== Number(item.id))
+      .map((row) => ({ score: relevance(item, row), item: row }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 4)
-      .map((r) => r.item);
+      .slice(0, 6);
 
-    const relatedExams = exams
-      .map((e) => ({ score: relevance(item, e), item: e }))
+    const sideOneItems = getListByType(sideOneType)
+      .map((row) => ({ score: relevance(item, row), item: row }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 4)
-      .map((r) => r.item);
+      .slice(0, 5);
 
-    const relatedBooks = books
-      .map((b) => ({ score: relevance(item, b), item: b }))
+    const sideTwoItems = getListByType(sideTwoType)
+      .map((row) => ({ score: relevance(item, row), item: row }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 4)
-      .map((r) => r.item);
+      .slice(0, 5);
 
-    renderRelatedList(relatedJobs, 'relatedJobs', 'Jobs');
-    renderRelatedList(relatedExams, 'relatedExams', 'Exams');
-    renderRelatedList(relatedBooks, 'relatedBooks', 'Books');
+    renderRelatedList(sideOneItems, 'sidebarRelatedOne', sideOneType, typeMap[sideOneType].label);
+    renderRelatedList(sideTwoItems, 'sidebarRelatedTwo', sideTwoType, typeMap[sideTwoType].label);
+    renderSameTypeCards(sameTypeItems, plan.end);
   }
 
   function renderNotFound() {
