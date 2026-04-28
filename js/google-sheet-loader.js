@@ -255,6 +255,7 @@ function mapExam(r) {
   return {
     id: Number(_getField(r, ['ID'])) || Number(r.__rowIndex) || 0,
     title: _getField(r, ['Title']),
+    category: _getField(r, ['Category', 'Exam Category']),
     exam_type: _getField(r, ['Exam Type']),
     syllabus_link: _getField(r, ['Syllabus Link']),
     test_date: _getField(r, ['Test Date']),
