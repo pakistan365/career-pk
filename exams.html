@@ -61,67 +61,20 @@
   </div>
 </div>
 
-<!-- EXAM QUICK TILES -->
+<!-- EXAM TYPE BLOCKS -->
 <section class="section section-alt">
   <div class="container">
-    <h2 class="section-title" style="margin-bottom:20px">Quick Access</h2>
-    <div class="exam-grid-large">
-      <a href="exams-mdcat.html" class="exam-tile">
-        <div class="exam-tile-icon">🩺</div>
-        <div class="exam-tile-name">MDCAT 2025</div>
-        <div class="exam-tile-date">Sep 14, 2025</div>
-        <div class="exam-tile-body">PMC — Medical & Dental</div>
-        <span class="badge badge-red">Registration Open</span>
-      </a>
-      <a href="exams-css.html" class="exam-tile">
-        <div class="exam-tile-icon">📋</div>
-        <div class="exam-tile-name">CSS 2026</div>
-        <div class="exam-tile-date">Feb 1, 2026</div>
-        <div class="exam-tile-body">FPSC — Civil Services</div>
-        <span class="badge badge-blue">Apply Now</span>
-      </a>
-      <a href="exams-ppsc.html" class="exam-tile">
-        <div class="exam-tile-icon">🏛️</div>
-        <div class="exam-tile-name">PPSC 2025</div>
-        <div class="exam-tile-date">Jul 20, 2025</div>
-        <div class="exam-tile-body">Punjab Public Service</div>
-        <span class="badge badge-blue">Upcoming</span>
-      </a>
-      <a href="exams.html" class="exam-tile">
-        <div class="exam-tile-icon">📝</div>
-        <div class="exam-tile-name">FPSC 2025</div>
-        <div class="exam-tile-date">Jun 5, 2025</div>
-        <div class="exam-tile-body">Federal Public Service</div>
-        <span class="badge badge-red">Closing Soon</span>
-      </a>
-      <a href="exams.html" class="exam-tile">
-        <div class="exam-tile-icon">🔬</div>
-        <div class="exam-tile-name">NTS NAT 2025</div>
-        <div class="exam-tile-date">Aug 10, 2025</div>
-        <div class="exam-tile-body">National Testing Service</div>
-        <span class="badge badge-blue">Upcoming</span>
-      </a>
-      <a href="exams.html" class="exam-tile">
-        <div class="exam-tile-icon">🌍</div>
-        <div class="exam-tile-name">IELTS 2025</div>
-        <div class="exam-tile-date">May 17, 2025</div>
-        <div class="exam-tile-body">British Council / IDP</div>
-        <span class="badge badge-blue">Book Now</span>
-      </a>
-      <a href="exams.html" class="exam-tile">
-        <div class="exam-tile-icon">🎓</div>
-        <div class="exam-tile-name">SAT 2025</div>
-        <div class="exam-tile-date">May 3, 2025</div>
-        <div class="exam-tile-body">College Board USA</div>
-        <span class="badge badge-blue">Register</span>
-      </a>
-      <a href="exams.html" class="exam-tile">
-        <div class="exam-tile-icon">📊</div>
-        <div class="exam-tile-name">GRE 2025</div>
-        <div class="exam-tile-date">Jun 15, 2025</div>
-        <div class="exam-tile-body">ETS — Graduate Record</div>
-        <span class="badge badge-blue">Register</span>
-      </a>
+    <div class="section-header">
+      <h2 class="section-title">Latest Exam Types</h2>
+    </div>
+    <div id="examTypeLatestGrid" class="exam-types-grid">
+      <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
+    </div>
+    <div class="section-header" style="margin-top:18px">
+      <h2 class="section-title">Other Exam Types</h2>
+    </div>
+    <div id="examTypeOtherGrid" class="exam-types-grid">
+      <div class="skeleton-card"></div><div class="skeleton-card"></div>
     </div>
   </div>
 </section>
@@ -220,8 +173,26 @@
   let allData = [];
   document.addEventListener('DOMContentLoaded', () => { updateFavCount(); onCMSReady(() => { loadData(); updateFavCount(); }); registerAutoRefreshSection('Exams', loadData); initializeAutoRefreshListeners(); });
   function loadData() {
-    try { allData = window.CMS_DATA['Exams'] || []; applyFilters(); }
+    try { allData = window.CMS_DATA['Exams'] || []; renderExamTypeBlocks(allData); applyFilters(); }
     catch(e) { document.getElementById('errorState').style.display = 'flex'; }
+  }
+      function renderExamTypeCard(group) {
+    return `<article class="exam-type-card"><h3>${escapeHtml(group.type)}</h3><p>${group.count} exam${group.count!==1?'s':''}</p><p>Latest date: ${formatDate(group.latestDate)}</p></article>`;
+  }
+  function renderExamTypeBlocks(rows) {
+    const grouped = {};
+    rows.forEach((exam) => {
+      const type = (exam.exam_type || 'Other').trim() || 'Other';
+      const dateValue = exam.test_date || exam.deadline || exam.posted_date || '';
+      if (!grouped[type]) grouped[type] = { type, count: 0, latestDate: dateValue };
+      grouped[type].count += 1;
+      if (new Date(dateValue || 0) > new Date(grouped[type].latestDate || 0)) grouped[type].latestDate = dateValue;
+    });
+    const groups = Object.values(grouped).sort((a,b)=>new Date(b.latestDate||0)-new Date(a.latestDate||0));
+    const latest = groups.slice(0, 4);
+    const other = groups.slice(4);
+    document.getElementById('examTypeLatestGrid').innerHTML = latest.length ? latest.map(renderExamTypeCard).join('') : '<div class="empty-mini">No exam types yet.</div>';
+    document.getElementById('examTypeOtherGrid').innerHTML = other.length ? other.map(renderExamTypeCard).join('') : '<div class="empty-mini">More types will appear here automatically.</div>';
   }
   function applyFilters() {
     const examType = document.getElementById('filterExamType').value;
