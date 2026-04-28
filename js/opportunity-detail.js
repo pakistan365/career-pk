@@ -139,6 +139,7 @@
     document.getElementById('opportunityActions').innerHTML = [
       actionButton('Apply Now', item.apply_link, true),
       actionButton('Register', item.registration_link, true),
+      <button class="btn btn-secondary" onclick="shareOpportunity(${Number(item.id) || 0},'${escapeJsSingleQuote(type)}','${escapeJsSingleQuote(title)}')"><i class="fa fa-share-nodes"></i> Share</button>`,
       actionButton('Official Source', item.source_link, false),
       actionButton('Download Guide', item.download_link || item.syllabus_link, false),
       actionButton('Past Papers', item.past_papers_link, false)
