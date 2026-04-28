@@ -824,8 +824,11 @@ function renderCards(items, gridId, type) {
     if (typeof observeCards === 'function') observeCards();
   }, 60);
   
-  enhanceCardsSection(grid, items, type);
-  updateListSchema(items, type);
+  const isHomeGrid = document.body.classList.contains('home-page');
+  if (!isHomeGrid) {
+    enhanceCardsSection(grid, items, type);
+    updateListSchema(items, type);
+  }
 }
 
 // ── Favourite handler ─────────────────────────────────────────
@@ -869,13 +872,16 @@ function loadHomePageData() {
   const books        = window.CMS_DATA.Books || [];
 
   renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
-  renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
   renderCards(sortItems(exams, 'newest').slice(0, 4), 'examsGrid', 'exam');
+  renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
   renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
+  renderHomeLatestList('homeLatestScholarshipsList', scholarships, 'scholarship');
   renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
   renderHomeLatestList('homeLatestExamList', sortItems(exams, 'deadline'), 'exam');
   renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
   renderHomeLatestList('homeLatestBooksList', books, 'book');
+  renderHomeLatestList('homeLatestJobsList', jobs, 'job');
+  renderHomeLatestList('homeLatestInternshipsList', internships, 'internship');
 }
 
 function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, queryKey) {
@@ -898,15 +904,37 @@ function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, quer
 function renderHomeLatestList(containerId, rows, type) {
   const container = document.getElementById(containerId);
   if (!container) return;
-  const latestRows = (type === 'exam' ? sortItems(rows || [], 'deadline') : sortItems(rows || [], 'newest')).slice(0, 5);
+  const pageByType = {
+    scholarship: 'scholarships.html',
+    exam: 'exams.html',
+    book: 'books.html',
+    job: 'jobs.html',
+    internship: 'internships.html'
+  };
+  const sortMode = type === 'exam' ? 'deadline' : 'newest';
+  const deduped = [];
+  const seen = new Set();
+  (sortItems(rows || [], sortMode)).forEach((item) => {
+    const key = `${text(item.title).toLowerCase()}|${text(item.test_date || item.deadline || item.posted_date)}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    deduped.push(item);
+  });
+  const latestRows = deduped.slice(0, 5);
   if (!latestRows.length) {
-    container.innerHTML = `<a class="home-latest-item" href="${type === 'book' ? 'books.html' : 'exams.html'}">No updates yet.</a>`;
+    container.innerHTML = `<a class="home-latest-item" href="${pageByType[type] || 'index.html'}">No updates yet.</a>`;
     return;
   }
+  
   container.innerHTML = latestRows.map((item) => {
-    const groupName = type === 'book' ? getBookGroupName(item) : getExamGroupName(item);
+    let groupName = 'Update';
+    if (type === 'book') groupName = getBookGroupName(item);
+    else if (type === 'exam') groupName = getExamGroupName(item);
+    else if (type === 'job') groupName = text(item.category || item.type || 'Jobs');
+    else if (type === 'scholarship') groupName = text(item.type || item.category || 'Scholarship');
+    else if (type === 'internship') groupName = text(item.type || item.duration || 'Internship');
     const dateLabel = type === 'exam' ? 'Test date' : 'Updated';
-    const dateValue = type === 'exam' ? (item.test_date || item.deadline || item.posted_date) : item.posted_date;
+    const dateValue = type === 'exam' ? (item.test_date || item.deadline || item.posted_date) : (item.posted_date || item.deadline || item.test_date);
     return `<a class="home-latest-item" href="${getCardDetailsUrl(item.id, type)}"><strong>${escapeHtml(item.title || 'Untitled')}</strong><span>${escapeHtml(groupName)} • ${dateLabel}: ${formatDate(dateValue)}</span></a>`;
   }).join('');
 }
