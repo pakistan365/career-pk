@@ -82,15 +82,7 @@
     </div>
     <div class="filter-bar-inline">
       <select class="filter-select" id="filterExamType" onchange="applyFilters()">
-        <option value="">📋 All Types</option>
-        <option value="MDCAT">MDCAT</option>
-        <option value="CSS">CSS</option>
-        <option value="PPSC">PPSC</option>
-        <option value="FPSC">FPSC</option>
-        <option value="NTS">NTS</option>
-        <option value="IELTS">IELTS</option>
-        <option value="SAT">SAT</option>
-        <option value="GRE">GRE</option>
+        <option value="">📋 All Categories</option>
       </select>
       <select class="filter-select" id="sortBy" onchange="applyFilters()">
         <option value="newest">Newest First</option>
@@ -166,9 +158,18 @@
 <script src="js/chatbot-loader.js"></script>
   <script>
   let allData = [];
+  let activeExamGroup = '';
   document.addEventListener('DOMContentLoaded', () => { updateFavCount(); onCMSReady(() => { loadData(); updateFavCount(); }); registerAutoRefreshSection('Exams', loadData); initializeAutoRefreshListeners(); });
   function loadData() {
-    try { allData = window.CMS_DATA['Exams'] || []; renderExamTypeBlocks(allData); const examFromUrl = new URLSearchParams(window.location.search).get('exam_type'); if (examFromUrl && [...document.getElementById('filterExamType').options].some((o) => o.value === examFromUrl)) document.getElementById('filterExamType').value = examFromUrl; applyFilters(); }
+    try {
+      allData = window.CMS_DATA.Exams || [];
+      const params = new URLSearchParams(window.location.search);
+      const examFromUrl = params.get('exam_type') || params.get('exam_group');
+      activeExamGroup = examFromUrl ? String(examFromUrl).trim() : '';
+      renderExamTypeBlocks(allData);
+      if (examFromUrl && [...document.getElementById('filterExamType').options].some((o) => o.value === examFromUrl)) document.getElementById('filterExamType').value = examFromUrl;
+      applyFilters();
+    }
     catch(e) { document.getElementById('errorState').style.display = 'flex'; }
   }
   function quickAccessContent(value) {
@@ -180,9 +181,9 @@
     const select = document.getElementById('filterExamType');
     if (!select) return;
     const current = select.value;
-    const options = [...new Set(rows.map((exam) => (exam.exam_type || '').trim()).filter(Boolean))]
-      .sort((a,b)=>a.localeCompare(b));
-    select.innerHTML = '<option value="">📋 All Types</option>' + options.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join('');
+    const options = [...new Set(rows.map((exam) => getExamGroupName(exam)).filter(Boolean))]
+    .sort((a,b)=>a.localeCompare(b));
+    select.innerHTML = '<option value="">📋 All Categories</option>' + options.map((type) => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join('');
     select.value = options.includes(current) ? current : '';
   }
   function renderExamTypeCard(group) {
@@ -198,18 +199,17 @@
         <span><i class="fa fa-layer-group"></i> Category: ${escapeHtml(group.type)}</span>
       </div>
       <div class="quick-access-actions">
-        <a class="btn btn-primary" href="exams.html?exam_type=${typeParam}#resultsGrid">Explore ${escapeHtml(group.type)} exams <i class="fa fa-arrow-right"></i></a>
-        <a class="btn btn-secondary" href="books.html?exam_type=${typeParam}#resultsGrid">Related Books</a>
+        <a class="btn btn-primary" href="exams.html?exam_group=${typeParam}#resultsGrid">Explore ${escapeHtml(group.type)} exams <i class="fa fa-arrow-right"></i></a>
+        <a class="btn btn-secondary" href="books.html?book_group=${typeParam}#resultsGrid">Related Books</a>
         <a class="btn btn-secondary" href="opportunity.html?type=exam&id=${Number(group.latestItem.id) || 0}">Open Latest Blog</a>
       </div>
     </article>`;
     }
   function renderExamTypeBlocks(rows) {
-    buildExamTypeFilters(rows);
     const grouped = {};
     buildExamTypeFilters(rows);
     rows.forEach((exam) => {
-      const type = (exam.exam_type || 'Other').trim() || 'Other';
+      const type = getExamGroupName(exam);
       const dateValue = exam.test_date || exam.deadline || exam.posted_date || '';
       if (!grouped[type]) grouped[type] = { type, count: 0, latestDate: dateValue, latestItem: exam, relatedBooks: 0 };
       grouped[type].count += 1;
@@ -218,8 +218,13 @@
         grouped[type].latestItem = exam;
       }
     });
+    const books = window.CMS_DATA.Books || [];
     Object.values(grouped).forEach((group) => {
-      group.relatedBooks = books.filter((book) => matchesFilterValue(book.exam_type, group.type)).length;
+      group.relatedBooks = books.filter((book) =>
+        matchesFilterValue(book.exam_type, group.type) ||
+        matchesFilterValue(book.category, group.type) ||
+        includesFilterValue(book.title, group.type)
+      ).length;
     });
     const groups = Object.values(grouped).sort((a,b)=>new Date(b.latestDate||0)-new Date(a.latestDate||0));
     document.getElementById('examTypeLatestGrid').innerHTML = groups.length ? groups.map(renderExamTypeCard).join('') : '<div class="empty-mini">No exam types yet.</div>';
@@ -227,13 +232,15 @@
   function applyFilters() {
     const examType = document.getElementById('filterExamType').value;
     const sort     = document.getElementById('sortBy').value;
-    let f = allData.filter(e => matchesFilterValue(e.exam_type, examType));
-    f = sortItems(f, sort, 'test_date');
-    document.getElementById('resultsCount') && (document.getElementById('resultsCount').textContent = `${f.length} exams`);
+    let f = allData.filter((e) => {
+      const groupMatch = !activeExamGroup || matchesFilterValue(getExamGroupName(e), activeExamGroup) || matchesFilterValue(e.exam_type, activeExamGroup);
+      return groupMatch && matchesFilterValue(getExamGroupName(e), examType);
+    });
+    f = sortItems(f, sort);
     renderCards(f, 'resultsGrid', 'exam');
     document.getElementById('emptyState').style.display = f.length===0 ? 'flex' : 'none';
   }
-  function clearFilters() { document.getElementById('filterExamType').value=''; document.getElementById('sortBy').value='newest'; applyFilters(); }
-</script>
+  function clearFilters() { activeExamGroup=''; document.getElementById('filterExamType').value=''; document.getElementById('sortBy').value='newest'; applyFilters(); }
+  </script>
 </body>
 </html>
