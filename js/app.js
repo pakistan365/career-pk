@@ -1238,6 +1238,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   updateFavCount();
   ensureChatbotLoaded();
+  initGlobalSitePolish();
   // Navbar scroll effect
   window.addEventListener('scroll', () => {
     document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
@@ -1363,3 +1364,94 @@ document.addEventListener('DOMContentLoaded', initCounters);
     nav.classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
 })();
+
+
+function initGlobalSitePolish() {
+  enhanceImageLoadingAndAlt();
+  improveInteractiveAccessibility();
+  ensureExternalLinkSafety();
+  injectAdPlaceholders();
+}
+
+function enhanceImageLoadingAndAlt() {
+  const imgs = document.querySelectorAll('img');
+  imgs.forEach((img, index) => {
+    if (!img.getAttribute('loading')) img.setAttribute('loading', index === 0 ? 'eager' : 'lazy');
+    if (!img.getAttribute('decoding')) img.setAttribute('decoding', 'async');
+    if (!img.getAttribute('fetchpriority') && index > 0) img.setAttribute('fetchpriority', 'low');
+    const rawAlt = (img.getAttribute('alt') || '').trim();
+    if (!rawAlt) {
+      const fallback = img.closest('a')?.textContent?.trim() || img.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || 'Career Pakistan image';
+      img.setAttribute('alt', fallback.replace(/\s+/g, ' ').slice(0, 120));
+    }
+  });
+}
+
+function improveInteractiveAccessibility() {
+  document.querySelectorAll('button').forEach((btn) => {
+    if (!btn.getAttribute('type')) btn.setAttribute('type', 'button');
+    const textLabel = (btn.textContent || '').replace(/\s+/g, ' ').trim();
+    if (!btn.getAttribute('aria-label') && !textLabel) {
+      const iconClass = btn.querySelector('i')?.className || '';
+      if (iconClass.includes('fa-search')) btn.setAttribute('aria-label', 'Open search');
+      else if (iconClass.includes('fa-moon')) btn.setAttribute('aria-label', 'Toggle dark mode');
+      else if (iconClass.includes('fa-bars')) btn.setAttribute('aria-label', 'Open navigation menu');
+      else if (iconClass.includes('fa-times')) btn.setAttribute('aria-label', 'Close');
+      else btn.setAttribute('aria-label', 'Action button');
+    }
+  });
+
+  document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+    const rel = new Set((a.getAttribute('rel') || '').split(/\s+/).filter(Boolean));
+    rel.add('noopener');
+    rel.add('noreferrer');
+    a.setAttribute('rel', Array.from(rel).join(' '));
+  });
+}
+
+function ensureExternalLinkSafety() {
+  document.querySelectorAll('a[href]').forEach((link) => {
+    const href = link.getAttribute('href') || '';
+    if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return;
+    try {
+      const parsed = new URL(href, window.location.origin);
+      const isExternal = parsed.origin !== window.location.origin;
+      if (isExternal) {
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noopener noreferrer');
+      }
+    } catch (_) { /* ignore malformed links */ }
+  });
+}
+
+function buildAdSlot(position, label) {
+  const slot = document.createElement('section');
+  slot.className = `ad-slot ad-slot-${position}`;
+  slot.setAttribute('aria-label', `${label} advertisement`);
+  slot.innerHTML = `<div class="ad-slot-inner"><span class="ad-chip">Ad Space</span><strong>${label}</strong><small>Reserved for responsive ad unit</small></div>`;
+  return slot;
+}
+
+function injectAdPlaceholders() {
+  if (document.querySelector('.ad-slot')) return;
+
+  const navbar = document.querySelector('.navbar');
+  if (navbar && navbar.parentNode) {
+    navbar.insertAdjacentElement('afterend', buildAdSlot('header', 'Header Banner'));
+  }
+
+  const firstSection = document.querySelector('main .section, .section');
+  if (firstSection && firstSection.parentNode) {
+    firstSection.insertAdjacentElement('beforebegin', buildAdSlot('incontent', 'In-content Banner'));
+  }
+
+  const sidebar = document.querySelector('.home-latest-sidebar, .opportunity-sidebar, .footer-col');
+  if (sidebar && sidebar.parentNode) {
+    sidebar.insertAdjacentElement('beforebegin', buildAdSlot('sidebar', 'Sidebar Rectangle'));
+  }
+
+  const footer = document.querySelector('footer.footer');
+  if (footer && footer.parentNode) {
+    footer.insertAdjacentElement('beforebegin', buildAdSlot('footer', 'Footer Banner'));
+  }
+}
