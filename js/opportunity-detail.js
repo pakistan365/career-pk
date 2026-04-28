@@ -91,6 +91,24 @@
     }).join('');
   }
 
+    function renderWebSearchLinks(seedTitle, seedGroup) {
+    const mount = document.getElementById('sidebarWebSearch');
+    if (!mount) return;
+    const keyword = text(seedTitle || seedGroup || config.label).trim();
+    const region = 'Pakistan';
+    const searches = [
+      { label: 'Google Search', icon: 'fa-brands fa-google', query: `${keyword} ${region}` },
+      { label: 'Latest News', icon: 'fa-regular fa-newspaper', query: `${keyword} latest updates ${region}` },
+      { label: 'YouTube Guides', icon: 'fa-brands fa-youtube', query: `${keyword} guide ${region}` }
+    ];
+    mount.innerHTML = searches.map((entry) => `
+      <a class="web-search-item" href="https://www.google.com/search?q=${encodeURIComponent(entry.query)}" target="_blank" rel="noopener noreferrer">
+        <i class="${entry.icon}"></i>
+        <span>${escapeHtml(entry.label)}</span>
+      </a>
+    `).join('');
+  }
+
   function renderSameTypeCards(items, targetType) {
     const mount = document.getElementById('relatedSameTypeCards');
     if (!mount) return;
@@ -270,6 +288,7 @@
     renderRelatedList(sideOneItems, 'sidebarRelatedOne', sideOneType, typeMap[sideOneType].label);
     renderRelatedList(sideTwoItems, 'sidebarRelatedTwo', sideTwoType, typeMap[sideTwoType].label);
     renderSameTypeCards(sameTypeItems, plan.end);
+    renderWebSearchLinks(title, '');
   }
 
   function renderNotFound() {
@@ -306,6 +325,7 @@
       document.getElementById('sidebarRelatedTwoTitle').textContent = 'Related Books';
       renderRelatedList(relatedExams, 'sidebarRelatedOne', 'exam', 'Exams');
       renderRelatedList(groupItems.slice(0, 6), 'sidebarRelatedTwo', 'book', 'Books');
+      renderWebSearchLinks('', `${group} books`);
       return;
     }
 
@@ -320,7 +340,11 @@
       document.getElementById('sidebarRelatedTwoTitle').textContent = 'Related Exams & Dates';
       renderRelatedList(relatedBooks, 'sidebarRelatedOne', 'book', 'Books');
       renderRelatedList(relatedExams, 'sidebarRelatedTwo', 'exam', 'Exams');
+      renderWebSearchLinks('', `${group} exams`);
+      return;
     }
+
+    renderWebSearchLinks('', `${group} ${config.label}`);
   }
 
   function init() {
