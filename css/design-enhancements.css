@@ -699,3 +699,75 @@ body.dark .home-hero-title {
     font-size: 11px;
   }
 }
+
+
+/* ── HOMEPAGE CARD SLIDER HARDENING (Scholarships/Jobs/Internships) ───── */
+body.home-page .cards-grid.home-card-slider {
+  --home-slider-gap: clamp(12px, 1.5vw, 16px);
+  --home-slider-edge: clamp(10px, 2vw, 18px);
+  --home-slider-card-height: clamp(336px, 58vw, 420px);
+  --home-visible-cards: 2;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--home-slider-gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  align-items: stretch;
+  padding-inline: var(--home-slider-edge);
+  scroll-padding-inline: var(--home-slider-edge);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 1024px) {
+  body.home-page .cards-grid.home-card-slider {
+    --home-visible-cards: 3;
+    --home-slider-card-height: 420px;
+  }
+}
+
+body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
+  display: none;
+}
+
+body.home-page .cards-grid.home-card-slider > .card,
+body.home-page .cards-grid.home-card-slider > .exam-card,
+body.home-page .cards-grid.home-card-slider > .skeleton-card {
+  flex: 0 0 calc((100% - ((var(--home-visible-cards) - 1) * var(--home-slider-gap))) / var(--home-visible-cards));
+  width: calc((100% - ((var(--home-visible-cards) - 1) * var(--home-slider-gap))) / var(--home-visible-cards));
+  min-width: calc((100% - ((var(--home-visible-cards) - 1) * var(--home-slider-gap))) / var(--home-visible-cards));
+  max-width: calc((100% - ((var(--home-visible-cards) - 1) * var(--home-slider-gap))) / var(--home-visible-cards));
+  height: var(--home-slider-card-height);
+  min-height: var(--home-slider-card-height);
+  max-height: var(--home-slider-card-height);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+body.home-page .cards-grid.home-card-slider .card-img {
+  height: clamp(126px, 16vw, 172px);
+  min-height: clamp(126px, 16vw, 172px);
+}
+
+body.home-page .cards-grid.home-card-slider .card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body.home-page .cards-grid.home-card-slider .card-details span {
+  min-width: 0;
+  max-width: 100%;
+}
+
+body.home-page .cards-grid.home-card-slider .card-footer {
+  margin-top: auto;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.home-page .cards-grid.home-card-slider > .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  }
+}
