@@ -664,6 +664,22 @@ function isBookTopic(topic) {
   return normalizeText(topic?.key) === 'book';
 }
 
+function getExamGroupName(exam) {
+  const category = text(exam?.category).trim();
+  if (category) return category;
+  const type = text(exam?.exam_type).trim();
+  if (type) return type;
+  return 'Other';
+}
+
+function getBookGroupName(book) {
+  const category = text(book?.category).trim();
+  if (category) return category;
+  const examType = text(book?.exam_type).trim();
+  if (examType) return examType;
+  return 'General';
+}
+
 function renderInsightItems(items, topic) {
   if (!items.length) return '<li>Live updates will appear here as soon as content is loaded.</li>';
   const sorted = [...items];
@@ -849,12 +865,33 @@ function loadHomePageData() {
   const scholarships = window.CMS_DATA.Scholarships || [];
   const jobs         = window.CMS_DATA.Jobs || [];
   const internships  = window.CMS_DATA.Internships || [];
+  const exams        = window.CMS_DATA.Exams || [];
   const books        = window.CMS_DATA.Books || [];
 
   renderCards(sortItems(scholarships, 'newest').slice(0, 4), 'scholarshipsGrid', 'scholarship');
   renderCards(sortItems(jobs, 'newest').slice(0, 4), 'jobsGrid', 'job');
+  renderCards(sortItems(exams, 'newest').slice(0, 4), 'examsGrid', 'exam');
   renderCards(sortItems(books, 'newest').slice(0, 4), 'booksGrid', 'book');
   renderCards(sortItems(internships, 'newest').slice(0, 4), 'internshipsGrid', 'internship');
+    renderHomeCategoryBlocks('homeExamBlocks', exams, getExamGroupName, 'exams.html', 'exam_group');
+  renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
+}
+
+function renderHomeCategoryBlocks(containerId, rows, getGroupName, pageUrl, queryKey) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const grouped = {};
+  rows.forEach((item) => {
+    const groupName = getGroupName(item);
+    if (!grouped[groupName]) grouped[groupName] = { name: groupName, count: 0 };
+    grouped[groupName].count += 1;
+  });
+  const groups = Object.values(grouped).sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  container.innerHTML = groups.length
+    ? groups.slice(0, 10).map((group) => (
+      `<a class="cat-pill" href="${pageUrl}?${queryKey}=${encodeURIComponent(group.name)}#resultsGrid">${escapeHtml(group.name)} <span>(${group.count})</span></a>`
+    )).join('')
+    : '<span class="cat-pill active">No categories yet</span>';
 }
 
 // ── Notification bar loader ───────────────────────────────────
