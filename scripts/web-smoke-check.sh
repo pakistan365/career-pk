@@ -49,8 +49,11 @@ print(f"Checked {len(html_files)} HTML pages; all local links/assets resolved.")
 PY
 
 echo "[2/3] Checking JavaScript syntax for frontend and API scripts..."
-for file in js/*.js api/*.js service-worker.js; do
-  node --check "$file" >/dev/null
+for pattern in js/*.js api/*.js service-worker.js; do
+  for file in $pattern; do
+    [ -e "$file" ] || continue
+    node --check "$file" >/dev/null
+  done
 done
 echo "JavaScript syntax check passed."
 
