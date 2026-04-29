@@ -5,10 +5,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vercel dev",
-    "build": "vercel build",
-    "deploy": "vercel deploy",
-    "check:package": "node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json is valid JSON')\""  },
+    "dev": "npx vercel dev",
+    "build": "echo \"No build step required\"",
+    "deploy": "npx vercel deploy",
+    "check:package": "node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json is valid JSON')\""
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
