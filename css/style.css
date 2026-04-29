@@ -747,6 +747,20 @@ ul { list-style: none; }
   align-items: start;
   margin-bottom: 12px;
 }
+
+.homepage-main-sidebar {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+.home-main-content {
+  min-width: 0;
+}
+@media (min-width: 920px) {
+  .homepage-main-sidebar {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+}
 @media (min-width: 920px) {
   .home-books-layout,
   .home-category-layout {
