@@ -1,0 +1,57 @@
+{
+  "production": {
+    "https://careerhub.pk/": "HTTPError:503",
+    "https://careerhub.pk/css/style.css": "HTTPError:503",
+    "https://careerhub.pk/js/app.js": "HTTPError:503"
+  },
+  "local": [
+    {
+      "viewport": "desktop",
+      "status": 200,
+      "grids": {
+        "#scholarshipsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        },
+        "#jobsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        }
+      }
+    },
+    {
+      "viewport": "tablet",
+      "status": 200,
+      "grids": {
+        "#scholarshipsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        },
+        "#jobsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        }
+      }
+    },
+    {
+      "viewport": "mobile",
+      "status": 200,
+      "grids": {
+        "#scholarshipsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        },
+        "#jobsGrid": {
+          "present": true,
+          "class": "cards-grid",
+          "scroll_left": 0
+        }
+      }
+    }
+  ]
+}
