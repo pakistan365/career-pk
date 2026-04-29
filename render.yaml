@@ -14,14 +14,14 @@ services:
         value: no-store, max-age=0
       - path: /*.html
         name: Cache-Control
-        value: public, max-age=300, stale-while-revalidate=60
-      - path: /css/*
+        value: no-cache, no-store, must-revalidate
+        - path: /css/*
         name: Cache-Control
-        value: public, max-age=86400
-      - path: /js/*
+        value: no-cache, max-age=0, must-revalidate
+        - path: /js/*
         name: Cache-Control
-        value: public, max-age=86400
-    routes:
+        value: no-cache, max-age=0, must-revalidate
+        routes:
       - type: rewrite
         source: /scholarships
         destination: /scholarships.html
