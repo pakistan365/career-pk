@@ -985,8 +985,11 @@ function loadHomePageData() {
   renderHomeCategoryBlocks('homeBookBlocks', books, getBookGroupName, 'books.html', 'book_group');
   renderHomeLatestList('homeLatestBooksList', books, 'book');
   renderHomeLatestList('homeLatestJobsList', jobs, 'job');
-  renderHomeLatestList('homeLatestInternshipsList', internships, 'internship');
-    initHomeCardSliders();
+  renderHomeLatestList('homeLatestInternshipsList', internships, 'internship', {
+    initialCount: 3,
+    toggleButtonId: 'homeLatestInternshipsToggle'
+  });
+  initHomeCardSliders();
 }
 
 function initHomeCardSliders() {
