@@ -251,7 +251,15 @@
   margin: 0 auto;
 }
 @media (max-width: 600px) {
-  .stats-ribbon-inner { grid-template-columns: repeat(2, 1fr); }
+  .stats-ribbon-inner {
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .stat-cell {
+    min-width: 140px;
+  }
 }
 
 .stat-cell {
