@@ -305,7 +305,20 @@ function mapNotification(r) {
 // ── Load all sheets ───────────────────────────────────────────
 async function _loadAllSheets(silent) {
   if (!silent) _showBanner('⏳ Loading live data…');
-  const texts = await Promise.all(TAB_DEFINITIONS.map(t => _fetchCSV(t)));
+  const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 12000));
+  let texts = [];
+  try {
+    texts = await Promise.race([
+      Promise.all(TAB_DEFINITIONS.map(t => _fetchCSV(t))),
+      timeoutPromise
+    ]);
+  } catch (error) {
+    console.error('[CMS] load timeout/error', error);
+    document.dispatchEvent(new CustomEvent('cmsLoadFailed'));
+    _showBanner('Failed to load data. Please refresh.', '#b91c1c');
+    setTimeout(_hideBanner, 5000);
+    return [];
+  }
   const changedTabs = [];
   let loaded = 0;
   TAB_DEFINITIONS.forEach((tab, i) => {
@@ -328,6 +341,7 @@ async function _loadAllSheets(silent) {
   if (loaded > 0) {
     _hideBanner();
   } else {
+    document.dispatchEvent(new CustomEvent('cmsLoadFailed'));
     _showBanner('⚠️ Data load failed. Check your Google Sheet is published publicly.', '#b45309');
     setTimeout(_hideBanner, 6000);
   }
