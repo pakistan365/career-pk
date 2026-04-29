@@ -752,14 +752,22 @@ ul { list-style: none; }
   display: grid;
   gap: 14px;
   align-items: start;
+  grid-template-areas:
+    "main"
+    "sidebar";
 }
 .home-main-content {
   min-width: 0;
+  grid-area: main;
 }
-@media (min-width: 920px) {
-  .homepage-main-sidebar {
-    grid-template-columns: minmax(0, 1fr) 280px;
-  }
+.home-sidebar-stack {
+  grid-area: sidebar;
+  min-width: 0;
+}
+@media (min-width: 768px) {
+.homepage-main-sidebar {
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+    grid-template-areas: "main sidebar";  }
 }
 @media (min-width: 920px) {
   .home-books-layout,
