@@ -847,6 +847,10 @@ function enhanceCardsSection(grid, items, type) {
     <h3>${isBookTopic(topic) ? 'Latest books' : 'Upcoming deadlines'}</h3>
     <p>${isBookTopic(topic) ? 'Newest titles from this category.' : 'Short deadline timeline for this category.'}</p>
     <ul>${renderInsightItems(items, topic)}</ul>
+    <div class="compact-sidebar-ad" role="complementary" aria-label="Sponsored placement"> 
+      <span class="compact-sidebar-ad-label">Sponsored</span>
+      <div class="compact-sidebar-ad-copy">Promote your course, coaching, or study tool here.</div>
+    </div>
   `;
 
   let seoBlock = layout.querySelector('.seo-rich-block');
