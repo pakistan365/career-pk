@@ -12,7 +12,11 @@ function setCors(res) {
 
 function normalizeBody(req) {
   if (!req.body) return {};
-  return typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+  if (!body || typeof body !== 'object') {
+    throw new Error('Request body must be a JSON object.');
+  }
+  return body;
 }
 
 function toGroqMessages(payload) {
@@ -50,7 +54,7 @@ async function callGemini(payload) {
     throw new Error(data?.error?.message || 'Gemini API request failed.');
   }
 
-    const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text;
   if (!reply) throw new Error('No response text from Gemini.');
   return { reply, provider: 'gemini', model: GEMINI_MODEL };
 }
@@ -98,7 +102,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid JSON body' });
   }
 
-    const providerMode = String(req.query?.provider || payload?.provider || 'auto').toLowerCase();
+  const providerMode = String(req.query?.provider || payload?.provider || 'auto').toLowerCase();
   
   try {
     if (providerMode === 'groq') {
@@ -111,7 +115,7 @@ export default async function handler(req, res) {
       return res.status(200).json(response);
     }
 
-      // auto mode: Gemini first, then Groq fallback
+    // auto mode: Gemini first, then Groq fallback
     try {
       const response = await callGemini(payload);
       return res.status(200).json(response);
