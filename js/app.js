@@ -342,11 +342,19 @@ function getFavButtonStateAttrs(isActive) {
 
 function shareButtonAttrs(title) {
   const label = `Share ${text(title || 'this opportunity')}`;
-  return `aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"`;
+  return `aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}" aria-expanded="false"`;
 }
 
 function getShareUrl(id, type) {
   return `${window.location.origin}/${getCardDetailsUrl(id, type)}`;
+}
+
+function closeAllShareMenus() {
+  document.querySelectorAll('.card-footer .share-actions').forEach((menu) => menu.remove());
+  document.querySelectorAll('.card-footer .btn-share.active').forEach((button) => {
+    button.classList.remove('active');
+    button.setAttribute('aria-expanded', 'false');
+  });
 }
 
 function shareOpportunity(id, type, title) {
@@ -357,31 +365,58 @@ function shareOpportunity(id, type, title) {
     <div class="share-actions">
       <a class="share-link whatsapp" href="https://wa.me/?text=${encodedText}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
       <a class="share-link telegram" href="https://t.me/share/url?url=${encoded}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i> Telegram</a>
-      <button class="share-link copy" onclick="copyOpportunityLink('${encodeURIComponent(shareUrl)}')"><i class="fa fa-link"></i> Copy Link</button>
+      <button class="share-link copy" onclick="copyOpportunityLink('${encodeURIComponent(shareUrl)}', '${escapeJsSingleQuote(normalizeItemId(id))}', '${escapeJsSingleQuote(type)}')"><i class="fa fa-link"></i> Copy Link</button>
     </div>
   `;
-  const card = document.querySelector(`.card[data-id="${id}"][data-type="${type}"] .card-footer`);
+
+  const normalizedId = normalizeItemId(id);
+  const card = document.querySelector(`.card[data-id="${normalizedId}"][data-type="${type}"] .card-footer`);
   if (card) {
-    card.querySelector('.share-actions')?.remove();
+    const shareButton = card.querySelector('.btn-share');
+    const existingMenu = card.querySelector('.share-actions');
+
+    if (existingMenu) {
+      existingMenu.remove();
+      shareButton?.classList.remove('active');
+      shareButton?.setAttribute('aria-expanded', 'false');
+      return;
+    }
+
+    closeAllShareMenus();
     card.insertAdjacentHTML('beforeend', shareMenu);
+    shareButton?.classList.add('active');
+    shareButton?.setAttribute('aria-expanded', 'true');
     return;
   }
 
-  copyOpportunityLink(encodeURIComponent(shareUrl), title);
+  copyOpportunityLink(encodeURIComponent(shareUrl), normalizedId, type, title);
 }
 
-function copyOpportunityLink(encodedUrl, title = '') {
+function copyOpportunityLink(encodedUrl, id = '', type = '', title = '') {
   const shareUrl = decodeURIComponent(encodedUrl);
+  const resetShareUi = () => {
+    if (!id || !type) return;
+    const card = document.querySelector(`.card[data-id="${normalizeItemId(id)}"][data-type="${type}"] .card-footer`);
+    if (!card) return;
+    card.querySelector('.share-actions')?.remove();
+    const shareButton = card.querySelector('.btn-share');
+    shareButton?.classList.remove('active');
+    shareButton?.setAttribute('aria-expanded', 'false');
+  };
+
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(shareUrl).then(() => {
       alert('Share link copied to clipboard.');
+      resetShareUi();
     }).catch(() => {
       window.prompt('Copy and share this link:', shareUrl);
+      resetShareUi();
     });
     return;
   }
 
   window.prompt('Copy and share this link:', shareUrl);
+  resetShareUi();
 }
 
 function openCardPost(id, type) {
