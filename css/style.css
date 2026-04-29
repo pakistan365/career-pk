@@ -946,31 +946,16 @@ ul { list-style: none; }
 /* Mobile compact layout for Explore/Suggestions listings */
 @media (max-width: 768px) {
   .home-latest-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
     min-width: 0;
   }
 
   .home-latest-item strong {
-    flex: 1 1 auto;
-    min-width: 0;
     margin: 0;
-    font-size: 12.5px;
-    line-height: 1.35;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-wrap: balance;
   }
 
   .home-latest-item span {
-    flex: 0 0 auto;
     margin: 0;
-    font-size: 10.8px;
-    line-height: 1.2;
-    text-align: right;
-    white-space: nowrap;
   }
 }
 
