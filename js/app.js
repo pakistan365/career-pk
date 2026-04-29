@@ -1405,6 +1405,41 @@ function initGlobalSitePolish() {
   improveInteractiveAccessibility();
   ensureExternalLinkSafety();
   injectAdPlaceholders();
+  initMobileSmartFilterBar();
+}
+
+
+function initMobileSmartFilterBar() {
+  if (window.innerWidth > 768 || document.body.classList.contains('home-page')) return;
+  const bar = document.querySelector('.filter-bar');
+  if (!bar) return;
+
+  let lastY = window.scrollY;
+  bar.classList.add('filter-visible');
+
+  const onScroll = () => {
+    const currentY = window.scrollY;
+    const delta = currentY - lastY;
+
+    if (currentY <= 8) {
+      bar.classList.add('filter-visible');
+      bar.classList.remove('filter-hidden');
+      lastY = currentY;
+      return;
+    }
+
+    if (delta > 4) {
+      bar.classList.add('filter-hidden');
+      bar.classList.remove('filter-visible');
+    } else if (delta < -4) {
+      bar.classList.add('filter-visible');
+      bar.classList.remove('filter-hidden');
+    }
+
+    lastY = currentY;
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 }
 
 function enhanceImageLoadingAndAlt() {
