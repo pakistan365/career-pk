@@ -95,6 +95,16 @@ ul { list-style: none; }
   margin: 0 auto;
   padding: 0 16px;
 }
+@media (max-width: 479px) {
+  .home-hero-layout {
+    grid-template-columns: 1fr;
+    row-gap: 10px;
+  }
+  .quick-nav-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+}
 @media (min-width: 768px) { .container { padding: 0 24px; } }
 
 /* ── Notification Bar ────────────────────────────────────── */
@@ -2024,10 +2034,10 @@ h1 { font-size: 20px !important; }
     margin-bottom: 10px;
   }
 
-  .cards-grid .card,
-  .cards-grid .job-card,
-  .cards-grid .scholarship-card,
-  .cards-grid .internship-card {
+  .cards-grid:not(.home-card-slider) .card,
+  .cards-grid:not(.home-card-slider) .job-card,
+  .cards-grid:not(.home-card-slider) .scholarship-card,
+  .cards-grid:not(.home-card-slider) .internship-card {
     width: 100% !important;
     max-width: 100% !important;
     padding: 0 !important;
