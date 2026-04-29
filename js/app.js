@@ -285,7 +285,15 @@ function isFav(id, type) {
 }
 function updateFavCount() {
   const el = document.getElementById('favCount');
-  if (el) el.textContent = getFavs().length;
+  if (!el) return;
+  const count = getFavs().length;
+  if (count === 0) {
+    el.style.display = 'none';
+    el.textContent = '';
+    return;
+  }
+  el.style.display = 'flex';
+  el.textContent = String(count);
 }
 
 // ── Tag chips ────────────────────────────────────────────────
@@ -332,21 +340,33 @@ function shareButtonAttrs(title) {
   return `aria-label="${escapeHtml(label)}" title="${escapeHtml(label)}"`;
 }
 
-function shareOpportunity(id, type, title) {
-  const shareUrl = `${window.location.origin}/${getCardDetailsUrl(id, type)}`;
-  const shareData = {
-    title: text(title || 'Career Pakistan Opportunity'),
-    text: `Check this ${text(type || 'opportunity')} on Career Pakistan`,
-    url: shareUrl
-  };
+function getShareUrl(id, type) {
+  return `${window.location.origin}/${getCardDetailsUrl(id, type)}`;
+}
 
-  if (navigator.share) {
-    navigator.share(shareData).catch(() => {
-      // User cancelled share sheet; no action needed.
-    });
+function shareOpportunity(id, type, title) {
+  const shareUrl = getShareUrl(id, type);
+  const encoded = encodeURIComponent(shareUrl);
+  const encodedText = encodeURIComponent(`Check this ${text(type || 'opportunity')} on Career Pakistan: ${shareUrl}`);
+  const shareMenu = `
+    <div class="share-actions">
+      <a class="share-link whatsapp" href="https://wa.me/?text=${encodedText}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+      <a class="share-link telegram" href="https://t.me/share/url?url=${encoded}" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-telegram"></i> Telegram</a>
+      <button class="share-link copy" onclick="copyOpportunityLink('${encodeURIComponent(shareUrl)}')"><i class="fa fa-link"></i> Copy Link</button>
+    </div>
+  `;
+  const card = document.querySelector(`.card[data-id="${id}"][data-type="${type}"] .card-footer`);
+  if (card) {
+    card.querySelector('.share-actions')?.remove();
+    card.insertAdjacentHTML('beforeend', shareMenu);
     return;
   }
 
+  copyOpportunityLink(encodeURIComponent(shareUrl), title);
+}
+
+function copyOpportunityLink(encodedUrl, title = '') {
+  const shareUrl = decodeURIComponent(encodedUrl);
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(shareUrl).then(() => {
       alert('Share link copied to clipboard.');
@@ -908,6 +928,10 @@ function renderCards(items, gridId, type) {
 // ── Favourite handler ─────────────────────────────────────────
 function handleFav(id, title, type, btn) {
   const added = toggleFav(id, title, type);
+  if (added) {
+    const item = getCardItemById(id, type);
+    if (item) storeFavoriteDeadline(item, type);
+  }
   if (btn) {
     btn.classList.toggle('active', added);
     btn.querySelector('i').className = `fa${added ? 's' : 'r'} fa-bookmark`;
@@ -1145,8 +1169,16 @@ function ensureChatbotLoaded() {
 
 // ── Navbar toggle ─────────────────────────────────────────────
 function toggleMenu() {
-  document.getElementById('navLinks')?.classList.toggle('open');
+  const isOpen = document.getElementById('navLinks')?.classList.toggle('open');
   document.getElementById('hamburger')?.classList.toggle('open');
+  document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+}
+function ensureMobileCloseButton() {
+  const nav = document.getElementById('navLinks');
+  if (!nav || nav.querySelector('.close-mobile-menu')) return;
+  const li = document.createElement('li');
+  li.innerHTML = '<button class="close-mobile-menu nav-icon-btn" onclick="toggleMenu()"><i class="fa fa-times"></i><span class="visually-hidden">Close menu</span></button>';
+  nav.prepend(li);
 }
 function toggleSearch() {
   document.getElementById('navSearch')?.classList.toggle('open');
@@ -1265,17 +1297,47 @@ function loadFavoritesPage() {
   grid.innerHTML = cards.join('');
 }
 
+function storeFavoriteDeadline(item, type) {
+  const deadline = item?.deadline || item?.test_date;
+  if (!deadline) return;
+  const key = `${type}:${item.id}`;
+  const current = JSON.parse(localStorage.getItem('ch_fav_deadlines') || '{}');
+  current[key] = { title: item.title, type, deadline };
+  localStorage.setItem('ch_fav_deadlines', JSON.stringify(current));
+}
+
+function checkDeadlineAlerts() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem('ch_deadline_check_date') === today) return;
+  localStorage.setItem('ch_deadline_check_date', today);
+  const saved = JSON.parse(localStorage.getItem('ch_fav_deadlines') || '{}');
+  const alerts = Object.values(saved).filter((item) => {
+    const days = daysUntil(item.deadline);
+    return typeof days === 'number' && days >= 0 && days <= 7;
+  });
+  if (!alerts.length) return;
+  alert(`Deadline alert: ${alerts.length} saved item(s) are closing within 7 days.`);
+}
+
 // ── Init on DOM ready ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   ensureResourcePreviewModal();
+  ensureMobileCloseButton();
   ensureCardDetailsModal();
   initDarkMode();
   updateFavCount();
   ensureChatbotLoaded();
   initGlobalSitePolish();
+  checkDeadlineAlerts();
   // Navbar scroll effect
   window.addEventListener('scroll', () => {
     document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50);
+  });
+  document.addEventListener('cmsLoadFailed', () => {
+    document.querySelectorAll('.cards-grid').forEach((grid) => {
+      if (!grid.querySelector('.skeleton-card')) return;
+      grid.innerHTML = '<div class="empty-state"><i class="fa fa-triangle-exclamation"></i><h3>Failed to load data. Please refresh.</h3></div>';
+    });
   });
   // Run CMS-dependent things only after data is ready
    whenCMSReady(() => {
@@ -1406,6 +1468,27 @@ function initGlobalSitePolish() {
   ensureExternalLinkSafety();
   injectAdPlaceholders();
   initMobileSmartFilterBar();
+    initPWA();
+}
+
+function initPWA() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(() => {}));
+  }
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    const installBtn = document.getElementById('installAppBtn');
+    if (!installBtn) return;
+    installBtn.style.display = 'inline-flex';
+    installBtn.onclick = async () => {
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      installBtn.style.display = 'none';
+    };
+  });
 }
 
 
