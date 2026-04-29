@@ -653,59 +653,7 @@ ul { list-style: none; }
   opacity: .45;
   cursor: not-allowed;
 }
-.home-card-slider {
-  --home-visible-cards: 2;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc((100% - (var(--home-visible-cards) - 1) * 14px) / var(--home-visible-cards));
-  grid-template-columns: none;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  align-items: stretch;
-}
-.home-card-slider::-webkit-scrollbar {
-  display: none;
-}
-.home-card-slider > .card,
-.home-card-slider > .exam-card,
-.home-card-slider > .skeleton-card {
-  scroll-snap-align: start;
-}
-@media (min-width: 520px) {
-  #scholarshipsGrid.home-card-slider,
-  #jobsGrid.home-card-slider,
-  #internshipsGrid.home-card-slider {
-    --home-visible-cards: 2;
-  }
-}
-@media (min-width: 901px) {
-  #scholarshipsGrid.home-card-slider,
-  #jobsGrid.home-card-slider,
-  #internshipsGrid.home-card-slider {
-    display: grid;
-    grid-auto-flow: row;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-auto-columns: initial;
-    overflow-x: visible;
-    scroll-snap-type: none;
-  }
-}
-
-@media (min-width: 1120px) {
-  #scholarshipsGrid.home-card-slider,
-  #jobsGrid.home-card-slider,
-  #internshipsGrid.home-card-slider {
-    --home-visible-cards: 3;
-  }
-}
-
-.home-card-slider > .card,
-.home-card-slider > .exam-card,
-.home-card-slider > .skeleton-card {
-  height: 100%;
-}
+/* Home slider layout is controlled by design-enhancements.css for consistent cross-breakpoint sizing. */
 
 .cards-layout {
   display: grid;
