@@ -281,6 +281,86 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
   }
 }
 
+/* ── Inner pages compact mobile card grid (jobs/scholarships/internships) ─── */
+@media (max-width: 768px) {
+  body.inner-mobile-grid .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    overflow-x: hidden;
+  }
+
+  body.inner-mobile-grid .cards-grid > .card,
+  body.inner-mobile-grid .cards-grid > .skeleton-card {
+    width: 100%;
+    min-width: 0;
+  }
+
+  body.inner-mobile-grid .cards-grid > .card {
+    height: 100%;
+    min-height: 320px;
+  }
+
+  body.inner-mobile-grid .card-img {
+    height: 96px;
+    min-height: 96px;
+    aspect-ratio: auto;
+  }
+
+  body.inner-mobile-grid .card-body {
+    padding: 10px;
+    gap: 6px;
+  }
+
+  body.inner-mobile-grid .card-title {
+    font-size: 0.87rem;
+    line-height: 1.35;
+    margin-bottom: 2px;
+    min-height: calc(1.35em * 2);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.inner-mobile-grid .card-desc {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  body.inner-mobile-grid .card-details {
+    gap: 4px;
+  }
+
+  body.inner-mobile-grid .card-details span {
+    flex: 1 1 100%;
+    font-size: 0.69rem;
+  }
+
+  body.inner-mobile-grid .card-footer {
+    padding: 8px 10px 10px;
+    gap: 5px;
+  }
+
+  body.inner-mobile-grid .card-footer .btn-primary {
+    min-height: 30px;
+    font-size: 0.68rem;
+    padding: 7px 6px;
+  }
+
+  body.inner-mobile-grid .btn-fav,
+  body.inner-mobile-grid .btn-share {
+    width: 30px;
+    height: 30px;
+  }
+}
+
 /* ── Home card sliders (jobs, scholarships, internships) ─── */
 body.home-page .cards-grid.home-card-slider {
   display: grid;
