@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
   const q = String(req.query?.q || '').trim();
   const limit = parseLimit(req.query?.limit);
-  
+
   if (!q) return res.status(400).json({ error: 'Missing q query parameter' });
 
   try {
@@ -67,11 +67,13 @@ export default async function handler(req, res) {
     }
 
     const data = await upstream.json();
-    const related = dedupeByUrl(flattenTopics(data?.RelatedTopics || [])
-.map(normalizeResult)
-      .filter((r) => r.url)
-      .slice(0, limit));
-    
+    const related = dedupeByUrl(
+      flattenTopics(data?.RelatedTopics || [])
+        .map(normalizeResult)
+        .filter((r) => r.url)
+        .slice(0, limit)
+    );
+
     if (!related.length && data?.AbstractURL) {
       related.push({
         title: data?.Heading || data?.AbstractURL,
