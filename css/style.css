@@ -2267,3 +2267,40 @@ h1 { font-size: 20px !important; }
     padding: 7px;
   }
 }
+
+/* Compact sponsored ad placements for deadline and updates sidebars */
+.deadline-ad-slot,
+.compact-sidebar-ad {
+  margin-top: 6px;
+  border: 1px dashed color-mix(in srgb, var(--primary) 38%, transparent);
+  background: color-mix(in srgb, var(--primary-bg) 58%, var(--bg-alt));
+  border-radius: 8px;
+}
+
+.deadline-ad-slot {
+  display: block;
+  padding: 4px 6px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: var(--text-secondary);
+}
+
+.compact-sidebar-ad {
+  padding: 9px;
+}
+
+.compact-sidebar-ad-label {
+  display: inline-flex;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+.compact-sidebar-ad-copy {
+  font-size: 12px;
+  line-height: 1.35;
+  color: var(--text-secondary);
+}
