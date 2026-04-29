@@ -326,8 +326,13 @@ function imgSrc(url, type) {
 }
 
 
+function normalizeItemId(id) {
+  const value = text(id).trim();
+  return value || '0';
+}
+
 function getCardDetailsUrl(id, type) {
-  return `opportunity.html?type=${encodeURIComponent(type)}&id=${encodeURIComponent(String(Number(id) || 0))}`;
+  return `opportunity.html?type=${encodeURIComponent(type)}&id=${encodeURIComponent(normalizeItemId(id))}`;
 }
 
 function getFavButtonStateAttrs(isActive) {
@@ -409,7 +414,7 @@ function cardScholarship(s) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(s.id, 'scholarship')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-share" onclick="shareOpportunity(${Number(s.id) || 0},'scholarship','${escapeJsSingleQuote(s.title)}')" ${shareButtonAttrs(s.title)}>
+      <button class="btn-share" onclick="shareOpportunity('${escapeJsSingleQuote(normalizeItemId(s.id))}','scholarship','${escapeJsSingleQuote(s.title)}')" ${shareButtonAttrs(s.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(s.id) || 0},'${escapeJsSingleQuote(s.title)}','scholarship',this)" ${getFavButtonStateAttrs(fav)}>
@@ -442,7 +447,7 @@ function cardJob(j) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(j.id, 'job')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-share" onclick="shareOpportunity(${Number(j.id) || 0},'job','${escapeJsSingleQuote(j.title)}')" ${shareButtonAttrs(j.title)}>
+      <button class="btn-share" onclick="shareOpportunity('${escapeJsSingleQuote(normalizeItemId(j.id))}','job','${escapeJsSingleQuote(j.title)}')" ${shareButtonAttrs(j.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(j.id) || 0},'${escapeJsSingleQuote(j.title)}','job',this)" ${getFavButtonStateAttrs(fav)}>
@@ -479,7 +484,7 @@ function cardInternship(i) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(i.id, 'internship')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-share" onclick="shareOpportunity(${Number(i.id) || 0},'internship','${escapeJsSingleQuote(i.title)}')" ${shareButtonAttrs(i.title)}>
+      <button class="btn-share" onclick="shareOpportunity('${escapeJsSingleQuote(normalizeItemId(i.id))}','internship','${escapeJsSingleQuote(i.title)}')" ${shareButtonAttrs(i.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(i.id) || 0},'${escapeJsSingleQuote(i.title)}','internship',this)" ${getFavButtonStateAttrs(fav)}>
@@ -511,7 +516,7 @@ function cardExam(e) {
     </div>
     <div class="card-footer exam-links">
       <a class="btn btn-primary" href="${getCardDetailsUrl(e.id, 'exam')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-share" onclick="shareOpportunity(${Number(e.id) || 0},'exam','${escapeJsSingleQuote(e.title)}')" ${shareButtonAttrs(e.title)}>
+      <button class="btn-share" onclick="shareOpportunity('${escapeJsSingleQuote(normalizeItemId(e.id))}','exam','${escapeJsSingleQuote(e.title)}')" ${shareButtonAttrs(e.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(e.id) || 0},'${escapeJsSingleQuote(e.title)}','exam',this)" ${getFavButtonStateAttrs(fav)}>
@@ -543,7 +548,7 @@ function cardBook(b) {
     </div>
     <div class="card-footer">
       <a class="btn btn-primary" href="${getCardDetailsUrl(b.id, 'book')}">View Details <i class="fa fa-arrow-right"></i></a>
-      <button class="btn-share" onclick="shareOpportunity(${Number(b.id) || 0},'book','${escapeJsSingleQuote(b.title)}')" ${shareButtonAttrs(b.title)}>
+      <button class="btn-share" onclick="shareOpportunity('${escapeJsSingleQuote(normalizeItemId(b.id))}','book','${escapeJsSingleQuote(b.title)}')" ${shareButtonAttrs(b.title)}>
         <i class="fa fa-share-nodes"></i>
       </button>
       <button class="btn-fav ${fav ? 'active' : ''}" onclick="handleFav(${Number(b.id) || 0},'${escapeJsSingleQuote(b.title)}','book',this)" ${getFavButtonStateAttrs(fav)}>
