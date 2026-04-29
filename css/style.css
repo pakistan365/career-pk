@@ -706,6 +706,13 @@ ul { list-style: none; }
   color: var(--text-secondary);
 }
 
+.home-single-column-layout {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+  margin-bottom: 12px;
+}
+
 .home-books-layout {
   display: grid;
   gap: 14px;
