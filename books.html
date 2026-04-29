@@ -73,8 +73,8 @@
   </div>
 </footer>
   
-<script src="js/google-sheet-loader.js"></script><script src="js/app.js"></script><script src="js/cms-auto-refresh-listener.js"></script><script src="js/chatbot-loader.js"></script>
-<script>
+<script src="js/google-sheet-loader.js"></script><script src="js/app.js"></script><script src="js/comprehensive-fix.js"></script><script src="js/cms-auto-refresh-listener.js"></script><script src="js/chatbot-loader.js"></script>
+  <script>
 let allData=[];
 let activeBookGroup='';
 document.addEventListener('DOMContentLoaded',()=>{updateFavCount();onCMSReady(()=>{loadData();updateFavCount();});registerAutoRefreshSection('Books',loadData);initializeAutoRefreshListeners();});
