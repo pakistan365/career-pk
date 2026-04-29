@@ -362,20 +362,13 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
 }
 
 /* ── Home card sliders (jobs, scholarships, internships) ─── */
+/* Mobile: 2 cards visible, horizontal scroll. Desktop (≥1024px): 3 cards visible, horizontal scroll.
+   Core slider layout is owned by design-enhancements.css (loads last).
+   This block only sets safe complementary properties. */
 body.home-page .cards-grid.home-card-slider {
-  display: grid;
-  grid-auto-flow: column;
-  --home-visible-cards: 1;
-  grid-auto-columns: calc((100% - (var(--home-visible-cards) - 1) * 14px) / var(--home-visible-cards));
-  gap: 10px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  --home-visible-cards: 2;
   scroll-behavior: smooth;
   padding-bottom: 2px;
-  scrollbar-width: none;
-  align-items: stretch;
-  grid-auto-rows: 1fr;
 }
 
 body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
@@ -383,46 +376,10 @@ body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
 }
 
 body.home-page .cards-grid.home-card-slider > .card {
-  min-width: 0;
   scroll-snap-align: start;
-  min-height: 100%;
-  height: 100%;
 }
 
-@media (min-width: 520px) {
-  body.home-page .cards-grid.home-card-slider {
-    --home-visible-cards: 2;
-  }
-}
-
-@media (min-width: 1120px) {
-  body.home-page .cards-grid.home-card-slider {
-    --home-visible-cards: 3;
-  }
-}
-
-@media (min-width: 901px) {
-  body.home-page .cards-grid.home-card-slider > .card,
-  body.home-page .cards-grid.home-card-slider > .exam-card,
-  body.home-page .cards-grid.home-card-slider > .skeleton-card {
-    height: 410px;
-    min-height: 410px;
-    max-height: 410px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-img {
-    height: 165px;
-    min-height: 165px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-body {
-    min-height: 178px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-footer {
-    min-height: 67px;
-  }
-}
+/* Card sizing fully owned by design-enhancements.css */
 
 body.home-page .home-slider-nav {
   display: flex;
@@ -458,136 +415,11 @@ body.home-page .home-slider-btn:disabled {
   html {
     font-size: 14px;
   }
-
-  body.home-page .cards-grid.home-card-slider {
-     grid-auto-flow: column;
-     grid-template-columns: none;
-     gap: 14px;
-     overflow-x: auto;
-     scroll-snap-type: x mandatory;
-     align-items: stretch;
-  }
-
-  body.home-page .cards-grid.home-card-slider > .card,
-  body.home-page .cards-grid.home-card-slider > .exam-card,
-  body.home-page .cards-grid.home-card-slider > .skeleton-card {
-    height: 100%;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-img {
-    min-height: clamp(94px, 30vw, 118px);
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-body {
-    padding: 10px;
-    gap: 6px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-title {
-    font-size: 0.88rem;
-    line-height: 1.3;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-details span {
-    font-size: 0.68rem;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-footer {
-    padding: 9px 10px;
-    gap: 6px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-footer .btn-primary {
-    min-height: 30px;
-    font-size: 0.69rem;
-    padding: 7px 8px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .btn-fav,
-  body.home-page .cards-grid.home-card-slider .btn-share {
-    width: 30px;
-    height: 30px;
-  }
 }
 
 @media (max-width: 768px) {
   body.home-page .cards-grid.home-card-slider {
     --home-visible-cards: 2;
-    gap: 10px;
-  }
-
-  body.home-page .cards-grid.home-card-slider > .card,
-  body.home-page .cards-grid.home-card-slider > .exam-card,
-  body.home-page .cards-grid.home-card-slider > .skeleton-card {
-    height: 292px;
-    min-height: 292px;
-    max-height: 292px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-img {
-    height: 96px;
-    min-height: 96px;
-    max-height: 96px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-body {
-    flex: 1;
-    min-height: 0;
-    padding: 8px 9px 7px;
-    gap: 5px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-title {
-    font-size: 0.82rem;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-height: calc(1.3em * 2);
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-desc {
-    font-size: 0.74rem;
-    line-height: 1.35;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-details span {
-    font-size: 0.64rem;
-    line-height: 1.25;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-footer {
-    margin-top: auto;
-    padding: 7px 8px;
-    gap: 5px;
-    flex-wrap: nowrap;
-  }
-
-  body.home-page .cards-grid.home-card-slider .card-footer .btn-primary {
-    min-height: 28px;
-    font-size: 0.66rem;
-    padding: 6px 7px;
-  }
-
-  body.home-page .cards-grid.home-card-slider .btn-fav,
-  body.home-page .cards-grid.home-card-slider .btn-share {
-    width: 28px;
-    height: 28px;
   }
 }
 
