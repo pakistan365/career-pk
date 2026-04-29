@@ -1898,6 +1898,19 @@ textarea:focus-visible {
   position: sticky;
   top: 86px;
 }
+.ad-slot-footer {
+  margin: 0;
+  padding: 0;
+  flex: 0 0 300px;
+  width: 300px;
+  max-width: 100%;
+}
+.ad-slot-inner-footer {
+  width: 100%;
+  min-height: 250px;
+  max-width: 100%;
+  height: auto;
+}
 .ad-slot-footer { margin-top: 28px; }
 
 @media (max-width: 980px) {
@@ -2070,6 +2083,28 @@ h1 { font-size: 20px !important; }
   .footer-brand,
   .footer-bottom {
     grid-column: 1 / -1;
+  }
+
+     .footer-brand-inline {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ad-slot-footer {
+    flex-basis: auto;
+    width: 100%;
+  }
+
+  .ad-slot-inner-footer {
+    min-height: 90px;
+    width: 100%;
+  }
+
+  .footer-inline-links {
+    gap: 6px;
+    font-size: 11px;
+    white-space: nowrap;
   }
 
   .footer-col ul {
