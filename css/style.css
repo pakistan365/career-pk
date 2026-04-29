@@ -797,6 +797,14 @@ ul { list-style: none; }
   margin: 0 0 10px;
   font-size: 15px;
 }
+.home-sidebar-stack {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+}
+.home-inline-ad-block .ad-slot-inner {
+  min-height: 180px;
+}
 .scholarship-deadlines-panel {
   display: grid;
   gap: 10px;
