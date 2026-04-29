@@ -1,0 +1,30 @@
+ (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
+diff --git a/package.json b/package.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..0a115ecc6a1134aa8e189006aab7f7bf606bcc2e
+--- /dev/null
++++ b/package.json
+@@ -0,0 +1,20 @@
++{
++  "name": "career-pk",
++  "version": "1.0.0",
++  "description": "Career Pakistan static site with Vercel serverless APIs",
++  "scripts": {
++    "dev": "vercel dev",
++    "build": "vercel build",
++    "deploy": "vercel deploy"
++  },
++  "keywords": [],
++  "author": "",
++  "license": "ISC",
++  "type": "module",
++  "dependencies": {
++    "@vercel/analytics": "^2.0.1",
++    "@vercel/speed-insights": "^2.0.0",
++    "vercel": "^52.0.0"
++  },
++  "private": true
++}
+ 
+EOF
+)
