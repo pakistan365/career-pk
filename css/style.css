@@ -2077,4 +2077,48 @@ img {
   .scholarships-list {
     gap: 10px !important;
   }
+   
+  /* Smart mobile filter bar (inner pages only) */
+  body:not(.home-page) .filter-bar {
+    top: 52px;
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    will-change: transform;
+  }
+
+  body:not(.home-page) .filter-bar .filter-row {
+    padding: 8px 0;
+    gap: 6px;
+  }
+
+  body:not(.home-page) .filter-bar .filter-select {
+    height: 32px;
+    min-width: 112px;
+    font-size: 12px;
+  }
+
+  body:not(.home-page) .filter-bar.filter-hidden {
+    transform: translateY(-100%);
+    box-shadow: none;
+  }
+
+  body:not(.home-page) .filter-bar.filter-visible {
+    transform: translateY(0);
+    box-shadow: 0 4px 14px rgba(0,0,0,.06);
+  }
+
+  /* Footer: improve scanability with two mobile columns */
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    padding: 28px 0 24px;
+  }
+
+  .footer-brand,
+  .footer-bottom {
+    grid-column: 1 / -1;
+  }
+
+  .footer-col ul {
+    gap: 6px;
+  }
 }
