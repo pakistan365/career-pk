@@ -1,10 +1,11 @@
 services:
   - type: web
     name: careerhub-pakistan
-    env: static
+    env: node
+    plan: free
     buildCommand: ""
-    staticPublishPath: .
-    pullRequestPreviewsEnabled: true
+    startCommand: npm start
+    autoDeploy: true
     headers:
       - path: /api/*
         name: Access-Control-Allow-Origin
@@ -15,13 +16,13 @@ services:
       - path: /*.html
         name: Cache-Control
         value: no-cache, no-store, must-revalidate
-        - path: /css/*
+      - path: /css/*
         name: Cache-Control
-        value: no-cache, max-age=0, must-revalidate
+      value: no-cache, max-age=0, must-revalidate
         - path: /js/*
         name: Cache-Control
         value: no-cache, max-age=0, must-revalidate
-        routes:
+    routes:
       - type: rewrite
         source: /scholarships
         destination: /scholarships.html
