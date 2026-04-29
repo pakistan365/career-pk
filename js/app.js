@@ -1471,6 +1471,7 @@ function initGlobalSitePolish() {
   improveInteractiveAccessibility();
   ensureExternalLinkSafety();
   injectAdPlaceholders();
+  injectCompactSidebarAds();
   initMobileSmartFilterBar();
     initPWA();
 }
@@ -1586,6 +1587,29 @@ function buildAdSlot(position, label) {
   slot.setAttribute('aria-label', `${label} advertisement`);
   slot.innerHTML = `<div class="ad-slot-inner"><span class="ad-chip">Ad Space</span><strong>${label}</strong><small>Reserved for responsive ad unit</small></div>`;
   return slot;
+}
+
+function buildCompactSidebarAd() {
+  const ad = document.createElement('div');
+  ad.className = 'compact-sidebar-ad compact-sidebar-ad-inline';
+  ad.setAttribute('role', 'complementary');
+  ad.setAttribute('aria-label', 'Sponsored placement');
+  ad.innerHTML = `
+    <span class="compact-sidebar-ad-label">Sponsored</span>
+    <div class="compact-sidebar-ad-copy">Promote your course, coaching, or study tool here.</div>
+  `;
+  return ad;
+}
+
+function injectCompactSidebarAds() {
+  const sidebarBlocks = document.querySelectorAll(
+    '.compact-deadline-sidebar, .home-latest-sidebar[aria-label="Latest books"], .quick-access-sidebar[aria-label="Book category updates"]'
+  );
+  sidebarBlocks.forEach((block) => {
+    const prev = block.previousElementSibling;
+    if (prev && prev.classList.contains('compact-sidebar-ad-inline')) return;
+    block.insertAdjacentElement('beforebegin', buildCompactSidebarAd());
+  });
 }
 
 function injectAdPlaceholders() {
