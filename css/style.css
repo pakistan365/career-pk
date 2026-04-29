@@ -786,6 +786,65 @@ ul { list-style: none; }
   border-color: var(--primary);
   transform: translateY(-1px);
 }
+
+
+/* Home section color system + compact category cards */
+body.home-page .section {
+  border-top: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+body.home-page .section .container {
+  border: 1px solid color-mix(in srgb, var(--border) 75%, transparent);
+  border-radius: 16px;
+  padding: 20px;
+  background: linear-gradient(140deg, color-mix(in srgb, var(--bg-card) 90%, transparent), color-mix(in srgb, var(--bg-alt) 85%, transparent));
+}
+body.home-page .section:nth-of-type(1) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 78%, #34d399); }
+body.home-page .section:nth-of-type(2) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 80%, #06b6d4); }
+body.home-page .section:nth-of-type(3) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 82%, #a78bfa); }
+body.home-page .section:nth-of-type(4) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 80%, #f59e0b); }
+body.home-page .section:nth-of-type(5) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 82%, #ef4444); }
+body.home-page .section:nth-of-type(6) .container { border-left: 4px solid color-mix(in srgb, var(--primary) 78%, #10b981); }
+
+body.dark.home-page .section .container {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--bg-card) 82%, #0f172a), color-mix(in srgb, var(--bg-alt) 85%, #111827));
+}
+
+#homeExamBlocks,
+#homeBookBlocks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+#homeExamBlocks .cat-pill,
+#homeBookBlocks .cat-pill {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
+  background: linear-gradient(160deg, color-mix(in srgb, var(--bg-card) 92%, transparent), color-mix(in srgb, var(--primary) 5%, var(--bg-alt)));
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+#homeExamBlocks .cat-pill span,
+#homeBookBlocks .cat-pill span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+#homeExamBlocks .cat-pill:hover,
+#homeBookBlocks .cat-pill:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+@media (max-width: 640px) {
+  body.home-page .section .container { padding: 16px; }
+  #homeExamBlocks,
+  #homeBookBlocks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 .home-latest-sidebar {
   background: var(--bg-card);
   border: 1px solid var(--border);
