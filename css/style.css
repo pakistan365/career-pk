@@ -2289,6 +2289,10 @@ h1 { font-size: 20px !important; }
   padding: 9px;
 }
 
+.compact-sidebar-ad-inline {
+  margin: 0 0 8px;
+}
+
 .compact-sidebar-ad-label {
   display: inline-flex;
   font-size: 10px;
