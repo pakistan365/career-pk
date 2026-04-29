@@ -1,0 +1,1009 @@
+/* ============================================================
+   Career Pakistan — design-enhancements.css
+   Enhanced visual design: animated cards, glowing quick-nav,
+   stats bar, hero polish, section headers & more
+   Inspired by reference design — dark cyber-teal aesthetic
+   ============================================================ */
+
+/* ── Google Font additions ──────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@500;600;700&display=swap');
+
+/* ── Design tokens added to root ────────────────────────── */
+:root {
+  --teal-glow:    rgba(20,184,166,0.18);
+  --teal-border:  rgba(20,184,166,0.25);
+  --teal-strong:  rgba(20,184,166,0.45);
+  --card-shine:   linear-gradient(135deg, rgba(20,184,166,0.06) 0%, rgba(20,184,166,0) 60%);
+  --float-shadow: 0 8px 30px rgba(20,184,166,0.12);
+}
+
+/* ── HERO SECTION — visual polish ───────────────────────── */
+.page-header.home-hero {
+  background: linear-gradient(160deg, #f3faf9 0%, #e3f7f4 45%, #cff0ec 100%) !important;
+  padding: 36px 0 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hero grid overlay */
+.page-header.home-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(20,184,166,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20,184,166,0.07) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page-header.home-hero .container { position: relative; z-index: 1; }
+
+.home-hero-title {
+  background: linear-gradient(135deg, var(--black) 40%, var(--primary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Animated accent line under title */
+.home-hero-title::after {
+  content: '';
+  display: block;
+  width: 64px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  margin-top: 10px;
+  border-radius: 2px;
+}
+
+.home-hero-actions .btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+.home-hero-actions .btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -60%;
+  width: 40%; height: 200%;
+  background: rgba(255,255,255,0.25);
+  transform: skewX(-20deg);
+  transition: left 0.5s ease;
+}
+.home-hero-actions .btn-primary:hover::after {
+  left: 120%;
+}
+
+/* ── QUICK NAV CARDS — glowing redesign ─────────────────── */
+.quick-nav-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--teal-border);
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.quick-nav-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+
+.quick-nav-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-shine);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.quick-nav-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px var(--teal-glow), 0 2px 6px rgba(0,0,0,0.06);
+  text-decoration: none;
+}
+
+.quick-nav-card:hover::before { transform: scaleX(1); }
+.quick-nav-card:hover::after { opacity: 1; }
+
+/* Category icon dot */
+.quick-nav-card strong {
+  font-size: 13px;
+  color: var(--black);
+  font-weight: 700;
+}
+
+/* ── SECTION HEADERS — accent lines ─────────────────────── */
+.section-header {
+  position: relative;
+  padding-bottom: 14px;
+}
+.section-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--primary), transparent 60%);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Animated dot before section titles */
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  box-shadow: 0 0 0 0 var(--teal-glow);
+  animation: titlePulse 2.5s ease infinite;
+  flex-shrink: 0;
+}
+
+@keyframes titlePulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--teal-strong); }
+  50% { box-shadow: 0 0 0 6px rgba(20,184,166,0); }
+}
+
+/* ── CARDS — enhanced hover & structure ─────────────────── */
+.card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s cubic-bezier(0.25,0.46,0.45,0.94),
+              box-shadow 0.28s ease,
+              border-color 0.28s ease;
+}
+
+/* Animated top border sweep */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), #5eead4, var(--primary));
+  background-size: 200%;
+  transform: scaleX(0);
+  transition: transform 0.35s ease;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--card-shine);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary);
+  box-shadow: var(--float-shadow);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+  animation: shimmerBorder 1.5s linear infinite;
+}
+
+.card:hover::after { opacity: 1; }
+
+@keyframes shimmerBorder {
+  0% { background-position: 0% }
+  100% { background-position: 200% }
+}
+
+/* Card image zoom */
+.card-img img { transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94); }
+.card:hover .card-img img { transform: scale(1.07); }
+
+/* Card placeholder — gradient */
+.card-img-placeholder {
+  background: linear-gradient(135deg, #e3f7f4 0%, #cff0ec 100%) !important;
+  font-size: 2.5rem;
+  transition: transform 0.3s;
+}
+.card:hover .card-img-placeholder { transform: scale(1.05); }
+
+/* ── BADGE IMPROVEMENTS ──────────────────────────────────── */
+.featured-badge {
+  border-radius: 4px !important;
+  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+  padding: 3px 7px !important;
+  backdrop-filter: blur(4px);
+}
+
+.badge {
+  border-radius: 4px !important;
+  letter-spacing: 0.5px;
+  font-size: 0.65rem;
+}
+
+/* ── STATS BAR — new component ───────────────────────────── */
+.stats-ribbon {
+  background: var(--black);
+  color: var(--white);
+  padding: 0;
+  overflow: hidden;
+}
+.stats-ribbon-inner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+@media (max-width: 600px) {
+  .stats-ribbon-inner {
+    grid-template-columns: repeat(4, minmax(140px, 1fr));
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .stat-cell {
+    min-width: 140px;
+  }
+}
+
+.stat-cell {
+  padding: 18px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  transition: background 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.stat-cell::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+.stat-cell:hover::before { transform: scaleX(1); }
+.stat-cell:hover { background: rgba(20,184,166,0.08); }
+.stat-cell:last-child { border-right: none; }
+
+.stat-num {
+  font-family: 'Bebas Neue', 'DM Serif Display', serif;
+  font-size: 2rem;
+  color: var(--primary);
+  line-height: 1;
+  letter-spacing: 1px;
+  text-shadow: 0 0 20px rgba(20,184,166,0.4);
+}
+.stat-label {
+  font-family: 'Rajdhani', 'DM Sans', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  margin-top: 4px;
+}
+
+/* ── SEARCH BAR — enhanced ───────────────────────────────── */
+.hero-search-box {
+  display: flex;
+  gap: 0;
+  max-width: 700px;
+  margin-top: 20px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: 0 4px 20px var(--teal-glow);
+  border: 1.5px solid var(--teal-border);
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.hero-search-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 4px 24px var(--teal-strong);
+}
+.hero-search-input {
+  flex: 1;
+  padding: 13px 18px;
+  border: none;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  min-width: 0;
+}
+.hero-search-input::placeholder { color: var(--gray-light); }
+.hero-search-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 13px 24px;
+  font-family: 'Rajdhani', 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.25s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hero-search-btn:hover { background: var(--primary-dark); }
+
+/* ── HOME DETAILS CARDS — redesign ──────────────────────── */
+.home-detail-card {
+  border: 1px solid var(--teal-border) !important;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+}
+
+.home-detail-card::before {
+  content: attr(data-icon);
+  position: absolute;
+  right: 16px; top: 14px;
+  font-size: 2.2rem;
+  opacity: 0.08;
+  line-height: 1;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.home-detail-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--primary), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.home-detail-card:hover {
+  border-color: var(--primary) !important;
+  transform: translateY(-3px);
+  box-shadow: var(--float-shadow);
+}
+.home-detail-card:hover::after { transform: scaleX(1); }
+.home-detail-card:hover::before { opacity: 0.14; }
+
+.home-detail-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ── EXAM CARDS — glow on hover ──────────────────────────── */
+.exam-card {
+  transition: all 0.28s cubic-bezier(0.25,0.46,0.45,0.94) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.exam-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--teal-glow) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.exam-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  border-color: var(--primary) !important;
+  box-shadow: 0 6px 20px var(--teal-glow);
+}
+.exam-card:hover::after { opacity: 1; }
+
+/* ── NAV SEARCH enhanced focus ───────────────────────────── */
+.nav-search { border-top: 2px solid var(--primary); }
+
+/* ── SKELETON SHIMMER improvement ───────────────────────── */
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--bg-alt) 25%, var(--border) 50%, var(--bg-alt) 75%);
+  background-size: 200% 100%;
+  animation: shimmerLoad 1.5s infinite;
+  min-height: 200px;
+}
+
+@keyframes shimmerLoad {
+  0% { background-position: 200% center; }
+  100% { background-position: -200% center; }
+}
+
+/* ── MOBILE BOTTOM NAV — active indicator ────────────────── */
+.mob-nav-item.active {
+  color: var(--primary);
+  position: relative;
+}
+.mob-nav-item.active::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  width: 36px; height: 2px;
+  background: var(--primary);
+  border-radius: 0 0 2px 2px;
+}
+
+/* ── CATEGORY TAGS — pill redesign ──────────────────────── */
+.card-tag {
+  transition: all 0.2s;
+  cursor: default;
+}
+.card-tag:hover {
+  background: var(--primary-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ── FOOTER — subtle gradient top border ────────────────── */
+.footer {
+  position: relative;
+}
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary) 30%, var(--primary) 70%, transparent);
+}
+
+/* ── VIEW ALL btn enhancement ────────────────────────────── */
+.view-all, .btn.btn-secondary {
+  position: relative;
+  overflow: hidden;
+}
+.view-all::after {
+  content: '→';
+  margin-left: 4px;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.view-all:hover::after { transform: translateX(3px); }
+
+/* ── FILTER BAR scrolled shadow ──────────────────────────── */
+.filter-bar {
+  transition: box-shadow 0.3s;
+}
+
+/* ── DARK MODE overrides for enhancements ────────────────── */
+body.dark .quick-nav-card {
+  background: rgba(11,36,33,0.9);
+  border-color: rgba(20,184,166,0.2);
+}
+body.dark .quick-nav-card:hover {
+  background: rgba(20,184,166,0.08);
+}
+
+body.dark .card::after {
+  background: linear-gradient(135deg, rgba(20,184,166,0.04) 0%, transparent 60%);
+}
+
+body.dark .card-img-placeholder {
+  background: linear-gradient(135deg, #0b2421 0%, #143b36 100%) !important;
+}
+
+body.dark .stats-ribbon { background: #061715; }
+
+body.dark .home-detail-card::after {
+  background: linear-gradient(90deg, rgba(20,184,166,0.5), transparent);
+}
+
+body.dark .hero-search-input {
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+body.dark .page-header.home-hero {
+  background: linear-gradient(160deg, #061715 0%, #0d2e2a 50%, #0b2421 100%) !important;
+}
+body.dark .home-hero-title {
+  background: linear-gradient(135deg, #DDF6F2 40%, #2DD4BF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── SCROLL ANIMATIONS ───────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .card, .quick-nav-card, .home-detail-card, .exam-card {
+    animation: fadeSlideIn 0.4s ease both;
+  }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Stagger children in grids */
+.cards-grid .card:nth-child(1) { animation-delay: 0s; }
+.cards-grid .card:nth-child(2) { animation-delay: 0.05s; }
+.cards-grid .card:nth-child(3) { animation-delay: 0.1s; }
+.cards-grid .card:nth-child(4) { animation-delay: 0.15s; }
+.cards-grid .card:nth-child(5) { animation-delay: 0.2s; }
+.cards-grid .card:nth-child(6) { animation-delay: 0.25s; }
+.cards-grid .card:nth-child(7) { animation-delay: 0.3s; }
+.cards-grid .card:nth-child(8) { animation-delay: 0.35s; }
+
+.quick-nav-grid .quick-nav-card:nth-child(1) { animation-delay: 0.05s; }
+.quick-nav-grid .quick-nav-card:nth-child(2) { animation-delay: 0.1s; }
+.quick-nav-grid .quick-nav-card:nth-child(3) { animation-delay: 0.15s; }
+.quick-nav-grid .quick-nav-card:nth-child(4) { animation-delay: 0.2s; }
+
+/* ── STAT COUNTER (used via JS) ──────────────────────────── */
+.stat-num[data-target] { cursor: default; }
+
+/* ── CATEGORY RIBBON PILLS ───────────────────────────────── */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 4px;
+}
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1.5px solid var(--teal-border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.cat-pill:hover, .cat-pill.active {
+  background: var(--primary-bg);
+  border-color: var(--primary);
+  color: var(--primary);
+  text-decoration: none;
+  box-shadow: 0 0 0 3px var(--teal-glow);
+}
+
+/* ── TRENDING LABEL ──────────────────────────────────────── */
+.trending-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--primary);
+  background: var(--primary-bg);
+  border: 1px solid var(--teal-border);
+  padding: 3px 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.trending-label::before {
+  content: '';
+  width: 6px; height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  animation: titlePulse 2s ease infinite;
+}
+
+/* ── CARD SIZING TUNE-UP (home + all listing pages) ─────── */
+.cards-grid {
+  gap: 18px;
+}
+
+.cards-grid .card {
+  height: 100%;
+  min-height: 100%;
+}
+
+.card-img {
+  aspect-ratio: 16 / 9;
+  min-height: clamp(148px, 16.5vw, 184px);
+}
+
+.card-body {
+  padding: 16px;
+  gap: 10px;
+}
+
+.card-title {
+  font-size: 1.02rem;
+  line-height: 1.45;
+  min-height: calc(1.45em * 2);
+}
+
+.card-desc {
+  font-size: 0.89rem;
+  line-height: 1.6;
+}
+
+.card-footer {
+  padding: 12px 16px;
+}
+
+.home-latest-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(84px, 9.2vw, 96px);
+  padding: clamp(8px, 1vw, 10px) clamp(10px, 1.1vw, 12px);
+  gap: clamp(2px, 0.5vw, 4px);
+}
+
+.home-latest-item strong {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  font-size: clamp(0.8rem, 0.73rem + 0.18vw, 0.84rem);
+  line-height: 1.35;
+}
+
+.home-latest-item span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: clamp(0.7rem, 0.66rem + 0.14vw, 0.75rem);
+  line-height: 1.3;
+}
+
+
+@media (min-width: 769px) {
+  .home-latest-item {
+    min-height: 90px;
+  }
+}
+@media (min-width: 1280px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 680px) {
+  .cards-grid {
+    gap: 11px;
+  }
+
+  .card-img {
+    min-height: clamp(122px, 35vw, 146px);
+  }
+
+  .card-body {
+    padding: 11px;
+    gap: 8px;
+  }
+
+  .card-title {
+    font-size: 0.94rem;
+    line-height: 1.35;
+    min-height: calc(1.35em * 2);
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .card-footer {
+    padding: 10px 11px;
+  }
+
+  .home-latest-item {
+    min-height: 76px;
+    padding: 7px 9px;
+    gap: 2px;
+  }
+
+  .home-latest-item strong {
+    font-size: clamp(0.74rem, 0.7rem + 0.3vw, 0.79rem);
+    line-height: 1.3;
+  }
+
+  .home-latest-item span {
+    font-size: clamp(0.66rem, 0.62rem + 0.22vw, 0.7rem);
+    line-height: 1.2;
+  }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════
+   HOMEPAGE CARD SLIDER  —  single source of truth
+   Mobile  (<1024px): 2 cards visible at a time, swipe to see rest
+   Desktop (≥1024px): 3 cards visible at a time, swipe to see rest
+   Cards are fixed size — no shrinking/growing as you scroll
+   ══════════════════════════════════════════════════════════════════════ */
+
+body.home-page .cards-grid.home-card-slider {
+  /* visible count variable — overridden per breakpoint below */
+  --n: 2;
+  --gap: 10px;
+  --card-h: 260px;
+  --card-w: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+
+  /* flex horizontal scroll — never wraps */
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--gap);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+  align-items: stretch;
+}
+
+body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each card: fixed width so exactly --n show at once, rest scroll into view */
+body.home-page .cards-grid.home-card-slider > .card,
+body.home-page .cards-grid.home-card-slider > .exam-card,
+body.home-page .cards-grid.home-card-slider > .skeleton-card {
+  flex: 0 0 var(--card-w);
+  width: var(--card-w);
+  min-width: var(--card-w);
+  max-width: var(--card-w);
+  height: var(--card-h);
+  min-height: var(--card-h);
+  max-height: var(--card-h);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Card internals */
+body.home-page .cards-grid.home-card-slider .card-img {
+  flex: 0 0 88px;
+  height: 88px;
+  min-height: 88px;
+  overflow: hidden;
+}
+body.home-page .cards-grid.home-card-slider .card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+body.home-page .cards-grid.home-card-slider .card-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px 9px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+body.home-page .cards-grid.home-card-slider .card-title {
+  font-size: 0.78rem;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.home-page .cards-grid.home-card-slider .card-desc {
+  font-size: 0.7rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+body.home-page .cards-grid.home-card-slider .card-details span {
+  font-size: 0.62rem;
+  min-width: 0;
+  max-width: 100%;
+}
+body.home-page .cards-grid.home-card-slider .card-footer {
+  margin-top: auto;
+  flex: 0 0 auto;
+  padding: 6px 8px;
+  gap: 5px;
+  flex-wrap: nowrap;
+}
+body.home-page .cards-grid.home-card-slider .card-footer .btn-primary {
+  min-height: 26px;
+  font-size: 0.65rem;
+  padding: 5px 7px;
+}
+body.home-page .cards-grid.home-card-slider .btn-fav,
+body.home-page .cards-grid.home-card-slider .btn-share {
+  width: 26px;
+  height: 26px;
+}
+
+/* ── Desktop: 3 cards ── */
+@media (min-width: 1024px) {
+  body.home-page .cards-grid.home-card-slider {
+    --n: 3;
+    --gap: 16px;
+    --card-h: 420px;
+  }
+  body.home-page .cards-grid.home-card-slider .card-img {
+    flex: 0 0 160px;
+    height: 160px;
+    min-height: 160px;
+  }
+  body.home-page .cards-grid.home-card-slider .card-body {
+    padding: 14px 16px 10px;
+  }
+  body.home-page .cards-grid.home-card-slider .card-title {
+    font-size: 0.95rem;
+  }
+  body.home-page .cards-grid.home-card-slider .card-desc {
+    font-size: 0.82rem;
+  }
+  body.home-page .cards-grid.home-card-slider .card-details span {
+    font-size: 0.75rem;
+  }
+  body.home-page .cards-grid.home-card-slider .card-footer .btn-primary {
+    min-height: 34px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.home-page .cards-grid.home-card-slider > .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   MOBILE CARD UNIFORMITY FIX  —  max-width: 900px only
+   Ensures scholarship, jobs, internship sliders are identical size.
+   Forces 2 visible cards with same height, gap, and internal layout.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Guarantee all three sliders use identical variables on mobile */
+  body.home-page #scholarshipsGrid.home-card-slider,
+  body.home-page #jobsGrid.home-card-slider,
+  body.home-page #internshipsGrid.home-card-slider {
+    --n: 2;
+    --gap: 10px;
+    --card-h: 260px;
+    --card-w: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    flex-direction: row !important;
+    gap: var(--gap) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scrollbar-width: none !important;
+    overscroll-behavior-x: contain;
+    align-items: stretch !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Each card: uniform fixed size across all three sliders */
+  body.home-page #scholarshipsGrid.home-card-slider > .card,
+  body.home-page #scholarshipsGrid.home-card-slider > .skeleton-card,
+  body.home-page #jobsGrid.home-card-slider > .card,
+  body.home-page #jobsGrid.home-card-slider > .skeleton-card,
+  body.home-page #internshipsGrid.home-card-slider > .card,
+  body.home-page #internshipsGrid.home-card-slider > .skeleton-card {
+    flex: 0 0 var(--card-w) !important;
+    width: var(--card-w) !important;
+    min-width: var(--card-w) !important;
+    max-width: var(--card-w) !important;
+    height: var(--card-h) !important;
+    min-height: var(--card-h) !important;
+    max-height: var(--card-h) !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+
+  /* Uniform card image height */
+  body.home-page #scholarshipsGrid.home-card-slider .card-img,
+  body.home-page #jobsGrid.home-card-slider .card-img,
+  body.home-page #internshipsGrid.home-card-slider .card-img {
+    flex: 0 0 88px !important;
+    height: 88px !important;
+    min-height: 88px !important;
+    max-height: 88px !important;
+    overflow: hidden;
+  }
+
+  /* Uniform card body */
+  body.home-page #scholarshipsGrid.home-card-slider .card-body,
+  body.home-page #jobsGrid.home-card-slider .card-body,
+  body.home-page #internshipsGrid.home-card-slider .card-body {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow: hidden;
+    padding: 8px 9px 6px !important;
+    display: flex !important;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  /* Uniform card title */
+  body.home-page #scholarshipsGrid.home-card-slider .card-title,
+  body.home-page #jobsGrid.home-card-slider .card-title,
+  body.home-page #internshipsGrid.home-card-slider .card-title {
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Uniform card description */
+  body.home-page #scholarshipsGrid.home-card-slider .card-desc,
+  body.home-page #jobsGrid.home-card-slider .card-desc,
+  body.home-page #internshipsGrid.home-card-slider .card-desc {
+    font-size: 0.7rem !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Uniform card footer */
+  body.home-page #scholarshipsGrid.home-card-slider .card-footer,
+  body.home-page #jobsGrid.home-card-slider .card-footer,
+  body.home-page #internshipsGrid.home-card-slider .card-footer {
+    margin-top: auto !important;
+    flex: 0 0 auto !important;
+    padding: 6px 8px !important;
+    gap: 5px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  /* Uniform primary button */
+  body.home-page #scholarshipsGrid.home-card-slider .card-footer .btn-primary,
+  body.home-page #jobsGrid.home-card-slider .card-footer .btn-primary,
+  body.home-page #internshipsGrid.home-card-slider .card-footer .btn-primary {
+    min-height: 26px !important;
+    font-size: 0.65rem !important;
+    padding: 5px 7px !important;
+  }
+
+  /* Ensure scholarship section's home-main-content fills full width on mobile */
+  .homepage-main-sidebar {
+    grid-template-columns: 1fr !important;
+  }
+  .home-main-content {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+}
