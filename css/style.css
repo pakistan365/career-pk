@@ -1540,6 +1540,20 @@ body.dark.home-page .section .container {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
+@media (min-width: 992px) {
+  .footer-grid.footer-grid-home {
+    grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+.footer-col-ad .ad-slot-footer {
+  margin-top: 0;
+  width: 100%;
+  max-width: 220px;
+}
+.footer-col-ad .ad-slot-inner-footer {
+  min-height: 150px;
+}
 .footer-brand,
 .footer-bottom {
   grid-column: 1 / -1;
@@ -2213,6 +2227,10 @@ h1 { font-size: 20px !important; }
 
   .footer-col ul {
     gap: 6px;
+  }
+   
+  .footer-col-ad .ad-slot-footer {
+    max-width: 100%;
   }
 }
 
