@@ -296,6 +296,8 @@
 
     updateDynamicSeo(item);
 
+    renderSidebarDeadline(item);
+
     const plan = relatedPlan[type] || relatedPlan.job;
     const sideOneType = plan.sidebar[0];
     const sideTwoType = plan.sidebar[1];
@@ -334,6 +336,8 @@
 
     function mountGroupBlog() {
     const groupItems = getListByType(type).filter((entry) => itemMatchesGroup(entry, group, type));
+    const sidebarDeadlineBlock = document.getElementById('sidebarDeadlineBlock');
+    if (sidebarDeadlineBlock) sidebarDeadlineBlock.style.display = 'none';
     toggleGroupLandingSections(false);
     document.getElementById('opportunityTitle').textContent = `${config.icon} ${group} ${config.label} Guide`;
     document.getElementById('opportunitySubtitle').textContent = `All ${group} related ${config.label.toLowerCase()} with connected updates in one place.`;
