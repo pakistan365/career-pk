@@ -175,6 +175,12 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
   transition: all 0.2s;
   box-shadow: 0 1px 2px rgba(2, 6, 23, 0.08);
 }
+.btn-share.active {
+  border-color: var(--primary, #6366f1);
+  background: var(--primary-bg, #eef2fb);
+  box-shadow: 0 4px 12px rgba(31, 75, 191, 0.2);
+}
+
 .btn-share:hover,
 .btn-share:focus-visible {
   border-color: var(--primary, #6366f1);
