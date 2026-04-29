@@ -72,9 +72,9 @@
       <div id="examTypeLatestGrid" class="exam-types-grid quick-access-grid">
       <div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>
       </div>
-      <aside class="quick-access-sidebar" aria-label="Upcoming exam deadlines">
+      <aside class="quick-access-sidebar compact-deadline-sidebar" aria-label="Upcoming exam deadlines">
         <h3>Deadline Session</h3>
-        <div id="examDeadlineSidebar" class="home-latest-list">
+        <div id="examDeadlineSidebar" class="home-latest-list compact-deadline-list">
           <a class="home-latest-item" href="exams.html">Loading deadlines...</a>
         </div>
       </aside>
@@ -236,7 +236,21 @@
     document.getElementById('examTypeLatestGrid').innerHTML = groups.length ? groups.map(renderExamTypeCard).join('') : '<div class="empty-mini">No exam types yet.</div>';
      const sidebar=document.getElementById('examDeadlineSidebar');
     if(sidebar){
-      sidebar.innerHTML=groups.length?groups.slice(0,6).map((group)=>`<a class="home-latest-item" href="opportunity.html?type=exam&group=${encodeURIComponent(group.type)}"><strong>${escapeHtml(group.type)}</strong><span>Exam date: ${formatDate(group.latestDate)} • ${group.count} listing${group.count!==1?'s':''}</span></a>`).join(''):'<a class="home-latest-item" href="exams.html">No upcoming deadlines yet.</a>';
+      sidebar.innerHTML = groups.length
+        ? groups.slice(0, 10).map((group) => {
+          const listingsLabel = `${group.count} listing${group.count !== 1 ? 's' : ''}`;
+          return `<a class="home-latest-item compact-deadline-item" href="opportunity.html?type=exam&group=${encodeURIComponent(group.type)}">
+            <span class="deadline-dot" aria-hidden="true"></span>
+            <div class="deadline-main">
+              <div class="deadline-row">
+                <strong class="deadline-title">${escapeHtml(group.type)}</strong>
+                <span class="deadline-badge">${listingsLabel}</span>
+              </div>
+              <span class="deadline-meta">Exam date: <span class="deadline-date">${formatDate(group.latestDate)}</span></span>
+            </div>
+          </a>`;
+        }).join('')
+        : '<a class="home-latest-item compact-deadline-item" href="exams.html">No upcoming deadlines yet.</a>';
     }
   }
   function applyFilters() {
