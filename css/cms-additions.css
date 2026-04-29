@@ -165,7 +165,7 @@ body.dark .tag { background: #1e1e2e; color: #9ca3af; border-color: #374151; }
   background: var(--bg-card, #fff);
   border: 1px solid color-mix(in srgb, var(--border, #e5e7eb) 72%, var(--primary, #6366f1) 28%);
   color: var(--primary, #6366f1);
-  width: 43px;
+  width: 34px;
   height: 34px;
   border-radius: 50%;
   display: inline-flex;
