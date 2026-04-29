@@ -1476,6 +1476,11 @@ ul { list-style: none; }
   gap: 24px;
   padding: 40px 0 32px;
 }
+@media (min-width: 992px) {
+  .footer-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
 .footer-brand,
 .footer-bottom {
   grid-column: 1 / -1;
