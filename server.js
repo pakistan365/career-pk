@@ -58,6 +58,10 @@ function createResAdapter(res) {
 }
 
 function parseBody(req) {
+  if (req.method === 'GET' || req.method === 'HEAD' || req.method === 'OPTIONS') {
+    return Promise.resolve(undefined);
+  }
+
   return new Promise((resolve, reject) => {
     const chunks = [];
     req.on('data', (chunk) => chunks.push(chunk));
@@ -80,7 +84,15 @@ function parseBody(req) {
 }
 
 function serveStatic(urlPath, res) {
-  const decodedPath = decodeURIComponent(urlPath);
+  let decodedPath;
+  try {
+    decodedPath = decodeURIComponent(urlPath);
+  } catch {
+    res.writeHead(400);
+    res.end('Bad Request');
+    return;
+  }
+
   const filePath = path.join(__dirname, decodedPath);
   if (!filePath.startsWith(__dirname)) {
     res.writeHead(403);
