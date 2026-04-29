@@ -91,6 +91,32 @@
     }).join('');
   }
 
+    function renderSidebarDeadline(item) {
+    const block = document.getElementById('sidebarDeadlineBlock');
+    const mount = document.getElementById('sidebarDeadlineContent');
+    if (!block || !mount) return;
+
+    const rawDate = item?.deadline || item?.test_date;
+    if (type !== 'scholarship' || !rawDate) {
+      block.style.display = 'none';
+      mount.innerHTML = '';
+      return;
+    }
+
+    const remaining = daysUntil(rawDate);
+    const remainingText = Number.isFinite(remaining)
+      ? (remaining < 0 ? 'Deadline has passed' : `${remaining} day${remaining === 1 ? '' : 's'} remaining`)
+      : 'Timeline not available';
+
+    block.style.display = '';
+    mount.innerHTML = `
+      <div class="related-item" aria-label="Scholarship deadline">
+        <strong><i class="fa fa-calendar"></i> ${escapeHtml(formatDate(rawDate))}</strong>
+        <span>${escapeHtml(remainingText)}</span>
+      </div>
+    `;
+  }
+
     function renderWebSearchLinks(seedTitle, seedGroup) {
     const mount = document.getElementById('sidebarWebSearch');
     if (!mount) return;
