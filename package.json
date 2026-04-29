@@ -1,20 +1,20 @@
 {
   "name": "career-pk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Career Pakistan static site with Vercel serverless APIs",
+  "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vercel dev",
     "build": "vercel build",
-    "deploy": "vercel deploy"
-  },
+    "deploy": "vercel deploy",
+    "check:package": "node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8')); console.log('package.json is valid JSON')\""  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
     "vercel": "^52.0.0"
-  },
-  "private": true
+  }
 }
