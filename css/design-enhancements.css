@@ -735,16 +735,16 @@ body.dark .home-hero-title {
 
 /* ══════════════════════════════════════════════════════════════════════
    HOMEPAGE CARD SLIDER  —  single source of truth
-   Mobile  (<1024px): 2 cards visible at a time, swipe to see rest
-   Desktop (≥1024px): 3 cards visible at a time, swipe to see rest
+   Mobile  (<900px): 2 cards visible at a time, swipe to see rest
+   Desktop (≥900px): 3 cards visible at a time, swipe to see rest
    Cards are fixed size — no shrinking/growing as you scroll
    ══════════════════════════════════════════════════════════════════════ */
 
 body.home-page .cards-grid.home-card-slider {
   /* visible count variable — overridden per breakpoint below */
   --n: 2;
-  --gap: 10px;
-  --card-h: 260px;
+  --gap: 14px;
+  --card-h: 280px;
   --card-w: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
 
   /* flex horizontal scroll — never wraps */
@@ -759,6 +759,8 @@ body.home-page .cards-grid.home-card-slider {
   scrollbar-width: none;
   overscroll-behavior-x: contain;
   align-items: stretch;
+  padding: 10px 0;
+  scroll-padding-inline: 16px;
 }
 
 body.home-page .cards-grid.home-card-slider::-webkit-scrollbar {
@@ -843,11 +845,11 @@ body.home-page .cards-grid.home-card-slider .btn-share {
 }
 
 /* ── Desktop: 3 cards ── */
-@media (min-width: 1024px) {
+@media (min-width: 900px) {
   body.home-page .cards-grid.home-card-slider {
     --n: 3;
-    --gap: 16px;
-    --card-h: 420px;
+    --gap: 18px;
+    --card-h: 400px;
   }
   body.home-page .cards-grid.home-card-slider .card-img {
     flex: 0 0 160px;
