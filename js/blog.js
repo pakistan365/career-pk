@@ -98,7 +98,10 @@ function parseCSV(csv) {
     item.tagsArray = (item.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
     item.featured = /^(true|1|yes)$/i.test(item.featured || '');
     return item;
-  }).filter((post) => post.id && post.title);
+  }).map((post, index) => {
+    const fallbackId = post.id || `blog-${index + 1}`;
+    return { ...post, id: String(fallbackId).trim() };
+  }).filter((post) => post.title);
 }
 
 const safeText = (value = '') => String(value)
@@ -129,7 +132,7 @@ function isValidBlogCsv(text = '') {
   if (!sample) return false;
   if (sample.startsWith('{') || sample.startsWith('<!')) return false;
   const firstLine = sample.split(/\r?\n/, 1)[0].toLowerCase();
-  return firstLine.includes('id') && firstLine.includes('title');
+  return firstLine.includes('title') && (firstLine.includes('id') || firstLine.includes('description') || firstLine.includes('category'));
 }
 
 async function fetchPosts() {
