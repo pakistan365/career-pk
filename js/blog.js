@@ -14,6 +14,7 @@ function parseCSVRow(row) {
 
 function parseCSV(csv) {
   const lines = csv.split(/\r?\n/).filter(Boolean);
+  if (!lines.length) return [];
   const headers = parseCSVRow(lines[0]).map(h=>h.trim());
   return lines.slice(1).map(line => {
     const values = parseCSVRow(line);
@@ -23,6 +24,29 @@ function parseCSV(csv) {
     item.featured = /^true$/i.test(item.featured || '');
     return item;
   }).filter(p => p.id && p.title);
+}
+
+const safeText = (value = '') => String(value)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+const safeUrl = (value = '') => {
+  try {
+    const u = new URL(String(value), window.location.origin);
+    if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
+  } catch (_) {}
+  return '';
+};
+
+function sanitizeRichText(raw = '') {
+  const text = String(raw).replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
+  return text
+    .split(/\n{2,}/)
+    .map(p => `<p>${safeText(p.trim())}</p>`)
+    .join('');
 }
 
 async function fetchPosts() {
@@ -38,7 +62,7 @@ async function fetchPosts() {
   return parseCSV(csv).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
 }
 
-function adSlot(){ return '<div class="ad-slot">Ad Space</div>'; }
+function adSlot(){ return '<div class="ad-slot" aria-label="Advertisement">Ad Space</div>'; }
 function fmtDate(d){ return d ? new Date(d).toLocaleDateString() : ''; }
 
 function initBlogListPage() {
@@ -61,7 +85,7 @@ function initBlogListPage() {
     const show = state.filtered.slice(0, state.page * state.perPage);
     list.innerHTML = '';
     show.forEach((p, idx) => {
-      list.insertAdjacentHTML('beforeend', `<article class="blog-card"><img src="${p.image_url||'banner.png'}" alt="${p.title}"><div class="blog-card-body"><span class="chip">${p.category||'General'}</span><h3>${p.title}</h3><p>${p.short_description||''}</p><div class="meta">${fmtDate(p.date)}</div><a class="btn btn-primary" href="blog-post.html?id=${encodeURIComponent(p.id)}">Read More</a></div></article>`);
+      list.insertAdjacentHTML('beforeend', `<article class="blog-card"><img loading="lazy" decoding="async" src="${safeUrl(p.image_url)||'banner.png'}" alt="${safeText(p.title)}"><div class="blog-card-body"><span class="chip">${safeText(p.category||'General')}</span><h3>${safeText(p.title)}</h3><p>${safeText(p.short_description||'')}</p><div class="meta">${fmtDate(p.date)}</div><a class="btn btn-primary" href="blog-post.html?id=${encodeURIComponent(p.id)}">Read More</a></div></article>`);
       if ((idx+1)%4===0) list.insertAdjacentHTML('beforeend', adSlot());
     });
     loadBtn.style.display = show.length < state.filtered.length ? 'inline-flex':'none';
@@ -75,7 +99,7 @@ function initBlogListPage() {
   fetchPosts().then(posts=>{
     state.posts = posts;
     const tags = [...new Set(posts.flatMap(p=>p.tagsArray))];
-    tags.forEach(t => tagsEl.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`));
+    tags.forEach(t => tagsEl.insertAdjacentHTML('beforeend', `<option value="${safeText(t)}">${safeText(t)}</option>`));
     applyFilters();
   });
 }
@@ -87,19 +111,20 @@ function initBlogPostPage() {
     if (!post) return;
     document.getElementById('postTitle').textContent = post.title;
     document.getElementById('postMeta').textContent = `${post.category || 'General'} • ${fmtDate(post.date)}`;
-    document.getElementById('postImage').src = post.image_url || 'banner.png';
-    const desc = post.description || '';
-    const blocks = desc.split(/<\/p>/i);
-    const content = [];
-    blocks.forEach((b,i)=>{ content.push(b + (b.includes('<p')?'</p>':'')); if (i===2) content.push(adSlot()); });
-    document.getElementById('postContent').innerHTML = content.join('');
+    document.getElementById('postImage').src = safeUrl(post.image_url) || 'banner.png';
+    document.getElementById('postImage').loading = 'lazy';
+    const sanitized = sanitizeRichText(post.description || post.short_description || 'No content available.');
+    const content = sanitized ? sanitized.split(/<\/p>/i).map((b, i) => `${b}</p>${i===2 ? adSlot() : ''}`).join('') : '<p>No content available.</p>';
+    document.getElementById('postContent').innerHTML = content;
     const actions = document.getElementById('postActions');
-    if (post.pdf_link) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-secondary" href="${post.pdf_link}" target="_blank" rel="noopener">View PDF</a>`);
-    if (post.external_link) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-primary" href="${post.external_link}" target="_blank" rel="noopener">Reference Link</a>`);
-
+    const pdfUrl = safeUrl(post.pdf_link);
+    const externalUrl = safeUrl(post.external_link);
+    if (pdfUrl) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-secondary" href="${pdfUrl}" target="_blank" rel="noopener noreferrer">View PDF</a>`);
+    if (externalUrl) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-primary" href="${externalUrl}" target="_blank" rel="noopener noreferrer">Reference Link</a>`);
+    
     const related = posts.filter(p => p.id!==post.id && (p.category===post.category || p.tagsArray.some(t=>post.tagsArray.includes(t)))).slice(0,5);
-    document.getElementById('relatedPosts').innerHTML = related.map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${p.title}</a>`).join('');
-    document.getElementById('latestPosts').innerHTML = posts.slice(0,5).map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${p.title}</a>`).join('');
+    document.getElementById('relatedPosts').innerHTML = related.map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
+    document.getElementById('latestPosts').innerHTML = posts.slice(0,5).map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
   });
 }
 
@@ -109,6 +134,6 @@ function initHomeBlogHighlights() {
   fetchPosts().then(posts => {
     const picks = posts.filter(p=>p.featured).slice(0,5);
     const data = picks.length ? picks : posts.slice(0,5);
-    wrap.innerHTML = data.slice(0,5).map(p=>`<article class="mini-blog-card"><img src="${p.image_url||'banner.png'}" alt="${p.title}"><h3>${p.title}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
+    wrap.innerHTML = data.slice(0,5).map(p=>`<article class="mini-blog-card"><img loading="lazy" decoding="async" src="${safeUrl(p.image_url)||'banner.png'}" alt="${safeText(p.title)}"><h3>${safeText(p.title)}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
   });
 }
