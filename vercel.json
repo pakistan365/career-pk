@@ -1,61 +1,229 @@
 {
   "version": 2,
   "rewrites": [
-    { "source": "/api/sheets", "destination": "/api/sheets.js" },
-    { "source": "/api/web-search", "destination": "/api/web-search.js" },
-    { "source": "/api/gemini-chat", "destination": "/api/gemini-chat.js" },
-    { "source": "/api/chat-feedback", "destination": "/api/chat-feedback.js" },
-    { "source": "/api/subscribe", "destination": "/api/subscribe.js" },
-    { "source": "/api/deadline-alerts", "destination": "/api/deadline-alerts.js" },
-    { "source": "/scholarships", "destination": "/scholarships.html" },
-    { "source": "/scholarships-national", "destination": "/scholarships-national.html" },
-    { "source": "/scholarships-international", "destination": "/scholarships-international.html" },
-    { "source": "/jobs", "destination": "/jobs.html" },
-    { "source": "/jobs-government", "destination": "/jobs-government.html" },
-    { "source": "/jobs-private", "destination": "/jobs-private.html" },
-    { "source": "/internships", "destination": "/internships.html" },
-    { "source": "/exams", "destination": "/exams.html" },
-    { "source": "/exams-mdcat", "destination": "/exams-mdcat.html" },
-    { "source": "/exams-css", "destination": "/exams-css.html" },
-    { "source": "/exams-ppsc", "destination": "/exams-ppsc.html" },
-    { "source": "/books", "destination": "/books.html" },
-    { "source": "/search", "destination": "/search.html" },
-    { "source": "/favorites", "destination": "/favorites.html" },
-    { "source": "/resume-builder", "destination": "/resume-builder.html" },
-    { "source": "/about", "destination": "/about.html" },
-    { "source": "/contact", "destination": "/contact.html" },
-    { "source": "/terms", "destination": "/terms.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/opportunity", "destination": "/opportunity.html" },
-    { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/blog-post", "destination": "/blog-post.html" }
+    {
+      "source": "/api/sheets",
+      "destination": "/api/sheets.js"
+    },
+    {
+      "source": "/api/web-search",
+      "destination": "/api/web-search.js"
+    },
+    {
+      "source": "/api/gemini-chat",
+      "destination": "/api/gemini-chat.js"
+    },
+    {
+      "source": "/api/chat-feedback",
+      "destination": "/api/chat-feedback.js"
+    },
+    {
+      "source": "/api/subscribe",
+      "destination": "/api/subscribe.js"
+    },
+    {
+      "source": "/api/deadline-alerts",
+      "destination": "/api/deadline-alerts.js"
+    },
+    {
+      "source": "/scholarships",
+      "destination": "/scholarships.html"
+    },
+    {
+      "source": "/scholarships-national",
+      "destination": "/scholarships-national.html"
+    },
+    {
+      "source": "/scholarships-international",
+      "destination": "/scholarships-international.html"
+    },
+    {
+      "source": "/jobs",
+      "destination": "/jobs.html"
+    },
+    {
+      "source": "/jobs-government",
+      "destination": "/jobs-government.html"
+    },
+    {
+      "source": "/jobs-private",
+      "destination": "/jobs-private.html"
+    },
+    {
+      "source": "/internships",
+      "destination": "/internships.html"
+    },
+    {
+      "source": "/exams",
+      "destination": "/exams.html"
+    },
+    {
+      "source": "/exams-mdcat",
+      "destination": "/exams-mdcat.html"
+    },
+    {
+      "source": "/exams-css",
+      "destination": "/exams-css.html"
+    },
+    {
+      "source": "/exams-ppsc",
+      "destination": "/exams-ppsc.html"
+    },
+    {
+      "source": "/books",
+      "destination": "/books.html"
+    },
+    {
+      "source": "/search",
+      "destination": "/search.html"
+    },
+    {
+      "source": "/favorites",
+      "destination": "/favorites.html"
+    },
+    {
+      "source": "/resume-builder",
+      "destination": "/resume-builder.html"
+    },
+    {
+      "source": "/about",
+      "destination": "/about.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/opportunity",
+      "destination": "/opportunity.html"
+    },
+    {
+      "source": "/blog",
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/blog-post",
+      "destination": "/blog-post.html"
+    }
   ],
   "headers": [
     {
-      "source": "/api/(.*)",
+      "source": "/api/:path*",
       "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" },
-        { "key": "Cache-Control", "value": "no-store, max-age=0" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
       ]
     },
     {
-      "source": "/(.*\\.html)",
+      "source": "/:path*.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     },
     {
-      "source": "/(css|js)/(.*)",
+      "source": "/css/:path*",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, stale-while-revalidate=604800" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/js/:path*",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.jpg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.jpeg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.gif",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.svg",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/:path*.ico",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/:path*.(png|jpg|jpeg|gif|svg|ico|webp)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     }
   ]
