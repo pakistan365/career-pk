@@ -306,6 +306,14 @@ function mapBlog(r) {
   };
 }
 
+function _isValidMappedItem(item) {
+  const primaryText = (item.title || item.message || '').trim();
+  const hasPrimaryText = primaryText.length > 0;
+  const hasNumericId = Number(item.id) > 0;
+  const hasStringId = String(item.id || '').trim().length > 0;
+  return hasPrimaryText && (hasNumericId || hasStringId);
+}
+
 function mapNotification(r) {
   const expiry = _getField(r, ['Expiry Date', 'Expiry']);
   const expired = expiry ? new Date(expiry) < new Date() : false;
@@ -342,10 +350,7 @@ async function _loadAllSheets(silent) {
     const text = texts[i];
     if (!text) { window.CMS_DATA[tab.name] = []; return; }
     try {
-      const mapped = _csvToObjects(text).map(tab.mapper).filter(x => {
-        const primaryText = (x.title || x.message || '').trim();
-        return x.id > 0 && primaryText.length > 0;
-      });
+      const mapped = _csvToObjects(text).map(tab.mapper).filter(_isValidMappedItem);
       const prev = JSON.stringify(window.CMS_DATA[tab.name]);
       window.CMS_DATA[tab.name] = mapped;
       if (prev !== JSON.stringify(mapped)) changedTabs.push(tab.name);
