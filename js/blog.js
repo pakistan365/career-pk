@@ -132,28 +132,39 @@ function isValidBlogCsv(text = '') {
   if (!sample) return false;
   if (sample.startsWith('{') || sample.startsWith('<!')) return false;
   const firstLine = sample.split(/\r?\n/, 1)[0].toLowerCase();
-  return firstLine.includes('title') && (firstLine.includes('id') || firstLine.includes('description') || firstLine.includes('category'));
+  return firstLine.includes('title') || firstLine.includes('description') || firstLine.includes('content') || firstLine.includes('post');
+}
+
+function parseAndValidatePosts(csv = '') {
+  const posts = parseCSV(csv);
+  return posts.filter((post) => post && post.title);
 }
 
 async function fetchPosts() {
   let csv = '';
+  let posts = [];
   try {
     const proxyRes = await fetch(BLOG_PROXY_URL, { cache: 'no-store' });
     if (!proxyRes.ok) throw new Error('Proxy failed: ' + proxyRes.status);
     csv = await proxyRes.text();
     if (!isValidBlogCsv(csv)) throw new Error('Proxy returned non-CSV payload');
+    posts = parseAndValidatePosts(csv);
+    if (!posts.length) throw new Error('Proxy CSV parsed but returned no blog rows');
   } catch (proxyError) {
     console.warn('Proxy fetch failed, trying direct CSV.', proxyError);
     try {
       const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' });
       if (!res.ok) throw new Error('Direct CSV failed: ' + res.status);
       csv = await res.text();
+      if (!isValidBlogCsv(csv)) throw new Error('Direct CSV returned non-CSV payload');
+      posts = parseAndValidatePosts(csv);
+      if (!posts.length) throw new Error('Direct CSV parsed but returned no blog rows');
     } catch (directError) {
       console.warn('Direct CSV fetch failed.', directError);
       throw new Error('Could not load blog posts');
     }
   }
-  return parseCSV(csv).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
+  return posts.sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
 }
 
 function adSlot(){ return '<div class="ad-slot" aria-label="Advertisement">Ad Space</div>'; }
