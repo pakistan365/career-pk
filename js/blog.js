@@ -142,10 +142,16 @@ async function fetchPosts() {
     if (!proxyRes.ok) throw new Error('Proxy failed: ' + proxyRes.status);
     csv = await proxyRes.text();
     if (!isValidBlogCsv(csv)) throw new Error('Proxy returned non-CSV payload');
-  } catch (e) {
-    const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Direct CSV failed: ' + res.status);
-    csv = await res.text();
+  } catch (proxyError) {
+    console.warn('Proxy fetch failed, trying direct CSV.', proxyError);
+    try {
+      const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' });
+      if (!res.ok) throw new Error('Direct CSV failed: ' + res.status);
+      csv = await res.text();
+    } catch (directError) {
+      console.warn('Direct CSV fetch failed.', directError);
+      throw new Error('Could not load blog posts');
+    }
   }
   return parseCSV(csv).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
 }
@@ -172,6 +178,9 @@ function initBlogListPage() {
   function render() {
     const show = state.filtered.slice(0, state.page * state.perPage);
     list.innerHTML = '';
+    if (show.length === 0) {
+      list.innerHTML = '<p style="text-align:center;">No blog posts found.</p>';
+    }
     show.forEach((p, idx) => {
       list.insertAdjacentHTML('beforeend', `<article class="blog-card"><img loading="lazy" decoding="async" src="${safeUrl(p.image_url)||'banner.png'}" alt="${safeText(p.title)}"><div class="blog-card-body"><span class="chip">${safeText(p.category||'General')}</span><h3>${safeText(p.title)}</h3><p>${safeText(p.short_description||'')}</p><div class="meta">${fmtDate(p.date)}</div><a class="btn btn-primary" href="blog-post.html?id=${encodeURIComponent(p.id)}">Read More</a></div></article>`);
       if ((idx+1)%4===0) list.insertAdjacentHTML('beforeend', adSlot());
@@ -189,6 +198,8 @@ function initBlogListPage() {
     const tags = [...new Set(posts.flatMap(p=>p.tagsArray))];
     tags.forEach(t => tagsEl.insertAdjacentHTML('beforeend', `<option value="${safeText(t)}">${safeText(t)}</option>`));
     applyFilters();
+  }).catch(()=>{
+    list.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
   });
 }
 
@@ -213,6 +224,8 @@ function initBlogPostPage() {
     const related = posts.filter(p => p.id!==post.id && (p.category===post.category || p.tagsArray.some(t=>post.tagsArray.includes(t)))).slice(0,5);
     document.getElementById('relatedPosts').innerHTML = related.map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
     document.getElementById('latestPosts').innerHTML = posts.slice(0,5).map(p=>`<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
+   }).catch(()=>{
+    document.getElementById('postContent').innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
   });
 }
 
@@ -223,5 +236,7 @@ function initHomeBlogHighlights() {
     const picks = posts.filter(p=>p.featured).slice(0,5);
     const data = picks.length ? picks : posts.slice(0,5);
     wrap.innerHTML = data.slice(0,5).map(p=>`<article class="mini-blog-card"><img loading="lazy" decoding="async" src="${safeUrl(p.image_url)||'banner.png'}" alt="${safeText(p.title)}"><h3>${safeText(p.title)}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
+  }).catch(()=>{
+    wrap.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
   });
 }
