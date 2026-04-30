@@ -1,3 +1,4 @@
+const BLOG_PROXY_URL = '/api/sheets?sheet=Blog';
 const BLOG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRciVbiyyI9Kk7LS99tAB3fAYMmMebHCAAi4WdpzKwPLKh0xb57GHRr99sN1audsiOqP2Ix_kx3Ocmo/pub?output=csv';
 
 function parseCSVRow(row) {
@@ -25,8 +26,15 @@ function parseCSV(csv) {
 }
 
 async function fetchPosts() {
-  const res = await fetch(BLOG_CSV_URL);
-  const csv = await res.text();
+  let csv = '';
+  try {
+    const proxyRes = await fetch(BLOG_PROXY_URL, { cache: 'no-store' });
+    if (!proxyRes.ok) throw new Error('Proxy failed: ' + proxyRes.status);
+    csv = await proxyRes.text();
+  } catch (e) {
+    const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' });
+    csv = await res.text();
+  }
   return parseCSV(csv).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
 }
 
