@@ -745,8 +745,8 @@ body.home-page .cards-grid.home-card-slider {
   --n: 2;
   --gap: 16px;
   --card-h: 320px;
-  --card-w: calc((100% - (var(--n) - 1) * var(--gap)) / var(--n));
-
+  --card-w: max(168px, calc((100% - (var(--n) - 1) * var(--gap)) / var(--n)));
+   
   /* flex horizontal scroll — never wraps */
   display: flex;
   flex-wrap: nowrap;
@@ -891,5 +891,42 @@ body.home-page .cards-grid.home-card-slider .btn-share {
   body.home-page .cards-grid.home-card-slider > .card:hover {
     transform: translateY(-4px);
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  }
+}
+
+
+/* Mobile homepage section separation for better scanability */
+@media (max-width: 899px) {
+  body.home-page .section {
+    position: relative;
+    margin: 12px 10px;
+    border: 1px solid color-mix(in srgb, var(--primary) 20%, #d7efe9 80%);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbfa 100%);
+  }
+
+  body.home-page .section.section-alt {
+    background: linear-gradient(180deg, #f4fbf8 0%, #eef8f6 100%);
+  }
+
+  body.home-page .section .container {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  body.home-page .section .section-title {
+    position: relative;
+    padding-left: 10px;
+  }
+
+  body.home-page .section .section-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 4px;
+    border-radius: 99px;
+    background: var(--primary);
   }
 }
