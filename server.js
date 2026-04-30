@@ -28,6 +28,11 @@ const routeMap = new Map([
   ['/search', '/search.html'],
   ['/favorites', '/favorites.html'],
   ['/resume-builder', '/resume-builder.html'],
+  ['/about', '/about.html'],
+  ['/contact', '/contact.html'],
+  ['/terms', '/terms.html'],
+  ['/privacy', '/privacy.html'],
+  ['/opportunity', '/opportunity.html'],
   ['/', '/index.html'],
 ]);
 
