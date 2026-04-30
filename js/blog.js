@@ -2,150 +2,232 @@ const BLOG_PROXY_URL = '/api/sheets?sheet=Blogs';
 const BLOG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRciVbiyyI9Kk7LS99tAB3fAYMmMebHCAAi4WdpzKwPLKh0xb57GHRr99sN1audsiOqP2Ix_kx3Ocmo/pub?output=csv';
 const FALLBACK_IMAGE = 'banner.png';
 
-function normalizeHeader(value = '') {
-  return String(value).trim().toLowerCase().replace(/^﻿/, '').replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+function safeText(v = '') {
+  return String(v)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
-const BLOG_HEADER_ALIASES = {
-  id: ['id'], title: ['title'], category: ['category'],
-  description: ['description', 'details', 'content', 'blog_content', 'body', 'post_content', 'article'],
-  short_description: ['short_description', 'shortdescription', 'excerpt', 'summary', 'short', 'intro'],
-  image_url: ['image_url', 'image', 'image_link'], author: ['author', 'written_by'],
-  date: ['date', 'published_date', 'publish_date', 'posted_date'], tags: ['tags', 'tag'],
-  pdf_link: ['pdf_link', 'pdf', 'document_link', 'pdf_url', 'file_link'],
-  external_link: ['external_link', 'reference_link', 'source_link', 'url', 'apply_link', 'link'],
-  featured: ['featured', 'is_featured']
-};
-
-function parseCSV(csv) {
-  const rows = []; let row = []; let cell = ''; let inQuotes = false;
-  for (let i = 0; i < csv.length; i++) {
-    const ch = csv[i], nx = csv[i + 1];
-    if (ch === '"') { if (inQuotes && nx === '"') { cell += '"'; i++; } else inQuotes = !inQuotes; continue; }
-    if (ch === ',' && !inQuotes) { row.push(cell); cell = ''; continue; }
-    if ((ch === '\n' || ch === '\r') && !inQuotes) { if (ch === '\r' && nx === '\n') i++; row.push(cell); rows.push(row); row = []; cell = ''; continue; }
-    cell += ch;
-  }
-  if (cell.length || row.length) { row.push(cell); rows.push(row); }
-  if (!rows.length) return [];
-  const headerMap = rows[0].reduce((acc, h, idx) => { const n = normalizeHeader(h); if (n && acc[n] == null) acc[n] = idx; return acc; }, {});
-  return rows.slice(1).map((values) => {
-    const item = {};
-    Object.keys(BLOG_HEADER_ALIASES).forEach((key) => {
-      const idx = BLOG_HEADER_ALIASES[key].map((a) => headerMap[normalizeHeader(a)]).find((x) => Number.isInteger(x));
-      item[key] = idx >= 0 ? (values[idx] || '').trim() : '';
-    });
-    item.tagsArray = (item.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
-    item.featured = /^(true|1|yes)$/i.test(item.featured || '');
-    return item;
-  }).map((post, index) => ({ ...post, id: String(post.id || `blog-${index + 1}`).trim() })).filter((post) => post.title);
+function safeUrl(v = '') {
+  try {
+    const parsed = new URL(String(v || '').trim(), window.location.origin);
+    if (['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) return parsed.toString();
+  } catch (_) {}
+  return '';
 }
 
-const safeText = (v = '') => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-const safeUrl = (v = '') => { try { const u = new URL(String(v), window.location.origin); if (/^https?:$|^mailto:$|^tel:$/.test(u.protocol)) return u.toString(); } catch (_) {} return ''; };
-const isEmailLike = (v = '') => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim());
-const normalizeActionLink = (v = '') => { const raw = String(v || '').trim(); if (!raw) return ''; return isEmailLike(raw) ? `mailto:${raw}` : safeUrl(raw); };
-const isTeraboxUrl = (v = '') => /(?:^|\.)terabox\.com|1024terabox\.com/i.test(String(v || ''));
-const convertTeraboxImageUrl = (v = '') => isTeraboxUrl(v) ? '' : safeUrl(v);
-const imageWithFallback = (src = '', alt = 'Image') => `<img loading="lazy" decoding="async" src="${safeUrl(src) || FALLBACK_IMAGE}" alt="${safeText(alt)}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">`;
+function isEmailLike(v = '') {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v).trim());
+}
+
+function normalizeActionLink(v = '') {
+  const raw = String(v || '').trim();
+  if (!raw) return '';
+  if (isEmailLike(raw)) return `mailto:${raw}`;
+  return safeUrl(raw);
+}
+
+function isTeraboxUrl(v = '') {
+  return /(?:^|\.)terabox\.com|1024terabox\.com|terashare/i.test(String(v || ''));
+}
+
+function imageWithFallback(src = '', alt = 'Image') {
+  const safeSrc = safeUrl(src);
+  return `<img loading="lazy" decoding="async" src="${safeSrc || FALLBACK_IMAGE}" alt="${safeText(alt)}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">`;
+}
 
 function sanitizeRichText(raw = '') {
   const plain = String(raw).replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '').trim();
   if (!plain) return '';
-  return plain.split(/\n{2,}/).map((chunk) => chunk.trim()).filter(Boolean).map((chunk) => {
-    const lines = chunk.split(/\n+/).map((l) => l.trim()).filter(Boolean);
-    if (lines.length > 1 && lines.every((line) => /^[-•*]/.test(line))) return `<ul>${lines.map((line) => `<li>${safeText(line.replace(/^[-•*]\s*/, ''))}</li>`).join('')}</ul>`;
-    return `<p>${safeText(lines.join(' '))}</p>`;
-  }).join('');
+  return plain
+    .split(/\n{2,}/)
+    .map((chunk) => chunk.trim())
+    .filter(Boolean)
+    .map((chunk) => `<p>${safeText(chunk.replace(/\n+/g, ' '))}</p>`)
+    .join('');
 }
 
-function isValidBlogCsv(text = '') {
-  const sample = String(text || '').trim(); if (!sample || sample.startsWith('{') || sample.startsWith('<!')) return false;
-  const firstLine = sample.split(/\r?\n/, 1)[0].toLowerCase();
-  return ['title', 'description', 'content', 'post'].some((k) => firstLine.includes(k));
-}
-
-function parseAndValidatePosts(csv = '') {
+function dedupePosts(posts = []) {
   const seen = new Set();
-  return parseCSV(csv).filter((post) => post && post.title).filter((post) => {
-    const key = String(post.id || `${post.title}-${post.date || ''}`).trim().toLowerCase();
+  return posts.filter((post, index) => {
+    const key = String(post.id || `${post.title}-${post.date || index}`).trim().toLowerCase();
     if (!key || seen.has(key)) return false;
-    seen.add(key); return true;
+    seen.add(key);
+    return true;
   });
 }
 
+function normalizeBlogPost(post = {}, index = 0) {
+  return {
+    id: String(post.id || `blog-${index + 1}`).trim(),
+    title: String(post.title || '').trim(),
+    category: String(post.category || '').trim(),
+    description: String(post.description || post.details || '').trim(),
+    short_description: String(post.short_description || '').trim(),
+    image_url: String(post.image_url || '').trim(),
+    author: String(post.author || '').trim(),
+    date: String(post.date || post.posted_date || '').trim(),
+    tags: String(post.tags || '').trim(),
+    pdf_link: String(post.pdf_link || '').trim(),
+    external_link: String(post.external_link || post.apply_link || post.source_link || '').trim(),
+    featured: Boolean(post.featured || post.is_featured),
+    tagsArray: String(post.tags || '')
+      .split(',')
+      .map((tag) => tag.trim())
+      .filter(Boolean),
+  };
+}
+
 async function fetchPosts() {
-  let csv = '', posts = [];
-  try {
-    const proxyRes = await fetch(BLOG_PROXY_URL, { cache: 'no-store' }); if (!proxyRes.ok) throw new Error();
-    csv = await proxyRes.text(); if (!isValidBlogCsv(csv)) throw new Error();
-    posts = parseAndValidatePosts(csv); if (!posts.length) throw new Error();
-  } catch (_) {
-    const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' }); if (!res.ok) throw new Error('Could not load blog posts');
-    csv = await res.text(); if (!isValidBlogCsv(csv)) throw new Error('Could not load blog posts');
-    posts = parseAndValidatePosts(csv); if (!posts.length) throw new Error('Could not load blog posts');
+  if (typeof window.onCMSReady === 'function' && !(window.CMS_DATA?.Blogs || []).length) {
+    await new Promise((resolve) => window.onCMSReady(resolve));
   }
-  return posts.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+  // 1) Prefer already-loaded CMS data so Blogs behave exactly like other tabs.
+  const liveRows = (window.CMS_DATA && Array.isArray(window.CMS_DATA.Blogs)) ? window.CMS_DATA.Blogs : [];
+  if (liveRows.length) {
+    return dedupePosts(liveRows.map(normalizeBlogPost).filter((p) => p.title))
+      .sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+  }
+
+  // 2) If CMS data isn't ready yet, use same proxy/fallback pattern as loader.
+  const tryUrls = [BLOG_PROXY_URL, BLOG_CSV_URL];
+  for (const url of tryUrls) {
+    try {
+      const res = await fetch(`${url}${url.includes('?') ? '&' : '?'}_t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) continue;
+      const csv = await res.text();
+      if (!csv || csv.trim().startsWith('{') || csv.trim().startsWith('<!')) continue;
+      const rows = csv.trim().split(/\r?\n/);
+      if (rows.length < 2) continue;
+      const headers = rows[0].split(',').map((h) => h.trim().toLowerCase());
+      const titleIdx = headers.findIndex((h) => h.includes('title'));
+      if (titleIdx < 0) continue;
+    } catch (_) {}
+  }
+
+  throw new Error('Could not load blog posts');
 }
 
 const adSlot = () => '<div class="ad-slot" aria-label="Advertisement">Ad Space</div>';
 const fmtDate = (d) => (d ? new Date(d).toLocaleDateString() : '');
 
 function initBlogListPage() {
+  const list = document.getElementById('blogList');
+  if (!list) return;
+
   const state = { page: 1, perPage: 6, q: '', cat: '', tag: '', posts: [], filtered: [] };
-  const list = document.getElementById('blogList'), loadBtn = document.getElementById('loadMoreBtn'), tagsEl = document.getElementById('tagFilter');
-  const applyFilters = () => { state.filtered = state.posts.filter((p) => (!state.q || p.title.toLowerCase().includes(state.q) || (p.short_description || '').toLowerCase().includes(state.q)) && (!state.cat || p.category === state.cat) && (!state.tag || p.tagsArray.includes(state.tag))); state.page = 1; render(); };
+  const loadBtn = document.getElementById('loadMoreBtn');
+  const tagsEl = document.getElementById('tagFilter');
+
+  const applyFilters = () => {
+    state.filtered = state.posts.filter((p) =>
+      (!state.q || p.title.toLowerCase().includes(state.q) || (p.short_description || '').toLowerCase().includes(state.q)) &&
+      (!state.cat || p.category === state.cat) &&
+      (!state.tag || p.tagsArray.includes(state.tag))
+    );
+    state.page = 1;
+    render();
+  };
+
   const render = () => {
-    const show = state.filtered.slice(0, state.page * state.perPage); list.innerHTML = '';
-    if (!show.length) list.innerHTML = '<p style="text-align:center;">No blog posts found.</p>';
+    const show = state.filtered.slice(0, state.page * state.perPage);
+    list.innerHTML = show.length ? '' : '<p style="text-align:center;">No blog posts found.</p>';
+
     show.forEach((p, idx) => {
-      list.insertAdjacentHTML('beforeend', `<article class="blog-card">${imageWithFallback(convertTeraboxImageUrl(p.image_url), p.title)}<div class="blog-card-body"><span class="chip">${safeText(p.category || 'General')}</span><h3>${safeText(p.title)}</h3><p>${safeText(p.short_description || '')}</p><div class="meta">${fmtDate(p.date)}</div><a class="btn btn-primary" href="blog-post.html?id=${encodeURIComponent(p.id)}">Read More</a></div></article>`);
+      const imageSrc = safeUrl(p.image_url);
+      const imageHtml = imageWithFallback(imageSrc, p.title);
+      list.insertAdjacentHTML('beforeend', `<article class="blog-card">${imageHtml}<div class="blog-card-body"><span class="chip">${safeText(p.category || 'General')}</span><h3>${safeText(p.title)}</h3><p>${safeText(p.short_description || '')}</p><div class="meta">${fmtDate(p.date)}</div><a class="btn btn-primary" href="blog-post.html?id=${encodeURIComponent(p.id)}">Read More</a></div></article>`);
       if ((idx + 1) % 4 === 0) list.insertAdjacentHTML('beforeend', adSlot());
+
+      // TeraBox image fallback link (preview method when direct render is blocked).
+      if (!imageSrc && isTeraboxUrl(p.image_url)) {
+        list.insertAdjacentHTML('beforeend', `<p class="meta" style="margin-top:-8px;"><a href="${safeUrl(p.image_url)}" target="_blank" rel="noopener noreferrer">Open image source</a></p>`);
+      }
     });
+
     loadBtn.style.display = show.length < state.filtered.length ? 'inline-flex' : 'none';
   };
+
   document.getElementById('blogSearch').addEventListener('input', (e) => { state.q = e.target.value.toLowerCase(); applyFilters(); });
   document.getElementById('categoryFilter').addEventListener('change', (e) => { state.cat = e.target.value; applyFilters(); });
   tagsEl.addEventListener('change', (e) => { state.tag = e.target.value; applyFilters(); });
-  loadBtn.addEventListener('click', () => { state.page++; render(); });
+  loadBtn.addEventListener('click', () => { state.page += 1; render(); });
+
   list.innerHTML = '<div class="skeleton-card"></div><div class="skeleton-card"></div><div class="skeleton-card"></div>';
-  fetchPosts().then((posts) => { state.posts = posts; [...new Set(posts.flatMap((p) => p.tagsArray))].forEach((t) => tagsEl.insertAdjacentHTML('beforeend', `<option value="${safeText(t)}">${safeText(t)}</option>`)); applyFilters(); }).catch(() => { list.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>'; });
+
+  fetchPosts()
+    .then((posts) => {
+      state.posts = posts;
+      [...new Set(posts.flatMap((p) => p.tagsArray))]
+        .forEach((tag) => tagsEl.insertAdjacentHTML('beforeend', `<option value="${safeText(tag)}">${safeText(tag)}</option>`));
+      applyFilters();
+    })
+    .catch(() => {
+      list.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
+    });
 }
 
 function initBlogPostPage() {
+  const postTitle = document.getElementById('postTitle');
+  if (!postTitle) return;
+
   const id = new URLSearchParams(location.search).get('id');
-  fetchPosts().then((posts) => {
-    const post = posts.find((p) => p.id === id) || posts[0]; if (!post) return;
-    document.getElementById('postTitle').textContent = post.title;
-    document.getElementById('postMeta').textContent = `${post.category || 'General'} • ${fmtDate(post.date)}`;
-    const postImageEl = document.getElementById('postImage');
-    postImageEl.src = convertTeraboxImageUrl(post.image_url) || FALLBACK_IMAGE; postImageEl.loading = 'lazy';
-    postImageEl.onerror = () => { postImageEl.onerror = null; postImageEl.src = FALLBACK_IMAGE; };
-    document.getElementById('postContent').innerHTML = (sanitizeRichText(post.description || post.short_description || 'No content available.') || '<p>No content available.</p>').split(/<\/p>/i).map((b, i) => `${b}</p>${i === 2 ? adSlot() : ''}`).join('');
-    const actions = document.getElementById('postActions');
-    const pdfUrl = normalizeActionLink(post.pdf_link), externalUrl = normalizeActionLink(post.external_link);
-    if (pdfUrl) { actions.insertAdjacentHTML('beforeend', `<a class="btn btn-secondary" href="${pdfUrl}" target="_blank" rel="noopener noreferrer">View PDF</a>`); actions.insertAdjacentHTML('beforeend', `<a class="btn btn-ghost" href="${pdfUrl}" download rel="noopener noreferrer">Download PDF</a>`); }
-    if (externalUrl) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-primary" href="${externalUrl}" target="_blank" rel="noopener noreferrer">Reference Link</a>`);
-       if (isTeraboxUrl(post.image_url)) actions.insertAdjacentHTML('beforeend', `<a class="btn btn-ghost" href="${safeUrl(post.image_url)}" target="_blank" rel="noopener noreferrer">Open Image Source</a>`);
-    const related = posts.filter((p) => p.id !== post.id && (p.category === post.category || p.tagsArray.some((t) => post.tagsArray.includes(t)))).slice(0, 5);
-    document.getElementById('relatedPosts').innerHTML = related.map((p) => `<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
-    document.getElementById('latestPosts').innerHTML = posts.slice(0, 5).map((p) => `<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
-  }).catch(() => { document.getElementById('postContent').innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>'; });
+  fetchPosts()
+    .then((posts) => {
+      const post = posts.find((p) => p.id === id) || posts[0];
+      if (!post) return;
+
+      postTitle.textContent = post.title;
+      document.getElementById('postMeta').textContent = `${post.category || 'General'} • ${fmtDate(post.date)}`;
+
+      const postImageEl = document.getElementById('postImage');
+      postImageEl.src = safeUrl(post.image_url) || FALLBACK_IMAGE;
+      postImageEl.loading = 'lazy';
+      postImageEl.onerror = () => { postImageEl.onerror = null; postImageEl.src = FALLBACK_IMAGE; };
+
+      const contentHtml = sanitizeRichText(post.description || post.short_description || 'No content available.') || '<p>No content available.</p>';
+      document.getElementById('postContent').innerHTML = contentHtml;
+
+      const actions = document.getElementById('postActions');
+      actions.innerHTML = '';
+      const pdfUrl = normalizeActionLink(post.pdf_link);
+      const externalUrl = normalizeActionLink(post.external_link);
+
+      if (pdfUrl) {
+        actions.insertAdjacentHTML('beforeend', `<a class="btn btn-secondary" href="${pdfUrl}" target="_blank" rel="noopener noreferrer">View PDF</a>`);
+        actions.insertAdjacentHTML('beforeend', `<a class="btn btn-ghost" href="${pdfUrl}" download rel="noopener noreferrer">Download PDF</a>`);
+      }
+      if (externalUrl) {
+        actions.insertAdjacentHTML('beforeend', `<a class="btn btn-primary" href="${externalUrl}" target="_blank" rel="noopener noreferrer">Reference Link</a>`);
+      }
+      if (isTeraboxUrl(post.image_url)) {
+        actions.insertAdjacentHTML('beforeend', `<a class="btn btn-ghost" href="${safeUrl(post.image_url)}" target="_blank" rel="noopener noreferrer">Open Image Source</a>`);
+      }
+
+      const related = posts.filter((p) => p.id !== post.id && (p.category === post.category || p.tagsArray.some((tag) => post.tagsArray.includes(tag)))).slice(0, 5);
+      document.getElementById('relatedPosts').innerHTML = related.map((p) => `<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
+      document.getElementById('latestPosts').innerHTML = posts.slice(0, 5).map((p) => `<a href="blog-post.html?id=${encodeURIComponent(p.id)}">${safeText(p.title)}</a>`).join('');
+    })
+    .catch(() => {
+      document.getElementById('postContent').innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
+    });
 }
 
 function initHomeBlogHighlights() {
-  const wrap = document.getElementById('homeBlogHighlights'); if (!wrap) return;
-  fetchPosts().then((posts) => {
-    const picks = posts.filter((p) => p.featured).slice(0, 5), data = picks.length ? picks : posts.slice(0, 5);
-    wrap.innerHTML = data.map((p) => `<article class="mini-blog-card">${imageWithFallback(convertTeraboxImageUrl(p.image_url), p.title)}<h3>${safeText(p.title)}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
-  }).catch(() => { wrap.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>'; });
   const wrap = document.getElementById('homeBlogHighlights');
   if (!wrap) return;
-  fetchPosts().then(posts => {
-    const picks = posts.filter(p=>p.featured).slice(0,5);
-    const data = picks.length ? picks : posts.slice(0,5);
-    wrap.innerHTML = data.slice(0,5).map(p=>`<article class="mini-blog-card"><img loading="lazy" decoding="async" src="${safeUrl(p.image_url)||'banner.png'}" alt="${safeText(p.title)}"><h3>${safeText(p.title)}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
-  }).catch(()=>{
-    wrap.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
-  });
+
+  fetchPosts()
+    .then((posts) => {
+      const picks = posts.filter((p) => p.featured).slice(0, 5);
+      const data = picks.length ? picks : posts.slice(0, 5);
+      wrap.innerHTML = data.map((p) => `<article class="mini-blog-card">${imageWithFallback(p.image_url, p.title)}<h3>${safeText(p.title)}</h3><a href="blog-post.html?id=${encodeURIComponent(p.id)}">Read</a></article>`).join('');
+    })
+    .catch(() => {
+      wrap.innerHTML = '<p style="text-align:center;">Could not load blog posts. Please try again later.<br><button type="button" onclick="location.reload()">Retry</button></p>';
+    });
 }
