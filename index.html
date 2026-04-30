@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="css/style.css"/>
   <link rel="stylesheet" href="css/cms-additions.css"/>
   <link rel="stylesheet" href="css/design-enhancements.css"/>
+  <link rel="stylesheet" href="css/blog.css"/>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&family=Bebas+Neue&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
   <link rel="icon" href="logo.png" type="image/png"/>
@@ -43,7 +44,7 @@
       <li><a href="index.html" class="active">Home</a></li>
       <li class="has-dropdown"><a href="scholarships.html">Scholarships <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="scholarships-national.html">National Scholarships</a></li><li><a href="scholarships-international.html">International Scholarships</a></li></ul></li>
       <li class="has-dropdown"><a href="jobs.html">Jobs <i class="fa fa-chevron-down fa-xs"></i></a><ul class="dropdown"><li><a href="jobs-government.html">Government Jobs</a></li><li><a href="jobs-private.html">Private / NGO Jobs</a></li></ul></li>
-      <li><a href="internships.html">Internships</a></li><li><a href="exams.html">Exams</a></li><li><a href="books.html">Books</a></li>
+      <li><a href="internships.html">Internships</a></li><li><a href="exams.html">Exams</a></li><li><a href="blog.html">Blog</a></li><li><a href="books.html">Books</a></li>
     </ul>
     <div class="nav-actions">
       <button class="nav-icon-btn" onclick="toggleSearch()"><i class="fa fa-search"></i></button>
@@ -241,6 +242,22 @@
   </div>
 </section>
 
+  
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header"><h2 class="section-title">Latest from Blog</h2><a class="view-all" href="blog.html">View All Blogs</a></div>
+    <div id="homeBlogHighlights" class="blog-grid"><div class="skeleton-card"></div><div class="skeleton-card"></div></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="home-detail-card" style="text-align:center">
+      <h3>Stay Updated</h3><p>Get latest exam updates, jobs, and notifications</p><a class="btn btn-primary" href="blog.html">Visit Blog</a>
+    </div>
+  </div>
+</section>
+
 <!-- WHY CAREERPK -->
 <section class="section">
   <div class="container">
@@ -342,7 +359,7 @@
 </nav>
 
 <script src="js/google-sheet-loader.js"></script>
-<script src="js/app.js"></script><script src="js/comprehensive-fix.js"></script>
+<script src="js/app.js"></script><script src="js/blog.js"></script><script src="js/comprehensive-fix.js"></script>
 <script src="js/cms-auto-refresh-listener.js"></script>
 <script src="js/chatbot-loader.js"></script>
 <script>
@@ -350,6 +367,7 @@
     updateFavCount();
     onCMSReady(() => { loadHomePageData(); updateFavCount(); });
     registerMultiTabRefresh(loadHomePageData);
+    initHomeBlogHighlights();
     initializeAutoRefreshListeners();
 
     // Animated stat counters
