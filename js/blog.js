@@ -95,14 +95,24 @@ function sanitizeRichText(raw = '') {
     .join('');
 }
 
+function isValidBlogCsv(text = '') {
+  const sample = String(text || '').trim();
+  if (!sample) return false;
+  if (sample.startsWith('{') || sample.startsWith('<!')) return false;
+  const firstLine = sample.split(/\r?\n/, 1)[0].toLowerCase();
+  return firstLine.includes('id') && firstLine.includes('title');
+}
+
 async function fetchPosts() {
   let csv = '';
   try {
     const proxyRes = await fetch(BLOG_PROXY_URL, { cache: 'no-store' });
     if (!proxyRes.ok) throw new Error('Proxy failed: ' + proxyRes.status);
     csv = await proxyRes.text();
+    if (!isValidBlogCsv(csv)) throw new Error('Proxy returned non-CSV payload');
   } catch (e) {
     const res = await fetch(BLOG_CSV_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Direct CSV failed: ' + res.status);
     csv = await res.text();
   }
   return parseCSV(csv).sort((a,b)=> new Date(b.date||0)-new Date(a.date||0));
