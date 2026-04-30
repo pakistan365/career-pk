@@ -744,8 +744,11 @@ body.home-page .cards-grid.home-card-slider {
   /* visible count variable — overridden per breakpoint below */
   --n: 2;
   --gap: 16px;
-  --card-h: 320px;
-  --card-w: max(168px, calc((100% - (var(--n) - 1) * var(--gap)) / var(--n)));
+  /* Easy manual controls for session card size on mobile */
+  --session-card-width-mobile: 168px;
+  --session-card-height-mobile: 320px;
+  --card-h: var(--session-card-height-mobile);
+  --card-w: max(var(--session-card-width-mobile), calc((100% - (var(--n) - 1) * var(--gap)) / var(--n)));
    
   /* flex horizontal scroll — never wraps */
   display: flex;
@@ -899,8 +902,8 @@ body.home-page .cards-grid.home-card-slider .btn-share {
 @media (max-width: 899px) {
   body.home-page .section {
     position: relative;
-    margin: 12px 10px;
-    border: 1px solid color-mix(in srgb, var(--primary) 20%, #d7efe9 80%);
+    margin: 8px 8px;
+    border: 1px solid color-mix(in srgb, var(--primary) 16%, #d7efe9 84%);
     border-radius: 14px;
     background: linear-gradient(180deg, #ffffff 0%, #f7fbfa 100%);
   }
@@ -910,8 +913,8 @@ body.home-page .cards-grid.home-card-slider .btn-share {
   }
 
   body.home-page .section .container {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
   body.home-page .section .section-title {
@@ -929,4 +932,13 @@ body.home-page .cards-grid.home-card-slider .btn-share {
     border-radius: 99px;
     background: var(--primary);
   }
+}
+
+body.dark.home-page .section {
+  border-color: #2a3a3f;
+  background: linear-gradient(180deg, #131a1d 0%, #10161a 100%);
+}
+
+body.dark.home-page .section.section-alt {
+  background: linear-gradient(180deg, #101a1a 0%, #0e1518 100%);
 }
