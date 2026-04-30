@@ -1,6 +1,30 @@
 const BLOG_PROXY_URL = '/api/sheets?sheet=Blog';
 const BLOG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRciVbiyyI9Kk7LS99tAB3fAYMmMebHCAAi4WdpzKwPLKh0xb57GHRr99sN1audsiOqP2Ix_kx3Ocmo/pub?output=csv';
 
+function normalizeHeader(value = '') {
+  return String(value)
+    .trim()
+    .toLowerCase()
+    .replace(/^﻿/, '')
+    .replace(/[^a-z0-9]+/g, '_')
+    .replace(/^_+|_+$/g, '');
+}
+
+const BLOG_HEADER_ALIASES = {
+  id: ['id'],
+  title: ['title'],
+  category: ['category'],
+  description: ['description', 'details', 'content'],
+  short_description: ['short_description', 'shortdescription', 'excerpt', 'summary'],
+  image_url: ['image_url', 'image', 'image_link'],
+  author: ['author', 'written_by'],
+  date: ['date', 'published_date', 'publish_date', 'posted_date'],
+  tags: ['tags', 'tag'],
+  pdf_link: ['pdf_link', 'pdf', 'document_link'],
+  external_link: ['external_link', 'reference_link', 'source_link', 'url'],
+  featured: ['featured', 'is_featured']
+};
+
 function parseCSVRow(row) {
   const out = []; let cur=''; let q=false;
   for (let i=0;i<row.length;i++) {
@@ -57,13 +81,18 @@ function parseCSV(csv) {
 
   if (!rows.length) return [];
 
-  const expectedHeaders = ['id', 'title', 'category', 'description', 'short_description', 'image_url', 'author', 'date', 'tags', 'pdf_link', 'external_link', 'featured'];
-  const headers = rows[0].map((h) => h.trim().toLowerCase().replace(/^\ufeff/, ''));
+  const headerMap = rows[0].reduce((acc, h, idx) => {
+    const normalized = normalizeHeader(h);
+    if (normalized && acc[normalized] == null) acc[normalized] = idx;
+    return acc;
+  }, {});
 
   return rows.slice(1).map((values) => {
     const item = {};
-    expectedHeaders.forEach((key) => {
-      const idx = headers.indexOf(key);
+    Object.keys(BLOG_HEADER_ALIASES).forEach((key) => {
+      const idx = BLOG_HEADER_ALIASES[key]
+        .map((alias) => headerMap[normalizeHeader(alias)])
+        .find((candidate) => Number.isInteger(candidate));
       item[key] = idx >= 0 ? (values[idx] || '').trim() : '';
     });
     item.tagsArray = (item.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
