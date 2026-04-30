@@ -17,10 +17,12 @@ const TAB_DEFINITIONS = [
   { name: 'Exams',         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR1ISsMtV-TMyTQleaS7sxDXAkrGHgk-MobAwOgHry2PLpKaZDQSJbu3JtiaYEYMDQW3M7cFAJO6IPp/pub?output=csv', mapper: mapExam },
   { name: 'Books',         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTUvgf_xYBH5igPoaGKEWTvk9MxA_VJ7a8104rnB1GJz0ef-zpjy05CjF5_XSlOEDAXh_2CzQOqn9ww/pub?output=csv', mapper: mapBook },
   { name: 'Notifications', csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQlGJdIw3YLBDWCXA7xnDyruQXlsDzm8KJ1cEqrjjwy-0G4leIFOp2yQF6FMhbw9hBnbajs0qb-dsrB/pub?output=csv', mapper: mapNotification },
+  // Blogs tab is now loaded here too for shared cache/debug visibility.
+  { name: 'Blogs',         csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRciVbiyyI9Kk7LS99tAB3fAYMmMebHCAAi4WdpzKwPLKh0xb57GHRr99sN1audsiOqP2Ix_kx3Ocmo/pub?output=csv', mapper: mapBlog },
 ];
 
 // ── Global data object ────────────────────────────────────────
-window.CMS_DATA = { Scholarships: [], Jobs: [], Internships: [], Exams: [], Books: [], Notifications: [] };
+window.CMS_DATA = { Scholarships: [], Jobs: [], Internships: [], Exams: [], Books: [], Notifications: [], Blogs: [] };
 window._CMS_READY             = false;
 window._CMS_CALLBACKS         = [];
 window._CMS_REFRESH_LISTENERS = [];
@@ -289,6 +291,21 @@ function mapBook(r) {
     ..._mapRichContentFields(r),
   };
 }
+function mapBlog(r) {
+  return {
+    id: _getField(r, ['ID']) || String(r.__rowIndex || ''),
+    title: _getField(r, ['Title']),
+    category: _getField(r, ['Category']),
+    description: _getField(r, ['Description', 'Content', 'Details']),
+    short_description: _getField(r, ['Short Description', 'Summary', 'Excerpt']),
+    image_url: _getField(r, ['Image URL', 'Image']),
+    date: _getField(r, ['Date', 'Published Date', 'Posted Date']),
+    tags: _getField(r, ['Tags']),
+    apply_link: _getField(r, ['Apply Link', 'Link', 'URL']),
+    pdf_link: _getField(r, ['PDF Link', 'Document Link']),
+  };
+}
+
 function mapNotification(r) {
   const expiry = _getField(r, ['Expiry Date', 'Expiry']);
   const expired = expiry ? new Date(expiry) < new Date() : false;
