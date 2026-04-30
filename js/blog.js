@@ -13,17 +13,63 @@ function parseCSVRow(row) {
 }
 
 function parseCSV(csv) {
-  const lines = csv.split(/\r?\n/).filter(Boolean);
-  if (!lines.length) return [];
-  const headers = parseCSVRow(lines[0]).map(h=>h.trim());
-  return lines.slice(1).map(line => {
-    const values = parseCSVRow(line);
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < csv.length; i++) {
+    const ch = csv[i];
+    const nx = csv[i + 1];
+
+    if (ch === '"') {
+      if (inQuotes && nx === '"') {
+        cell += '"';
+        i++;
+      } else {
+        inQuotes = !inQuotes;
+      }
+      continue;
+    }
+
+    if (ch === ',' && !inQuotes) {
+      row.push(cell);
+      cell = '';
+      continue;
+    }
+
+    if ((ch === '\n' || ch === '\r') && !inQuotes) {
+      if (ch === '\r' && nx === '\n') i++;
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = '';
+      continue;
+    }
+
+    cell += ch;
+  }
+
+  if (cell.length || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+
+  if (!rows.length) return [];
+
+  const expectedHeaders = ['id', 'title', 'category', 'description', 'short_description', 'image_url', 'author', 'date', 'tags', 'pdf_link', 'external_link', 'featured'];
+  const headers = rows[0].map((h) => h.trim().toLowerCase().replace(/^\ufeff/, ''));
+
+  return rows.slice(1).map((values) => {
     const item = {};
-    headers.forEach((h,i)=> item[h] = (values[i] || '').trim());
-    item.tagsArray = (item.tags || '').split(',').map(t=>t.trim()).filter(Boolean);
-    item.featured = /^true$/i.test(item.featured || '');
+    expectedHeaders.forEach((key) => {
+      const idx = headers.indexOf(key);
+      item[key] = idx >= 0 ? (values[idx] || '').trim() : '';
+    });
+    item.tagsArray = (item.tags || '').split(',').map((t) => t.trim()).filter(Boolean);
+    item.featured = /^(true|1|yes)$/i.test(item.featured || '');
     return item;
-  }).filter(p => p.id && p.title);
+  }).filter((post) => post.id && post.title);
 }
 
 const safeText = (value = '') => String(value)
