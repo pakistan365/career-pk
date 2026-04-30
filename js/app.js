@@ -85,7 +85,7 @@ function safeUrl(url) {
   if (!raw) return '#';
   try {
     const parsed = new URL(raw, window.location.origin);
-    if (!['http:', 'https:'].includes(parsed.protocol)) return '#';
+    if (!['http:', 'https:', 'mailto:', 'tel:'].includes(parsed.protocol)) return '#';
     return parsed.href;
   } catch {
     return '#';
@@ -155,9 +155,9 @@ function collectResourceLinks(item) {
 function classifyResourceUrl(url) {
   const safe = safeUrl(url);
   if (safe === '#') return { kind: 'link', icon: 'fa-link', label: 'Open Link', url: '#' };
+  if (isTeraBoxUrl(safe)) return { kind: 'cloud', icon: 'fa-cloud', label: 'TeraBox File', url: safe };
   if (isPdfUrl(safe)) return { kind: 'pdf', icon: 'fa-file-pdf', label: 'PDF', url: safe };
   if (isImageUrl(safe)) return { kind: 'image', icon: 'fa-image', label: 'Image', url: safe };
-  if (isTeraBoxUrl(safe)) return { kind: 'cloud', icon: 'fa-cloud', label: 'Cloud File', url: safe };
   if (/books\.google\./i.test(safe)) return { kind: 'book', icon: 'fa-book-open', label: 'Book Preview', url: safe };
   return { kind: 'link', icon: 'fa-link', label: 'Open Link', url: safe };
 }
@@ -193,6 +193,18 @@ function renderInlineResourcePreview(url) {
           </iframe>
         </div>
         <span><i class="fa fa-up-right-from-square"></i> Open full ${escapeHtml(meta.label.toLowerCase())} • ${escapeHtml(host)}</span>
+      </a>
+    `;
+  }
+    if (meta.kind === 'cloud') {
+    return `
+      <a class="resource-inline resource-inline-card" href="${meta.url}" target="_blank" rel="noopener noreferrer">
+        <div class="resource-mini-icon"><i class="fa ${meta.icon}"></i></div>
+        <div class="resource-mini-meta">
+          <strong>${escapeHtml(meta.label)}</strong>
+          <span>${escapeHtml(host)}</span>
+        </div>
+        <i class="fa fa-up-right-from-square"></i>
       </a>
     `;
   }
@@ -343,13 +355,16 @@ function renderMetaTags(values = []) {
 
 // ── Fallback image ───────────────────────────────────────────
 function imgSrc(url, type) {
-  if (!url || url.includes('REPLACE_WITH')) {
+  const clean = text(url).trim();
+  if (!clean || clean.includes('REPLACE_WITH')) {
     const icons = {
       scholarship: '🎓', job: '💼', internship: '🚀', exam: '📋', book: '📚'
     };
     return null; // use emoji placeholder
   }
-  return url;
+  if (isImageUrl(clean)) return clean;
+  if (isTeraBoxUrl(clean)) return null;
+  return clean;
 }
 
 
