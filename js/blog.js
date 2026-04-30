@@ -1,4 +1,4 @@
-const BLOG_PROXY_URL = '/api/sheets?sheet=Blog';
+const BLOG_PROXY_URL = '/api/sheets?sheet=Blogs';
 const BLOG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRciVbiyyI9Kk7LS99tAB3fAYMmMebHCAAi4WdpzKwPLKh0xb57GHRr99sN1audsiOqP2Ix_kx3Ocmo/pub?output=csv';
 
 function normalizeHeader(value = '') {
