@@ -6,6 +6,8 @@
 // ============================================================
 
 // ── Utility: fetch sheet data from live window.CMS_DATA ──────
+window.CMS_DATA = window.CMS_DATA || { Scholarships: [], Jobs: [], Internships: [], Exams: [], Books: [], Notifications: [] };
+
 function fetchSheet(sheetName) {
   return Promise.resolve((window.CMS_DATA[sheetName] || []).slice());
 }
