@@ -107,12 +107,33 @@ function extractUrls(value) {
   return [...new Set(matches.map(safeUrl).filter(u => u !== '#'))];
 }
 
+function getUrlFilename(url) {
+  const raw = text(url).trim();
+  if (!raw) return '';
+  try {
+    const parsed = new URL(raw);
+    const candidates = [
+      parsed.pathname.split('/').pop() || '',
+      parsed.searchParams.get('filename') || '',
+      parsed.searchParams.get('name') || '',
+      parsed.searchParams.get('file') || ''
+    ];
+    return candidates.find(Boolean) || '';
+  } catch {
+    return '';
+  }
+}
+
 function isPdfUrl(url) {
-  return /\.pdf($|[?#])/i.test(text(url)) || /[?&]format=pdf\b/i.test(text(url));
+  const raw = text(url);
+  const fileName = getUrlFilename(raw);
+  return /\.pdf($|[?#])/i.test(raw) || /[?&]format=pdf\b/i.test(raw) || /\.pdf($|[?#])/i.test(fileName);
 }
 
 function isImageUrl(url) {
-  return /\.(png|jpe?g|gif|webp|svg)($|[?#])/i.test(text(url));
+  const raw = text(url);
+  const fileName = getUrlFilename(raw);
+  return /\.(png|jpe?g|gif|webp|svg)($|[?#])/i.test(raw) || /\.(png|jpe?g|gif|webp|svg)($|[?#])/i.test(fileName);
 }
 
 function isTeraBoxUrl(url) {
@@ -238,11 +259,15 @@ function renderResourceActions(item, title) {
   if (!links.length) return '';
   const pdf = links.find(isPdfUrl);
   const image = links.find(isImageUrl);
+  const teraPdf = links.find((link) => isTeraBoxUrl(link) && isPdfUrl(link));
+  const teraImage = links.find((link) => isTeraBoxUrl(link) && isImageUrl(link));
   const tera = links.find(isTeraBoxUrl);
   return `
     <div class="resource-actions">
       ${pdf ? `<button class="btn btn-ghost" onclick="openResourcePreview('${escapeJsSingleQuote(pdf)}','${escapeJsSingleQuote(title)}')"><i class="fa fa-file-pdf"></i> Preview PDF</button>` : ''}
       ${image ? `<a href="${safeUrl(image)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-image"></i> View Image</a>` : ''}
+      ${(!pdf && teraPdf) ? `<a href="${safeUrl(teraPdf)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-file-pdf"></i> Open TeraBox PDF</a>` : ''}
+      ${(!image && teraImage) ? `<a href="${safeUrl(teraImage)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-image"></i> Open TeraBox Image</a>` : ''}
       ${tera ? `<a href="${safeUrl(tera)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost"><i class="fa fa-cloud"></i> Open TeraBox</a>` : ''}
     </div>
   `;
