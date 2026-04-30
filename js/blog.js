@@ -14,14 +14,14 @@ const BLOG_HEADER_ALIASES = {
   id: ['id'],
   title: ['title'],
   category: ['category'],
-  description: ['description', 'details', 'content'],
-  short_description: ['short_description', 'shortdescription', 'excerpt', 'summary'],
+  description: ['description', 'details', 'content', 'blog_content', 'body', 'post_content', 'article'],
+  short_description: ['short_description', 'shortdescription', 'excerpt', 'summary', 'short', 'intro'],
   image_url: ['image_url', 'image', 'image_link'],
   author: ['author', 'written_by'],
   date: ['date', 'published_date', 'publish_date', 'posted_date'],
   tags: ['tags', 'tag'],
-  pdf_link: ['pdf_link', 'pdf', 'document_link'],
-  external_link: ['external_link', 'reference_link', 'source_link', 'url'],
+  pdf_link: ['pdf_link', 'pdf', 'document_link', 'pdf_url', 'file_link'],
+  external_link: ['external_link', 'reference_link', 'source_link', 'url', 'apply_link', 'link'],
   featured: ['featured', 'is_featured']
 };
 
@@ -114,17 +114,23 @@ const safeText = (value = '') => String(value)
 const safeUrl = (value = '') => {
   try {
     const u = new URL(String(value), window.location.origin);
-    if (u.protocol === 'http:' || u.protocol === 'https:') return u.toString();
+    if (u.protocol === 'http:' || u.protocol === 'https:' || u.protocol === 'mailto:' || u.protocol === 'tel:') return u.toString();
   } catch (_) {}
   return '';
 };
 
 function sanitizeRichText(raw = '') {
-  const text = String(raw).replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '');
-  return text
-    .split(/\n{2,}/)
-    .map(p => `<p>${safeText(p.trim())}</p>`)
-    .join('');
+  const plain = String(raw).replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, '').trim();
+  if (!plain) return '';
+  const blocks = plain.split(/\n{2,}/).map((chunk) => chunk.trim()).filter(Boolean);
+  return blocks.map((chunk) => {
+    const lines = chunk.split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    if (lines.length > 1 && lines.every((line) => /^[-•*]/.test(line))) {
+      const items = lines.map((line) => `<li>${safeText(line.replace(/^[-•*]\s*/, ''))}</li>`).join('');
+      return `<ul>${items}</ul>`;
+    }
+    return `<p>${safeText(lines.join(' '))}</p>`;
+  }).join('');
 }
 
 function isValidBlogCsv(text = '') {
